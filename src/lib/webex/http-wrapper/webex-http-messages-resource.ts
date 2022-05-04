@@ -1,7 +1,7 @@
-import { WebexReq } from './webex-req';
+import { WebexHttp } from './webex-http';
 import type { Json } from '../../types';
 
-export class WebexReqMessagesResource extends WebexReq {
+export class WebexHttpMessagesResource extends WebexHttp {
   /**
    * Creates a Webex Request wrapper instance for the `messages` HTTP API endpoint.
    *
@@ -46,6 +46,6 @@ export class WebexReqMessagesResource extends WebexReq {
  *
  * @param accessToken
  *
- * @return {WebexReqMessagesResource}
+ * @return {WebexHttpMessagesResource}
  */
-export const webexReqMessagesResource = (accessToken: string) => new WebexReqMessagesResource(accessToken);
+export const webexReqMessagesResource = (accessToken: string) => new WebexHttpMessagesResource(accessToken);

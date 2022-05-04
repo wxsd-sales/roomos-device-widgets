@@ -1,7 +1,7 @@
-import { WebexReq } from './webex-req';
+import { WebexHttp } from './webex-http';
 import type { Json } from '../../types';
 
-export class WebexReqPeopleResource extends WebexReq {
+export class WebexHttpPeopleResource extends WebexHttp {
   /**
    * Creates a Webex Request wrapper instance for the `people` HTTP API endpoint.
    *
@@ -59,6 +59,6 @@ export class WebexReqPeopleResource extends WebexReq {
  *
  * @param accessToken
  *
- * @return {WebexReqPeopleResource}
+ * @return {WebexHttpPeopleResource}
  */
-export const webexReqPeopleResource = (accessToken: string) => new WebexReqPeopleResource(accessToken);
+export const webexReqPeopleResource = (accessToken: string) => new WebexHttpPeopleResource(accessToken);

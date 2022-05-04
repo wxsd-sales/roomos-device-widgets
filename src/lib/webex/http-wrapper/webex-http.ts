@@ -2,7 +2,7 @@ import { JsonRequest } from '../../shared/json-request';
 import { WEBEX_API_ENDPOINT } from '../../constants';
 import { WebexReqErrorPrefix } from '../../types';
 
-export class WebexReq extends JsonRequest {
+export class WebexHttp extends JsonRequest {
   /**
    * Creates a Webex request wrapper instance for the HTTP API.
    *
@@ -45,6 +45,6 @@ export class WebexReq extends JsonRequest {
  * @param accessToken
  * @param resource
  *
- * @return {WebexReq}
+ * @return {WebexHttp}
  */
-export const webexReq = (accessToken: string, resource = '') => new WebexReq(resource, accessToken);
+export const webexReq = (accessToken: string, resource = '') => new WebexHttp(resource, accessToken);
