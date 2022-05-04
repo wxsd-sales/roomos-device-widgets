@@ -3,7 +3,7 @@ import type { Json } from '../../types';
 
 export class WebexHttpPeopleResource extends WebexHttp {
   /**
-   * Creates a Webex Request wrapper instance for the `people` HTTP API endpoint.
+   * Creates a Webex Request wrapper instance for the `people` HTTP API resource.
    *
    * @param accessToken
    */
@@ -55,7 +55,7 @@ export class WebexHttpPeopleResource extends WebexHttp {
 }
 
 /**
- * Instantiates the Webex request wrapper for the `people` HTTP API endpoint.
+ * Instantiates the Webex request wrapper for the `people` HTTP API resource.
  *
  * @param accessToken
  *

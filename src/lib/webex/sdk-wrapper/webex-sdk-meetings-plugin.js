@@ -242,7 +242,7 @@ export class WebexSdkMeetingsPlugin {
 }
 
 /**
- * Instantiates the Meetings Plugin wrapper.
+ * Instantiates the Webex SDK Meetings Plugin wrapper.
  *
  * @return {WebexSdkMeetingsPlugin}
  */

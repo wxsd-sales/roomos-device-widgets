@@ -4,7 +4,7 @@ import { WebexReqErrorPrefix } from '../../types';
 
 export class WebexHttp extends JsonRequest {
   /**
-   * Creates a Webex request wrapper instance for the HTTP API.
+   * Creates a Webex HTTP API request wrapper instance.
    *
    * @param resource
    * @param accessToken
@@ -13,6 +13,13 @@ export class WebexHttp extends JsonRequest {
     super(WEBEX_API_ENDPOINT, resource, 'UTF-8', accessToken);
   }
 
+  /**
+   * Returns JSON if successful else rejects the Promise with the HTTP error enclosed.
+   *
+   * @param r
+   *
+   * @return {Promise<any>}
+   */
   protected handleResponse(r: Response) {
     const onFailure = (r: Response) => {
       if (r?.status === 401) {
@@ -40,7 +47,7 @@ export class WebexHttp extends JsonRequest {
 }
 
 /**
- * Instantiates the Webex request wrapper.
+ * Instantiates the Webex HTTP API request wrapper.
  *
  * @param accessToken
  * @param resource

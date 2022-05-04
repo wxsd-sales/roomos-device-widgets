@@ -3,7 +3,7 @@ import type { Json } from '../../types';
 
 export class WebexHttpMessagesResource extends WebexHttp {
   /**
-   * Creates a Webex Request wrapper instance for the `messages` HTTP API endpoint.
+   * Creates a Webex Request wrapper instance for the `messages` HTTP API resource.
    *
    * @param accessToken
    */
@@ -42,7 +42,7 @@ export class WebexHttpMessagesResource extends WebexHttp {
 }
 
 /**
- * Instantiates the Webex request wrapper for the `messages` HTTP API endpoint.
+ * Instantiates the Webex request wrapper for the `messages` HTTP API resource.
  *
  * @param accessToken
  *

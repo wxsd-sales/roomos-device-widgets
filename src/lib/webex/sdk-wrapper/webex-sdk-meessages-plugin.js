@@ -32,7 +32,7 @@ export class WebexSdkMessagesPlugin {
 }
 
 /**
- * Instantiates the Messages Plugin wrapper.
+ * Instantiates the Webex SDK Messages Plugin wrapper.
  *
  * @return {WebexSdkMessagesPlugin}
  */
