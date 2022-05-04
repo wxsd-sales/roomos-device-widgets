@@ -1,5 +1,13 @@
 export type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
 
+export enum RequestMethod {
+  DELETE = 'DELETE',
+  GET = 'GET',
+  PATCH = 'PATCH',
+  POST = 'POST',
+  PUT = 'PUT'
+}
+
 export enum WebexReqErrorPrefix {
   INVALID_EXPIRED_ACCESS_TOKEN = 'Invalid or expired access token',
   UNEXPECTED_CLIENT_ERROR = 'Unexpected client error',

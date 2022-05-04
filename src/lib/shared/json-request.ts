@@ -1,4 +1,5 @@
 import type { Json } from '../types';
+import { RequestMethod } from '../types';
 
 export class JsonRequest {
   public resourceUrl = '/';
@@ -22,7 +23,7 @@ export class JsonRequest {
     return r.ok ? r.json() : Promise.reject(r);
   }
 
-  protected makeRequest(method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE', url: string, body?: Json) {
+  protected makeRequest(method: RequestMethod, url: string, body?: Json) {
     const request = body
       ? new Request(url, { method: method, headers: this.headers, body: JSON.stringify(body) })
       : new Request(url, { method: method, headers: this.headers });
@@ -31,23 +32,33 @@ export class JsonRequest {
   }
 
   delete(endpoint?: string, parameters?: Json) {
-    return this.makeRequest('DELETE', this.formUrl(endpoint, parameters)).then((r) => this.handleResponse(r));
+    const url = this.formUrl(endpoint, parameters);
+
+    return this.makeRequest(RequestMethod.DELETE, url).then((r) => this.handleResponse(r));
   }
 
   get(endpoint?: string, parameters?: Json) {
-    return this.makeRequest('GET', this.formUrl(endpoint, parameters)).then((r) => this.handleResponse(r));
+    const url = this.formUrl(endpoint, parameters);
+
+    return this.makeRequest(RequestMethod.GET, url).then((r) => this.handleResponse(r));
   }
 
   patch(endpoint?: string, parameters?: Json, body?: Json) {
-    return this.makeRequest('PATCH', this.formUrl(endpoint, parameters), body).then((r) => this.handleResponse(r));
+    const url = this.formUrl(endpoint, parameters);
+
+    return this.makeRequest(RequestMethod.PATCH, url, body).then((r) => this.handleResponse(r));
   }
 
   post(endpoint?: string, parameters?: Json, body?: Json) {
-    return this.makeRequest('POST', this.formUrl(endpoint, parameters), body).then((r) => this.handleResponse(r));
+    const url = this.formUrl(endpoint, parameters);
+
+    return this.makeRequest(RequestMethod.POST, url, body).then((r) => this.handleResponse(r));
   }
 
   put(endpoint?: string, parameters?: Json, body?: Json) {
-    return this.makeRequest('PUT', this.formUrl(endpoint, parameters), body).then((r) => this.handleResponse(r));
+    const url = this.formUrl(endpoint, parameters);
+
+    return this.makeRequest(RequestMethod.PUT, url, body).then((r) => this.handleResponse(r));
   }
 }
 
