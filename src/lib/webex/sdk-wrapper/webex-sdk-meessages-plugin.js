@@ -36,4 +36,4 @@ export class WebexSdkMessagesPlugin {
  *
  * @return {WebexSdkMessagesPlugin}
  */
-export const webexSdkMessagesPlugin = new WebexSdkMessagesPlugin();
+export const webexSdkMessagesPlugin = () => new WebexSdkMessagesPlugin();

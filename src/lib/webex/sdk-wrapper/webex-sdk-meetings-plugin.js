@@ -246,4 +246,4 @@ export class WebexSdkMeetingsPlugin {
  *
  * @return {WebexSdkMeetingsPlugin}
  */
-export const webexSdkMeetingsPlugin = new WebexSdkMeetingsPlugin();
+export const webexSdkMeetingsPlugin = () => new WebexSdkMeetingsPlugin();
