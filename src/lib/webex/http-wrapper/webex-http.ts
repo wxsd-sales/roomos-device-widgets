@@ -16,11 +16,11 @@ export class WebexHttp extends JsonRequest {
   /**
    * Returns JSON if successful else rejects the Promise with the HTTP error enclosed.
    *
-   * @param r
+   * @param response
    *
    * @return {Promise<any>}
    */
-  protected handleResponse(r: Response) {
+  protected handleResponse(response: Response) {
     const onFailure = (r: Response) => {
       if (r?.status === 401) {
         return WebexReqErrorPrefix.INVALID_EXPIRED_ACCESS_TOKEN;
@@ -33,7 +33,7 @@ export class WebexHttp extends JsonRequest {
       }
     };
 
-    return r.ok ? r.json() : Promise.reject(r).catch((r) => `${onFailure(r)}: ${r}`);
+    return response.ok ? response.json() : Promise.reject(response).catch((r) => `${onFailure(r)}: ${r}`);
   }
 
   /**

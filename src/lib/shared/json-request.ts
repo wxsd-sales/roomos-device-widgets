@@ -38,12 +38,12 @@ export class JsonRequest {
   /**
    * Returns JSON if successful else rejects the Promise with the failed response enclosed.
    *
-   * @param r
+   * @param response
    *
    * @return {Promise<any>}
    */
-  protected handleResponse(r: Response) {
-    return r.ok ? r.json() : Promise.reject(r);
+  protected handleResponse(response: Response) {
+    return response.ok ? response.json() : Promise.reject(response);
   }
 
   /**
