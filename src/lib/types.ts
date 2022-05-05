@@ -8,6 +8,12 @@ export enum RequestMethod {
   PUT = 'PUT'
 }
 
+export enum StateKey {
+  ACCESS_TOKEN = 'accessToken',
+  AUTHORIZED_USER = 'authorizedUser',
+  WEBEX = 'webex'
+}
+
 export enum WebexReqErrorPrefix {
   INVALID_EXPIRED_ACCESS_TOKEN = 'Invalid or expired access token',
   UNEXPECTED_CLIENT_ERROR = 'Unexpected client error',
@@ -20,10 +26,4 @@ export enum WebexSdkErrorPrefix {
   INITIALIZE_MEETINGS = 'Could not initialize meetings plugin',
   LISTEN_MESSAGES = 'Could not listen for messages',
   START_MEETING = 'Could not start meeting'
-}
-
-export enum StateKey {
-  ACCESS_TOKEN = 'accessToken',
-  AUTHORIZED_USER = 'authorizedUser',
-  WEBEX = 'webex'
 }
