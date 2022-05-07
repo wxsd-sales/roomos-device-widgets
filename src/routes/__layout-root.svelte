@@ -81,9 +81,6 @@
 
 <main id="app" class="is-hidden">
   <slot />
-  <span class="icon has-text-primary">
-    <i class="mdi mdi-alert" />
-  </span>
 </main>
 
 <slot name="script" />
