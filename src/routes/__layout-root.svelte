@@ -12,13 +12,13 @@
     // https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cookies.js
     function hasCookiesEnabled() {
       // Quick test if browser has cookieEnabled host property
-      if (navigator.cookieEnabled) return false;
+      if (navigator.cookieEnabled) return true;
       // Create cookie
       document.cookie = 'cookieTest=1';
       const isCookieSet = document.cookie.indexOf('cookieTest=') !== -1;
       // Delete cookie
       document.cookie = 'cookieTest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT';
-      return !isCookieSet;
+      return isCookieSet;
     }
 
     const mainMenu = document.getElementById('main-burger');
