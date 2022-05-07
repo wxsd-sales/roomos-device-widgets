@@ -11,7 +11,7 @@
   let qrImage: HTMLImageElement;
   let tries = 0;
 
-  const jsonRequest = new JsonRequest('.', 'device');
+  const jsonRequest = new JsonRequest('/auth', 'device');
   const sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
 
   function authorize() {
@@ -70,16 +70,18 @@
       <img bind:this={qrImage} id="qr-code" alt="Webex QR Code" src="" />
     </figure>
   </div>
-  <div class="column is-5 has-text-centered-mobile">
-    <p class="is-size-4">Can't scan the QR code?</p>
-    <br />
-    <p>
-      Visit <code id="verification-uri" class="has-text-primary has-text-weight-bold">
-        {authorizeResponse?.verification_uri}
-      </code> and enter code:
-    </p>
-    <br />
-    <code id="user-code" class="subtitle has-text-weight-bold">{authorizeResponse?.user_code}</code>
+  <div class="column is-5 has-text-centered-mobile is-align-items-center is-flex">
+    <div>
+      <p class="is-size-4">Can't scan the QR code?</p>
+      <br />
+      <p>
+        Visit <code id="verification-uri" class="has-text-link">
+          {authorizeResponse?.verification_uri}
+        </code> and enter code:
+      </p>
+      <br />
+      <code id="user-code" class="subtitle has-text-weight-semibold">{authorizeResponse?.user_code}</code>
+    </div>
   </div>
 </div>
 
