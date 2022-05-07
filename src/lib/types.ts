@@ -11,6 +11,9 @@ export enum RequestMethod {
 export enum StateKey {
   ACCESS_TOKEN = 'accessToken',
   AUTHORIZED_USER = 'authorizedUser',
+  EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
+  EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',
+  EXAMPLE_WRITABLE = 'exampleWritable',
   WEBEX = 'webex'
 }
 
