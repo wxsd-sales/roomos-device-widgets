@@ -20,7 +20,7 @@ export class WebexHttpPeopleResource extends WebexHttp {
    * @return {Promise<Json | string>}
    */
   getPersonDetails(personId: string, query?: { callingData: boolean }) {
-    return super.get(personId, query);
+    return this.get(personId, query);
   }
 
   /**
@@ -31,7 +31,7 @@ export class WebexHttpPeopleResource extends WebexHttp {
    * @return {Promise<Json | string>}
    */
   getMyOwnDetails(query?: { callingData: boolean }) {
-    return super.get('me', query);
+    return this.get('me', query);
   }
 
   /**
@@ -50,7 +50,7 @@ export class WebexHttpPeopleResource extends WebexHttp {
     locationId?: string;
     max?: number;
   }) {
-    return super.get(undefined, query).then((r: { items: Json[] }) => r.items);
+    return this.get(undefined, query).then((r: { items: Json[] }) => r.items);
   }
 }
 

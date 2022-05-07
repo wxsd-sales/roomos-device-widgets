@@ -19,7 +19,7 @@ export class WebexHttpMessagesResource extends WebexHttp {
    * @return {Promise<Json[]> | string}
    */
   listDirectMessages(query: { parentId?: string; personId: string } | { parentId?: string; personEmail: string }) {
-    return super.get('direct', query).then((r: { items: Json[] }) => r.items);
+    return this.get('direct', query).then((r: { items: Json[] }) => r.items);
   }
 
   /**
@@ -37,7 +37,7 @@ export class WebexHttpMessagesResource extends WebexHttp {
     beforeMessage?: string;
     max?: number;
   }) {
-    return super.get(undefined, query).then((r: { items: Json[] }) => r.items);
+    return this.get(undefined, query).then((r: { items: Json[] }) => r.items);
   }
 }
 
