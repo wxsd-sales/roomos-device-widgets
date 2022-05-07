@@ -28,10 +28,10 @@ export function storage<V>(
   return store;
 }
 
-export function sessionStorage<T>(key: StateKey, initialValue?: T): Writable<T> {
-  return storage(key, initialValue, 'sessionStorage');
-}
-
 export function localStorage<T>(key: StateKey, initialValue?: T): Writable<T> {
   return storage(key, initialValue, 'localStorage');
+}
+
+export function sessionStorage<T>(key: StateKey, initialValue?: T): Writable<T> {
+  return storage(key, initialValue, 'sessionStorage');
 }
