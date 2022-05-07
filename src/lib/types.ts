@@ -30,3 +30,11 @@ export enum WebexSdkErrorPrefix {
   LISTEN_MESSAGES = 'Could not listen for messages',
   START_MEETING = 'Could not start meeting'
 }
+
+export interface AuthorizeResponse {
+  device_code: string;
+  expires_in: number;
+  user_code: string;
+  verification_uri: string;
+  interval: number;
+}
