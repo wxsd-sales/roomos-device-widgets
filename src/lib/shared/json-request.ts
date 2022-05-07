@@ -22,13 +22,7 @@ export class JsonRequest extends FetchWrapper {
   }
 
   /**
-   *  Makes a resource request.
-   *
-   * @param method
-   * @param url
-   * @param body
-   *
-   * @return {Promise<Response>}
+   *  @inheritDoc
    */
   protected makeRequest(method: RequestMethod, url: string, body?: Json) {
     const request = body

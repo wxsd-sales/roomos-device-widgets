@@ -20,13 +20,7 @@ export class UrlEncodedRequest extends FetchWrapper {
   }
 
   /**
-   *  Makes a resource request.
-   *
-   * @param method
-   * @param url
-   * @param body
-   *
-   * @return {Promise<Response>}
+   *  @inheritDoc
    */
   protected makeRequest(method: RequestMethod, url: string, body?: Json) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
