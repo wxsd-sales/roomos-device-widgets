@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import type { AuthorizeResponse } from '../../../lib/types';
-import { RequestMethod } from '../../../lib/types';
+import type { AuthorizeResponse } from '$lib/types';
+import { urlEncodedRequest } from '$lib/shared/urlencoded-request';
 
 const webexOauthHelpServiceUrl: string = process.env.WEBEX_OAUTH_HELP_SERVICE_URL || '';
 const webexDeviceAuthorizeEndpoint: string = process.env.WEBEX_DEVICE_AUTHORIZE_ENDPOINT || '';
@@ -12,40 +12,39 @@ const webexClientSecret: string = process.env.WEBEX_CLIENT_SECRET || '';
 const webexClientScope: string = process.env.WEBEX_CLIENT_SCOPE || '';
 
 async function authorize() {
-  const authorizeUrl = webexOauthHelpServiceUrl + webexDeviceAuthorizeEndpoint;
-  const authorizeRequest = new Request(authorizeUrl, {
-    method: RequestMethod.POST,
-    body: new URLSearchParams({ client_id: webexClientId, scope: webexClientScope })
-  });
-  const r = await fetch(authorizeRequest);
+  const authorizeRequest = urlEncodedRequest(webexOauthHelpServiceUrl);
 
-  return r.ok ? { body: (await r.json()) as AuthorizeResponse } : { status: r.status };
+  return await authorizeRequest
+    .post(webexDeviceAuthorizeEndpoint, {
+      client_id: webexClientId,
+      scope: webexClientScope
+    })
+    .then((r) => ({ body: r as AuthorizeResponse }))
+    .catch((e) => ({ status: 400, message: e }));
 }
 
 async function token(deviceCode: string) {
-  const tokenUrl = webexOauthHelpServiceUrl + webexDeviceTokenEndpoint;
-  const tokenHeaders = new Headers({
-    Authorization: 'Basic ' + Buffer.from(webexClientId + ':' + webexClientSecret).toString('base64')
-  });
-  const tokenRequest = new Request(tokenUrl, {
-    method: RequestMethod.POST,
-    headers: tokenHeaders,
-    body: new URLSearchParams({ grant_type: webexDeviceGrantType, client_id: webexClientId, device_code: deviceCode })
-  });
+  const credentials = Buffer.from(webexClientId + ':' + webexClientSecret).toString('base64');
+  const tokenRequest = urlEncodedRequest(webexOauthHelpServiceUrl, '', 'Basic', credentials);
 
-  const r = await fetch(tokenRequest);
-
-  return r.ok ? { body: await r.json() } : { status: r.status };
+  return await tokenRequest
+    .post(webexDeviceTokenEndpoint, {
+      client_id: webexClientId,
+      device_code: deviceCode,
+      grant_type: webexDeviceGrantType
+    })
+    .then((r) => ({ body: r as AuthorizeResponse }))
+    .catch((e) => ({ status: 400, message: e }));
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-export async function get(request) {
+export function get(request) {
   switch (request.params?.endpoint) {
     case 'authorize':
-      return await authorize();
+      return authorize();
     case 'token':
-      return await token(request.url.searchParams.get('deviceCode'));
+      return token(request.url.searchParams.get('deviceCode'));
     case 'validateUrl':
       return { body: { validateUrl: webexOauthHelpServiceUrl + webexDeviceValidateEndpoint } };
     default:
