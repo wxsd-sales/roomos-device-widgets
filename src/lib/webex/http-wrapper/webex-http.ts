@@ -33,7 +33,9 @@ export class WebexHttp extends JsonRequest {
       }
     };
 
-    return response.ok ? response.json() : Promise.reject(response).catch((r) => `${onFailure(r)}: ${r}`);
+    return response.ok
+      ? response.json()
+      : Promise.reject(response).catch(async (r) => `${onFailure(r)}: ${await r.json()}`);
   }
 
   /**
