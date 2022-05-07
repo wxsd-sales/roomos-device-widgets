@@ -3,10 +3,10 @@ import { writable } from 'svelte/store';
 import { browser } from '$app/env';
 import type { StateKey } from '../types';
 
-export function storage<V, S extends keyof WindowSessionStorage | keyof WindowLocalStorage>(
+export function storage<V>(
   key: StateKey,
   value?: V,
-  browserStorageName?: S
+  browserStorageName?: keyof WindowSessionStorage | keyof WindowLocalStorage
 ): Writable<V> {
   const store = writable<V>(value);
 
