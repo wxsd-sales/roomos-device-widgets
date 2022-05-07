@@ -11,12 +11,13 @@ export class JsonRequest {
    * @param baseUrl
    * @param resource
    * @param charset
-   * @param accessToken
+   * @param authScheme
+   * @param credentials
    */
-  constructor(baseUrl = '/', resource = '', charset?: string, accessToken?: string) {
-    this.resourceUrl = baseUrl + resource ? '/' + resource : '';
+  constructor(baseUrl = '/', resource = '', charset = 'UTF-8', authScheme = 'Bearer', credentials?: string) {
+    this.resourceUrl = baseUrl + (resource ? '/' + resource : '');
     charset ? this.headers.set('Content-type', 'application/json; ' + charset) : null;
-    accessToken ? this.headers.set('Authorization', 'Bearer ' + accessToken) : null;
+    credentials ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
   }
 
   /**
@@ -142,4 +143,10 @@ export class JsonRequest {
  *
  * @type {JsonRequest}
  */
-export const jsonRequest = new JsonRequest();
+export const jsonRequest = (
+  baseUrl = '/',
+  resource = '',
+  charset = 'UTF-8',
+  authScheme = 'Bearer',
+  credentials?: string
+) => new JsonRequest(baseUrl, resource, charset, authScheme, credentials);
