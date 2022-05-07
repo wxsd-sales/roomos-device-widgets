@@ -10,7 +10,7 @@ export class WebexHttp extends JsonRequest {
    * @param accessToken
    */
   constructor(resource: string, accessToken: string) {
-    super(WEBEX_API_ENDPOINT, resource, 'UTF-8', accessToken);
+    super(WEBEX_API_ENDPOINT, resource, 'UTF-8', 'Bearer', accessToken);
   }
 
   /**
