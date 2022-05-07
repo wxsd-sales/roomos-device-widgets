@@ -12,8 +12,8 @@
 </script>
 
 <div class="container">
-  <div class="columns is-centered is-mobile my-1 py-6">
-    <div class="column is-four-fifths">
+  <div class="columns is-centered m-1 py-6">
+    <div class="column is-four-fifths is-12-mobile">
       <div class="box mb-4 pb-4">
         <h1 class="title">Home</h1>
         <div class="card-content">
