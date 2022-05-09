@@ -65,12 +65,12 @@
 </script>
 
 <div class="columns">
-  <div class="column is-7">
+  <div class="column is-two-fifths">
     <figure class="has-text-centered">
       <img bind:this={qrImage} id="qr-code" alt="Webex QR Code" src="" />
     </figure>
   </div>
-  <div class="column is-5 has-text-centered-mobile is-align-items-center is-flex">
+  <div class="column has-text-centered-mobile is-align-items-center is-flex-tablet">
     <div>
       <p class="is-size-4">Can't scan the QR code?</p>
       <br />
