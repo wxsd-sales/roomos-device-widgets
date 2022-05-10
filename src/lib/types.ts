@@ -17,7 +17,7 @@ export enum StateKey {
   WEBEX = 'webex'
 }
 
-export enum WebexReqErrorPrefix {
+export enum WebexHttpErrorPrefix {
   INVALID_EXPIRED_ACCESS_TOKEN = 'Invalid or expired access token',
   UNEXPECTED_CLIENT_ERROR = 'Unexpected client error',
   UNEXPECTED_ERROR = 'Unexpected error',
