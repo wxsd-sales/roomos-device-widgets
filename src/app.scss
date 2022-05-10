@@ -15,3 +15,9 @@
 @import 'bulma/sass/grid/_all';
 @import 'bulma/sass/helpers/_all';
 @import 'bulma/sass/layout/_all';
+
+html,
+body,
+#app {
+  height: 100%;
+}
