@@ -11,7 +11,7 @@
   let qrImage: HTMLImageElement;
   let tries = 0;
 
-  const jsonRequest = new JsonRequest('/auth', 'device');
+  const jsonRequest = new JsonRequest('/actions', 'device');
   const sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
 
   function authorize() {
