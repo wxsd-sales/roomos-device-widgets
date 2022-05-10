@@ -9,7 +9,7 @@ export enum RequestMethod {
 }
 
 export enum StateKey {
-  CREDENTIALS = 'credentials',
+  WEBEX_OAUTH = 'webexOauth',
   AUTHORIZED_USER = 'authorizedUser',
   EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
   EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',

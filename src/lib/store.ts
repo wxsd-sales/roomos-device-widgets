@@ -12,4 +12,4 @@ export const exampleSessionWritable = sessionStorage<string>(
   'initial-session-storage-value'
 );
 
-export const credentialsSessionWritable = sessionStorage<Json>(StateKey.CREDENTIALS, undefined);
+export const webexOauthSessionWritable = sessionStorage<Json>(StateKey.WEBEX_OAUTH, undefined);

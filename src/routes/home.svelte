@@ -1,6 +1,6 @@
 <script lang="ts">
   import Example from '../components/Example.svelte';
-  import { credentialsSessionWritable } from '../lib/store';
+  import { webexOauthSessionWritable } from '../lib/store';
 </script>
 
 <div class="container">
@@ -10,7 +10,7 @@
         <h1 class="title">Home</h1>
         <div class="card-content">
           <div class="content">You are home!</div>
-          <pre><code>{JSON.stringify($credentialsSessionWritable || {}, null, 2)}</code></pre>
+          <pre><code>{JSON.stringify($webexOauthSessionWritable || {}, null, 2)}</code></pre>
         </div>
       </div>
 
