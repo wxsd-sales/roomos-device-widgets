@@ -9,7 +9,7 @@ export enum RequestMethod {
 }
 
 export enum StateKey {
-  ACCESS_TOKEN = 'accessToken',
+  CREDENTIALS = 'credentials',
   AUTHORIZED_USER = 'authorizedUser',
   EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
   EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',

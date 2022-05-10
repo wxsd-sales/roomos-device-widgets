@@ -4,7 +4,7 @@
   import { onMount } from 'svelte';
   import { JsonRequest } from '../../lib/shared/json-request';
   import type { AuthorizeResponse } from '../../lib/types';
-  import { accessTokenSession } from '../../lib/store';
+  import { credentialsSessionWritable } from '../../lib/store';
 
   let authorizeResponse: AuthorizeResponse;
   let webexDeviceValidateUrl: string;
@@ -37,19 +37,19 @@
 
     const id = setInterval(() => {
       tries = tries + 1;
-      if (tries >= (expiresIn * 1100) / (interval * 1100) || $accessTokenSession) {
+      if (tries >= (expiresIn * 1100) / (interval * 1100) || $credentialsSessionWritable) {
         console.info('Clearing setInterval id:', id);
         clearInterval(id);
       }
 
       token(deviceCode)
-        .then((r) => accessTokenSession.set(r))
+        .then((r) => credentialsSessionWritable.set(r))
         .catch((e) => console.error(e));
     }, interval * 1100);
   }
 
   function init() {
-    accessTokenSession.set(undefined);
+    credentialsSessionWritable.set(undefined);
     return Promise.all([authorize(), validateUrl()])
       .then(([r1, r2]) => {
         authorizeResponse = r1;
@@ -85,10 +85,10 @@
   </div>
 </div>
 
-{#if authorizeResponse && !$accessTokenSession?.access_token}
+{#if authorizeResponse && !$credentialsSessionWritable?.access_token}
   <div class="column is-12 has-text-centered">
     Expires in {((authorizeResponse.expires_in * 1000) / (authorizeResponse.interval * 1000)).toFixed(0) - tries} seconds
   </div>
-{:else if $accessTokenSession}
+{:else if $credentialsSessionWritable}
   <div class="column is-12 has-text-centered has-text-success">Sucess!</div>
 {/if}

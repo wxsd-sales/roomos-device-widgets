@@ -12,4 +12,4 @@ export const exampleSessionWritable = sessionStorage<string>(
   'initial-session-storage-value'
 );
 
-export const accessTokenSession = sessionStorage<Json>(StateKey.ACCESS_TOKEN, undefined);
+export const credentialsSessionWritable = sessionStorage<Json>(StateKey.CREDENTIALS, undefined);
