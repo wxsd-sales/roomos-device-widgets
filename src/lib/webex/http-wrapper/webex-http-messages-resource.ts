@@ -48,4 +48,4 @@ export class WebexHttpMessagesResource extends WebexHttp {
  *
  * @return {WebexHttpMessagesResource}
  */
-export const webexReqMessagesResource = (accessToken: string) => new WebexHttpMessagesResource(accessToken);
+export const webexHttpMessagesResource = (accessToken: string) => new WebexHttpMessagesResource(accessToken);

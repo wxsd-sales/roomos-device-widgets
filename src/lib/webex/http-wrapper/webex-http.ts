@@ -56,4 +56,4 @@ export class WebexHttp extends JsonRequest {
  *
  * @return {WebexHttp}
  */
-export const webexReq = (accessToken: string, resource = '') => new WebexHttp(resource, accessToken);
+export const webexHttp = (accessToken: string, resource = '') => new WebexHttp(resource, accessToken);

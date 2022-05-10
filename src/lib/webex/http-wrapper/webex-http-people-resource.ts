@@ -61,4 +61,4 @@ export class WebexHttpPeopleResource extends WebexHttp {
  *
  * @return {WebexHttpPeopleResource}
  */
-export const webexReqPeopleResource = (accessToken: string) => new WebexHttpPeopleResource(accessToken);
+export const webexHttpPeopleResource = (accessToken: string) => new WebexHttpPeopleResource(accessToken);
