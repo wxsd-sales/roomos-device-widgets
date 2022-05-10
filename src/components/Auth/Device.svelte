@@ -37,7 +37,7 @@
 
     const id = setInterval(() => {
       tries = tries + 1;
-      if (tries >= (expiresIn * 1100) / (interval * 1100) || $webexOauthSessionWritable) {
+      if (tries >= expiresIn / interval || $webexOauthSessionWritable) {
         console.info('Clearing setInterval id:', id);
         clearInterval(id);
       }
@@ -87,7 +87,7 @@
 
 {#if authorizeResponse && !$webexOauthSessionWritable?.access_token}
   <div class="column is-12 has-text-centered">
-    Expires in {((authorizeResponse.expires_in * 1000) / (authorizeResponse.interval * 1000)).toFixed(0) - tries} seconds
+    Expires in {(authorizeResponse.expires_in / authorizeResponse.interval).toFixed(0) - tries} seconds
   </div>
 {:else if $webexOauthSessionWritable}
   <div class="column is-12 has-text-centered has-text-success">Sucess!</div>
