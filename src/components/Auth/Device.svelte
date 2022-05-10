@@ -90,5 +90,5 @@
     Expires in {((authorizeResponse.expires_in * 1000) / (authorizeResponse.interval * 1000)).toFixed(0) - tries} seconds
   </div>
 {:else if $accessTokenSession}
-  <div class="column is-12 has-text-centered has-text-success">Sucess!</div>
+  <div class="column is-12 has-text-centered has-text-success">Success!</div>
 {/if}
