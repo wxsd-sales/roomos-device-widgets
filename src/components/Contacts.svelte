@@ -8,7 +8,7 @@
     <iframe
       src={`https://wxsd-sales.github.io/presence-on-device/?token=${$accessTokenSession.access_token}`}
       frameborder="0"
-      id="iframe"
+      id="contactsIframe"
       title="contacts"
     />
   {:else}
@@ -17,7 +17,7 @@
 </div>
 
 <style>
-  iframe {
+  #contactsIframe {
     width: 100%;
     height: 100%;
     overflow: hidden;
