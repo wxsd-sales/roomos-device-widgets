@@ -1,9 +1,4 @@
-<iframe
-  src={`https://orderlina.menu/marcelas`}
-  frameborder="0"
-  id="foodOrderMenuIframe"
-  title="contacts"
-/>
+<iframe src={`https://orderlina.menu/marcelas`} frameborder="0" id="foodOrderMenuIframe" title="contacts" />
 
 <style>
   #foodOrderMenuIframe {
