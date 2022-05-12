@@ -43,7 +43,7 @@ export class WebexHttp extends JsonRequest {
    *
    * @param response
    */
-  paginate() { 
+  paginate() {
     throw Error('Not Implemented.');
   }
 }

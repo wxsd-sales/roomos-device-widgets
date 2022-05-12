@@ -24,6 +24,9 @@ export const UNMUTE_VIDEO = 'Start Video';
 export const MUTE_SHARE = 'Stop Share';
 export const UNMUTE_SHARE = 'Start Share';
 
+export const MANAGE_CONTACTS = 'Manage Contacts';
+export const VIEW_CONTACTS = 'View Contacts';
+
 export const VALID_UUID = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/;
 export const VALID_ACCESS_TOKEN =
   /^([a-zA-Z0-9]{64})_(.*)_([0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12})$/;
