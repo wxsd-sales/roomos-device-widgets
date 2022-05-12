@@ -1,10 +1,8 @@
 <script lang="ts">
   import { onMount, SvelteComponent } from 'svelte';
-  import type { SvelteElement } from 'svelte/internal';
 
   export let components: Array<typeof SvelteComponent>;
   let Carousel: typeof SvelteComponent;
-  let carousel: typeof SvelteElement;
 
   onMount(async () => {
     const module = await import('svelte-carousel');
@@ -12,12 +10,16 @@
   });
 </script>
 
-<section class="hero">
-  <svelte:component this={Carousel} bind:this={carousel}>
-    {#each components as item}
-      <div class="container p-4">
-        <svelte:component this={item} />
-      </div>
-    {/each}
-  </svelte:component>
-</section>
+<svelte:component this={Carousel}>
+  {#each components as item}
+    <div class="p-2 carouselItem ">
+      <svelte:component this={item} />
+    </div>
+  {/each}
+</svelte:component>
+
+<style>
+  .carouselItem {
+    height: 45rem;
+  }
+</style>
