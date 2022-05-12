@@ -1,4 +1,8 @@
-<iframe src={`https://orderlina.menu/marcelas`} frameborder="0" id="foodOrderMenuIframe" title="contacts" />
+<script>
+  import {FOOD_MENU_URL} from '../lib/constants';
+</script>
+
+<iframe src={FOOD_MENU_URL} frameborder="0" id="foodOrderMenuIframe" title="contacts" />
 
 <style>
   #foodOrderMenuIframe {

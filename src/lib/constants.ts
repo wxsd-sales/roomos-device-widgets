@@ -48,3 +48,5 @@ export const VALID_DESTINATION = new RegExp(
   `(${VALID_MEETING_LINK.source})|(${VALID_PMR_LINK.source})|(${VALID_PMR_ADDRESS.source})|(${VALID_SIP.source})|(${VALID_EMAIL.source})`,
   'i'
 );
+
+export const FOOD_MENU_URL = 'https://orderlina.menu/marcelas';
