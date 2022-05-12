@@ -49,7 +49,6 @@
   }
 
   function init() {
-    accessTokenSession.set(undefined);
     return Promise.all([authorize(), validateUrl()])
       .then(([r1, r2]) => {
         authorizeResponse = r1;
