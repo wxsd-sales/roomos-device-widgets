@@ -50,7 +50,7 @@ export type WebexPeopleListQuery = {
   locationId?: string;
   max?: number;
   showAllTypes?: false;
-}
+};
 
 export type WebexPerson = {
   id: string;
@@ -61,8 +61,8 @@ export type WebexPerson = {
   lastName?: string;
   orgId: string;
   phoneNumbers: Array<string>;
-  status: string,
-}
+  status: WebexUserStatus;
+};
 
 export enum WebexUserStatus {
   ACTIVE = 'active',
@@ -73,5 +73,5 @@ export enum WebexUserStatus {
   OOO = 'OutOfOffice',
   PENDING = 'pending',
   PRESENTING = 'presenting',
-  UNKNOWN = 'unknown',
+  UNKNOWN = 'unknown'
 }

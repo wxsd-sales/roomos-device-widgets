@@ -1,3 +1,5 @@
+import { WebexUserStatus } from "./types";
+
 export const DOC_LINK = 'https://developer.webex.com/docs/getting-started#accounts-and-authentication';
 
 export const WEBEX_API_ENDPOINT = 'https://webexapis.com/v1';
@@ -53,3 +55,13 @@ export const VALID_DESTINATION = new RegExp(
 );
 
 export const FOOD_MENU_URL = 'https://orderlina.menu/marcelas';
+
+export const AVATAR_ICONS = {
+  [WebexUserStatus.CALL]: 'phone-outline',
+  [WebexUserStatus.DND]: 'minus-circle',
+  [WebexUserStatus.MEETING]: 'video',
+  [WebexUserStatus.OOO]: 'airplane',
+  [WebexUserStatus.PENDING]: 'account-clock',
+  [WebexUserStatus.PRESENTING]: 'presentation',
+  [WebexUserStatus.UNKNOWN]: 'help-circle',
+ }  
