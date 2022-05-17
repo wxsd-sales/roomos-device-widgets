@@ -192,8 +192,8 @@
 
   onMount(async () => {
     updateBookingData();
-    // xapi = await roomosJsxapi().initialize();
-    // setTimeout(updateSensorData, 3000);
+    xapi = await roomosJsxapi().initialize();
+    setInterval(updateSensorData, 3000);
   });
 </script>
 
