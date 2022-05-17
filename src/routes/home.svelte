@@ -7,7 +7,7 @@
   let webexUser = {};
 
   onMount(async () => {
-    webexUser = $webexOauthSessionWritable
+    webexUser = $webexOauthSessionWritable?.access_token
       ? await webexHttpPeopleResource($webexOauthSessionWritable.access_token).getMyOwnDetails({ callingData: true })
       : {};
   });
