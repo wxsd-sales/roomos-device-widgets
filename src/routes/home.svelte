@@ -29,16 +29,17 @@
         </div>
       </div>
 
-      {#if import.meta.env.DEV}
-        <div class="box my-4">
-          <h1 class="title">import.meta.env</h1>
-          <div class="card-content">
-            <div class="content">
-              <pre><code>{JSON.stringify(import.meta.env, null, 2)}</code></pre>
-            </div>
-          </div>
-        </div>
-      {/if}
+      <!-- https://github.com/vitejs/vite/issues/3304 -->
+      <!--{#if import.meta.env.DEV}-->
+      <!--  <div class="box my-4">-->
+      <!--    <h1 class="title">import.meta.env</h1>-->
+      <!--    <div class="card-content">-->
+      <!--      <div class="content">-->
+      <!--        <pre><code>{JSON.stringify(import.meta.env || '{}', null, 2)}</code></pre>-->
+      <!--      </div>-->
+      <!--    </div>-->
+      <!--  </div>-->
+      <!--{/if}-->
 
       <div class="box my-4">
         <h1 class="title">Svelte Component</h1>
