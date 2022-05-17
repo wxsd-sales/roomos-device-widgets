@@ -14,7 +14,9 @@ export enum StateKey {
   EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
   EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',
   EXAMPLE_WRITABLE = 'exampleWritable',
-  WEBEX = 'webex'
+  WEBEX = 'webex',
+  CONTACTS_LIST = 'contactsList',
+  WEBEX_PEOPLE_INSTANCE = 'webexPeopleInstance'
 }
 
 export enum WebexHttpErrorPrefix {
@@ -41,4 +43,39 @@ export interface AuthorizeResponse {
   user_code: string;
   verification_uri: string;
   interval: number;
+}
+
+export type WebexPeopleListQuery = {
+  email?: string;
+  displayName?: string;
+  id?: string;
+  orgId?: string;
+  callingData?: boolean;
+  locationId?: string;
+  max?: number;
+  showAllTypes?: false;
+};
+
+export type WebexPerson = {
+  id: string;
+  displayName: string;
+  emails: Array<string>;
+  avatar?: string;
+  firstName?: string;
+  lastName?: string;
+  orgId: string;
+  phoneNumbers: Array<string>;
+  status: WebexUserStatus;
+};
+
+export enum WebexUserStatus {
+  ACTIVE = 'active',
+  CALL = 'call',
+  DND = 'DoNotDisturb',
+  INACTIVE = 'inactive',
+  MEETING = 'meeting',
+  OOO = 'OutOfOffice',
+  PENDING = 'pending',
+  PRESENTING = 'presenting',
+  UNKNOWN = 'unknown'
 }

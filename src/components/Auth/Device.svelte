@@ -49,7 +49,6 @@
   }
 
   function init() {
-    webexOauthSessionWritable.set(undefined);
     return Promise.all([authorize(), validateUrl()])
       .then(([r1, r2]) => {
         authorizeResponse = r1;
@@ -89,6 +88,4 @@
   <div class="column is-12 has-text-centered">
     Expires in {(authorizeResponse.expires_in / authorizeResponse.interval).toFixed(0) - tries} seconds
   </div>
-{:else if $webexOauthSessionWritable}
-  <div class="column is-12 has-text-centered has-text-success">Sucess!</div>
 {/if}

@@ -6,6 +6,7 @@
   import barometer from '@bybas/weather-icons/production/line/all/barometer.svg';
   import smokeParticles from '@bybas/weather-icons/production/line/all/smoke-particles.svg';
   import { roomosJsxapi } from '../../lib/roomos/jsxapi-wrapper/roomos-jsxapi';
+  import Contacts from '../../components/Contacts/index.svelte';
 
   let xapi;
   let bookings: { call: unknown; organizer: unknown; time: unknown; title: string; meetingPlatform: string }[] = [];
@@ -55,60 +56,6 @@
   function updateBookingData() {
     const rawBookings = {
       Booking: [
-        {
-          Agenda: '',
-          BookingStatus: 'OK',
-          BookingStatusMessage: '',
-          Cancellable: 'False',
-          DialInfo: {
-            Calls: {
-              Call: [
-                {
-                  Number: '9b958af7-8f47-3d28-ac10-abad772905d6',
-                  Protocol: 'Spark',
-                  id: 1
-                }
-              ]
-            },
-            ConnectMode: 'OBTP'
-          },
-          Encryption: 'BestEffort',
-          Id: 'webex-16',
-          MaximumMeetingExtension: 30,
-          MeetingExtensionAvailability: 'Guaranteed',
-          MeetingId: '',
-          Organizer: {
-            Email: '',
-            FirstName: 'Ashesh Singh',
-            Id: '8c5cfa04-1b0c-4ab2-be06-1b8c46098005',
-            LastName: ''
-          },
-          Privacy: 'Private',
-          Recording: 'Disabled',
-          Spark: {
-            Alert: 'False',
-            LocusActive: 'True',
-            MeetingType: 'Adhoc',
-            Participants: {},
-            Pending: 'False'
-          },
-          Time: {
-            EndTime: '2022-05-17T19:22:03Z',
-            EndTimeBuffer: 0,
-            StartTime: '2022-05-16T18:22:03Z',
-            StartTimeBuffer: 300
-          },
-          Title: 'Ashesh Singh',
-          Webex: {
-            DialInNumbers: {},
-            Enabled: 'False',
-            HostKey: '',
-            MeetingNumber: '',
-            Password: '',
-            Url: ''
-          },
-          id: 1
-        },
         {
           Agenda: '',
           BookingStatus: 'OK',
@@ -307,23 +254,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child box is-translucent-black has-text-white">
-            <p class="title is-size-4">Presense</p>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam semper diam at erat pulvinar, at pulvinar
-              felis blandit. Vestibulum volutpat tellus diam, consequat gravida libero rhoncus ut. Morbi maximus, leo
-              sit amet vehicula eleifend, nunc dui porta orci, quis semper odio felis ut quam.
-            </p>
-            <p>
-              Suspendisse varius ligula in molestie lacinia. Maecenas varius eget ligula a sagittis. Pellentesque
-              interdum, nisl nec interdum maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet
-              erat. Maecenas imperdiet felis nisi, fringilla luctus felis hendrerit sit amet. Aenean vitae gravida diam,
-              finibus dignissim turpis. Sed eget varius ligula, at volutpat tortor.
-            </p>
-            <p>
-              Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor
-              consequat libero. Donec leo ligula, maximus et pellentesque sed, gravida a metus. Cras ullamcorper a nunc
-              ac porta. Aliquam ut aliquet lacus, quis faucibus libero. Quisque non semper leo.
-            </p>
+            <Contacts />
           </div>
         </div>
         <div class="tile is-5 is-vertical is-parent">
@@ -420,18 +351,6 @@
 </section>
 
 <style>
-  /** {*/
-  /*  outline: lightgrey dashed 1px;*/
-  /*}*/
-  /*.container {*/
-  /*  outline: lightgreen dashed 4px;*/
-  /*}*/
-  /*.columns {*/
-  /*  outline: lightskyblue dashed 3px;*/
-  /*}*/
-  /*.column {*/
-  /*  outline: lightblue dashed 2px;*/
-  /*}*/
   .is-brand-title {
     font-size: 4.35rem;
   }
@@ -447,20 +366,9 @@
     left: 0;
     filter: brightness(60%);
   }
-  .is-translucent-white {
-    background-color: hsl(0, 0%, 100%, 0.6);
-    box-shadow: none;
-  }
+
   .is-translucent-black {
-    background-color: hsl(0, 0%, 0%, 0.4);
+    background-color: hsl(0, 0%, 0%, 0.65);
     box-shadow: none;
-  }
-  .is-overflow-ellipse {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .is-inline-grid {
-    display: inline-grid;
   }
 </style>

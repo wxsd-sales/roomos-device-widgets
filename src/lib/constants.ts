@@ -1,3 +1,5 @@
+import { WebexUserStatus } from './types';
+
 export const DOC_LINK = 'https://developer.webex.com/docs/getting-started#accounts-and-authentication';
 
 export const WEBEX_API_ENDPOINT = 'https://webexapis.com/v1';
@@ -24,6 +26,9 @@ export const UNMUTE_VIDEO = 'Start Video';
 export const MUTE_SHARE = 'Stop Share';
 export const UNMUTE_SHARE = 'Start Share';
 
+export const MANAGE_CONTACTS = 'Manage Contacts';
+export const VIEW_CONTACTS = 'View Contacts';
+
 export const VALID_UUID = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/;
 export const VALID_ACCESS_TOKEN =
   /^([a-zA-Z0-9]{64})_(.*)_([0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12})$/;
@@ -48,3 +53,15 @@ export const VALID_DESTINATION = new RegExp(
   `(${VALID_MEETING_LINK.source})|(${VALID_PMR_LINK.source})|(${VALID_PMR_ADDRESS.source})|(${VALID_SIP.source})|(${VALID_EMAIL.source})`,
   'i'
 );
+
+export const FOOD_MENU_URL = 'https://orderlina.menu/marcelas';
+
+export const AVATAR_ICONS = {
+  [WebexUserStatus.CALL]: 'phone-outline',
+  [WebexUserStatus.DND]: 'minus-circle',
+  [WebexUserStatus.MEETING]: 'video',
+  [WebexUserStatus.OOO]: 'airplane',
+  [WebexUserStatus.PENDING]: 'account-clock',
+  [WebexUserStatus.PRESENTING]: 'presentation',
+  [WebexUserStatus.UNKNOWN]: 'help-circle'
+};

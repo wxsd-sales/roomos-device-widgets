@@ -1,5 +1,5 @@
 import { WebexHttp } from './webex-http';
-import type { Json } from '../../types';
+import type { Json, WebexPeopleListQuery } from '../../types';
 
 export class WebexHttpPeopleResource extends WebexHttp {
   /**
@@ -41,15 +41,7 @@ export class WebexHttpPeopleResource extends WebexHttp {
    *
    * @return {Promise<Json[] | string>}
    */
-  listPeople(query?: {
-    email?: string;
-    displayName?: string;
-    id?: string;
-    orgId?: string;
-    callingData?: boolean;
-    locationId?: string;
-    max?: number;
-  }) {
+  listPeople(query?: WebexPeopleListQuery) {
     return this.get(undefined, query).then((r: { items: Json[] }) => r.items);
   }
 }

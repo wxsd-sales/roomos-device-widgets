@@ -5,7 +5,6 @@
 
 // Fonts
 @import '@mdi/font/css/materialdesignicons.css'; // SCSS import not working at the moment
-@import 'weather-icons/css/weather-icons.css';
 
 // Import Bulma styles
 @import 'bulma/sass/utilities/_all';
@@ -16,3 +15,39 @@
 @import 'bulma/sass/grid/_all';
 @import 'bulma/sass/helpers/_all';
 @import 'bulma/sass/layout/_all';
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+//* {
+//  outline: lightgrey dashed 1px;
+//}
+//.container {
+//  outline: lightgreen dashed 4px;
+//}
+//.columns {
+//  outline: lightskyblue dashed 3px;
+//}
+//.column {
+//  outline: lightblue dashed 2px;
+//}
+
+.is-translucent-white {
+  background-color: hsl(0, 0%, 100%, 0.65);
+  box-shadow: none;
+}
+.is-translucent-black {
+  background-color: hsl(0, 0%, 0%, 0.65);
+  box-shadow: none;
+}
+.is-overflow-ellipse {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.is-inline-grid {
+  display: inline-grid;
+}
