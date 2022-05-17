@@ -31,6 +31,10 @@ export enum WebexSdkErrorPrefix {
   START_MEETING = 'Could not start meeting'
 }
 
+export enum RoomosJsxapiErrorPrefix {
+  INITIALIZATION = 'Could not initialize RoomOS JSXAPI'
+}
+
 export interface AuthorizeResponse {
   device_code: string;
   expires_in: number;
