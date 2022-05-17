@@ -10,7 +10,7 @@ export enum RequestMethod {
 
 export enum StateKey {
   WEBEX_OAUTH = 'webexOauth',
-  AUTHORIZED_USER = 'authorizedUser',
+  WEBEX_USER = 'webexUser',
   EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
   EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',
   EXAMPLE_WRITABLE = 'exampleWritable',
