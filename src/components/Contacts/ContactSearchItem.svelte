@@ -6,11 +6,11 @@
   export let selectPerson: unknown;
 </script>
 
-<div class="columns is-align-items-center contactsSearchItem" on:click={selectPerson(person)}>
-  <div class="column is-one-fifth">
+<div class="columns is-align-items-center contactsSearchItem is-mobile" on:click={selectPerson(person)}>
+  <div class="column is-1-tablet is-2-mobile">
     <Avatar {person} size={3} />
   </div>
-  <div style="align-items: center" class="column is-fourth-fifths">
+  <div class="column is-11-tablet is-10-mobile">
     <p class="is-size-4">{person.displayName}</p>
   </div>
 </div>

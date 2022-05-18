@@ -1,4 +1,5 @@
-/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */ /* Import only what you need from Bulma */
+/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */
+/* Import only what you need from Bulma */
 
 // Variables
 @import 'variables';
@@ -39,15 +40,18 @@ body,
   background-color: hsl(0, 0%, 100%, 0.65);
   box-shadow: none;
 }
+
 .is-translucent-black {
   background-color: hsl(0, 0%, 0%, 0.65);
   box-shadow: none;
 }
+
 .is-overflow-ellipse {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .is-inline-grid {
   display: inline-grid;
 }

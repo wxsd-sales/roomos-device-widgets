@@ -18,7 +18,12 @@
     .join(';');
 </script>
 
-<figure class="image is-128*128 avatarContainer" style={cssVarStyles}>
+<figure class="image is-64x64">
+  <img src="https://bulma.io/images/placeholders/64x64.png" />
+</figure>
+
+<!-- <img src="https://bulma.io/images/placeholders/64x64.png" /> -->
+<!-- <figure class="image is-64x64" style={cssVarStyles}>
   {#if person.avatar}
     <img class={`is-rounded avatar ${person.status}`} src={person.avatar} alt={person.displayName} />
   {:else}
@@ -29,17 +34,13 @@
   <span class="icon iconContainer has-text-danger">
     <i class={`mdi mdi-light mdi-36px mdi-${AVATAR_ICONS[person.status]}`} />
   </span>
-</figure>
+</figure> -->
 
-<style>
-  .avatarContainer {
-    position: relative;
-    align-items: center;
-  }
+<!-- <style>
   .avatar {
     display: block;
-    width: var(--width);
-    height: var(--height);
+    /* width: var(--width);
+    height: var(--height); */
   }
 
   .initials {
@@ -48,8 +49,8 @@
     align-items: center;
     background-color: gray;
     color: white;
-    width: var(--width);
-    height: var(--height);
+    /* width: var(--width);
+    height: var(--height); */
     border-radius: 50%;
   }
 
@@ -68,4 +69,4 @@
   .inactive {
     opacity: 0.5;
   }
-</style>
+</style> -->

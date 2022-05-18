@@ -11,6 +11,7 @@
   let searchIsLoading = people.length !== 0;
 
   const searchPeople = async (event) => {
+    searchIsLoading = true;
     const input = event.target.value;
     const option: WebexPeopleListQuery = {
       showAllTypes: false,
@@ -23,7 +24,7 @@
     }
 
     people = ((await $webexPeopleInstanceMemory.listPeople(option)) as Array<WebexPerson>) || [];
-    searchIsLoading = true;
+    searchIsLoading = false;
   };
 
   const selectPerson = (person: WebexPerson) => {
@@ -36,7 +37,7 @@
 
 <div class="container">
   <div class="field">
-    <p class="control has-icons-right">
+    <div class:is-loading={searchIsLoading} class="control is-medium">
       <input
         class="input is-medium"
         type="text"
@@ -44,10 +45,7 @@
         bind:this={inputField}
         on:input={searchPeople}
       />
-      {#if searchIsLoading}
-        <span class="icon is-small is-right loader is-loading" />
-      {/if}
-    </p>
+    </div>
   </div>
   {#if people.length}
     <div class="box">
@@ -57,11 +55,3 @@
     </div>
   {:else if false}{/if}
 </div>
-
-<style>
-  .loader {
-    height: 1rem !important;
-    width: 1rem !important;
-    margin: 1rem;
-  }
-</style>
