@@ -231,11 +231,7 @@ export class WebexSdkMeetingsPlugin {
       // Get our local media stream and add it to the meeting
       return meeting.getMediaStreams(mediaSettings).then((mediaStreams) => {
         const [localStream, localShare] = mediaStreams;
-        meeting.addMedia({
-          localShare,
-          localStream,
-          mediaSettings
-        });
+        meeting.addMedia({ localShare, localStream, mediaSettings });
       });
     });
   }

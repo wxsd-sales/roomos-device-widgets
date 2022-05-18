@@ -9,8 +9,8 @@ export enum RequestMethod {
 }
 
 export enum StateKey {
-  ACCESS_TOKEN = 'accessToken',
-  AUTHORIZED_USER = 'authorizedUser',
+  WEBEX_OAUTH = 'webexOauth',
+  WEBEX_USER = 'webexUser',
   EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
   EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',
   EXAMPLE_WRITABLE = 'exampleWritable',
@@ -19,7 +19,7 @@ export enum StateKey {
   WEBEX_PEOPLE_INSTANCE = 'webexPeopleInstance'
 }
 
-export enum WebexReqErrorPrefix {
+export enum WebexHttpErrorPrefix {
   INVALID_EXPIRED_ACCESS_TOKEN = 'Invalid or expired access token',
   UNEXPECTED_CLIENT_ERROR = 'Unexpected client error',
   UNEXPECTED_ERROR = 'Unexpected error',
@@ -31,6 +31,10 @@ export enum WebexSdkErrorPrefix {
   INITIALIZE_MEETINGS = 'Could not initialize meetings plugin',
   LISTEN_MESSAGES = 'Could not listen for messages',
   START_MEETING = 'Could not start meeting'
+}
+
+export enum RoomosJsxapiErrorPrefix {
+  INITIALIZATION = 'Could not initialize RoomOS JSXAPI'
 }
 
 export interface AuthorizeResponse {

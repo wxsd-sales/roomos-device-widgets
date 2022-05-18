@@ -1,6 +1,6 @@
 import { JsonRequest } from '../../shared/json-request';
 import { WEBEX_API_ENDPOINT } from '../../constants';
-import { WebexReqErrorPrefix } from '../../types';
+import { WebexHttpErrorPrefix } from '../../types';
 
 export class WebexHttp extends JsonRequest {
   /**
@@ -23,13 +23,13 @@ export class WebexHttp extends JsonRequest {
   protected handleResponse(response: Response) {
     const onFailure = (r: Response) => {
       if (r?.status === 401) {
-        return WebexReqErrorPrefix.INVALID_EXPIRED_ACCESS_TOKEN;
+        return WebexHttpErrorPrefix.INVALID_EXPIRED_ACCESS_TOKEN;
       } else if (r?.status >= 500) {
-        return WebexReqErrorPrefix.UNEXPECTED_SERVER_ERROR;
+        return WebexHttpErrorPrefix.UNEXPECTED_SERVER_ERROR;
       } else if (r?.status >= 400) {
-        return WebexReqErrorPrefix.UNEXPECTED_CLIENT_ERROR;
+        return WebexHttpErrorPrefix.UNEXPECTED_CLIENT_ERROR;
       } else {
-        return WebexReqErrorPrefix.UNEXPECTED_ERROR;
+        return WebexHttpErrorPrefix.UNEXPECTED_ERROR;
       }
     };
 
@@ -56,4 +56,4 @@ export class WebexHttp extends JsonRequest {
  *
  * @return {WebexHttp}
  */
-export const webexReq = (accessToken: string, resource = '') => new WebexHttp(resource, accessToken);
+export const webexHttp = (accessToken: string, resource = '') => new WebexHttp(resource, accessToken);

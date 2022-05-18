@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { accessTokenSession } from '../../lib/store';
+  import { webexOauthSessionWritable } from '../../lib/store';
   import Device from '../Auth/Device.svelte';
   import Content from './Content.svelte';
 </script>
 
-{#if $accessTokenSession}
+{#if $webexOauthSessionWritable}
   <Content />
 {:else}
   <Device />

@@ -55,7 +55,7 @@
   };
 </script>
 
-<div class="hero tile m-4 p-4">
+<div class="hero tile">
   {#if displayInputs}
     <form
       class="is-flex is-flex-direction-column is-justify-content-space-between tile"
@@ -65,7 +65,7 @@
         Text a video chat link to a family member. Enter their mobile number and click the invite button.
       </p>
       <input
-        class="input"
+        class="input mb-4"
         placeholder="From"
         type="text"
         bind:value={fromInputValue}
@@ -73,21 +73,21 @@
         on:input={handleFromChange}
       />
       <MaskedInput
-        class="input"
+        class="input mb-4"
         options={phoneNumberOption}
         placeholder="+1 (XXX) - XXX - XXXX"
         type="tel"
         on:input={handlePhoneChange}
         bind:value={phoneInputValue}
       />
-      <button class="button is-success is-size-4" {disabled}>Send Invitation</button>
+      <button class="button is-success is-rounded is-large" {disabled}>Send Invitation</button>
     </form>
   {:else}
     <div class="is-flex is-flex-direction-column is-justify-content-space-between has-text-centered tile">
-      <p class="title">Video chat invite sent!</p>
+      <p class="title mb-6">Video chat invite sent!</p>
       <p class="subtitle">{`to ${phoneInputValue} from ${fromInputValue}`}</p>
       <button
-        class="button is-success is-size-4"
+        class="button is-success is-rounded is-large"
         on:click={() => {
           window.location.href = `sip:${sipAddress}`;
         }}>Join</button

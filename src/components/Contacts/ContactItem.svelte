@@ -1,6 +1,5 @@
 <script lang="ts">
   import Avatar from '../Avatar.svelte';
-  import { onMount } from 'svelte';
   import type { WebexPerson } from '$lib/types';
 
   export let person: WebexPerson;
@@ -10,17 +9,20 @@
   };
 </script>
 
-<div class="box">
-  <div class="columns">
-    <div class="column is-1">
-      <Avatar {person} size={4} />
-    </div>
-    <div class="column is-10">
-      <p class="title">{person.displayName}</p>
-      <p class="subtitle">{person.emails[0]}</p>
-    </div>
-    <div class="column is-1">
-      <button class="button is-success" on:click={makeSIPCall}>Call</button>
-    </div>
+<div class="columns is-vcentered">
+  <div class="column">
+    <Avatar {person} size={4} />
+  </div>
+  <div class="column is-7">
+    <p class="title is-size-3">{person.displayName}</p>
+    <p class="subtitle is-size-5">{person.emails[0]}</p>
+  </div>
+  <div class="column is-3">
+    <button class="button is-success is-fullwidth is-rounded is-large" on:click={makeSIPCall}>
+      <span class="icon is-large">
+        <i class="mdi mdi-phone" />
+      </span>
+      <span>Call</span>
+    </button>
   </div>
 </div>

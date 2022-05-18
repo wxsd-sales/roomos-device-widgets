@@ -1,7 +1,7 @@
 import { localStorage, sessionStorage, storage } from './shared/storage';
 import { StateKey, type WebexPerson } from './types';
 import type { Json } from './types';
-import { WebexHttpPeopleResource } from './webex/http-wrapper/webex-http-people-resource';
+import type { WebexHttpPeopleResource } from './webex/http-wrapper/webex-http-people-resource';
 
 export const exampleWritable = storage<string>(StateKey.EXAMPLE_WRITABLE, 'example-writable-value');
 export const exampleLocalWritable = localStorage<string>(
@@ -13,7 +13,7 @@ export const exampleSessionWritable = sessionStorage<string>(
   'initial-session-storage-value'
 );
 
-export const accessTokenSession = sessionStorage<Json>(StateKey.ACCESS_TOKEN, undefined);
+export const webexOauthSessionWritable = sessionStorage<Json>(StateKey.WEBEX_OAUTH, undefined);
 
 export const contactsListSession = sessionStorage<Array<WebexPerson>>(StateKey.CONTACTS_LIST, []);
 

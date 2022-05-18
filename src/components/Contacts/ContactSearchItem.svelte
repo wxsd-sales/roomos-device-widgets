@@ -3,7 +3,7 @@
   import Avatar from '../Avatar.svelte';
 
   export let person: WebexPerson;
-  export let selectPerson: Function;
+  export let selectPerson: unknown;
 </script>
 
 <div class="columns is-align-items-center contactsSearchItem" on:click={selectPerson(person)}>

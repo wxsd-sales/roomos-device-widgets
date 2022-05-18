@@ -14,10 +14,12 @@ export class JsonRequest extends FetchWrapper {
    * @param authScheme
    * @param credentials
    */
-  constructor(baseUrl = '/', resource = '', authScheme = 'Bearer', credentials?: string, charset?: string) {
+  constructor(baseUrl = '/', resource = '', charset?: string, authScheme?: string, credentials?: string) {
     super(baseUrl, resource, authScheme, credentials);
     this.resourceUrl = baseUrl + (resource ? '/' + resource : '');
-    charset ? this.headers.set('Content-type', 'application/json; ' + charset) : this.headers.set('Content-type', 'application/json');
+    charset
+      ? this.headers.set('Content-type', 'application/json' + ';' + charset)
+      : this.headers.set('Content-type', 'application/json');
     credentials ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
   }
 
@@ -41,7 +43,7 @@ export class JsonRequest extends FetchWrapper {
 export const jsonRequest = (
   baseUrl = '/',
   resource = '',
-  charset = undefined,
-  authScheme = 'Bearer',
+  charset?: string,
+  authScheme?: string,
   credentials?: string
 ) => new JsonRequest(baseUrl, resource, authScheme, credentials, charset);
