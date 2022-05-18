@@ -259,7 +259,7 @@
           </div>
         </div>
         <div class="tile is-5 is-vertical is-parent">
-          <div class="tile is-child has-text-white box is-translucent-black">
+          <div class="tile is-child has-text-white box is-translucent-black" id="sms-title">
             <GuestDemoSmsInvitation />
           </div>
           <div class="tile is-child has-text-white box is-translucent-black">
@@ -362,5 +362,8 @@
   .is-translucent-black {
     background-color: hsl(0, 0%, 0%, 0.8);
     box-shadow: none;
+  }
+  #sms-title {
+    min-height: 210px;
   }
 </style>

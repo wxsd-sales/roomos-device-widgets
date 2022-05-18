@@ -55,46 +55,49 @@
   };
 </script>
 
-<div class="hero tile">
-  {#if displayInputs}
-    <form
-      class="is-flex is-flex-direction-column is-justify-content-space-between tile"
-      on:submit|preventDefault={sendInvites}
-    >
-      <p class="subtitle mb-1">Text a video chat link to a guest.</p>
+{#if displayInputs}
+  <form class="" on:submit|preventDefault={sendInvites}>
+    <p class="title is-size-4">Text a video chat link to a guest</p>
+    <div class="field control">
       <input
-        class="input mb-2 is-rounded is-medium"
+        class="input is-rounded is-medium"
         placeholder="From"
         type="text"
         bind:value={fromInputValue}
         required
         on:input={handleFromChange}
       />
-      <MaskedInput
-        class="input mb-2 is-rounded is-medium"
-        options={phoneNumberOption}
-        placeholder="+1 (XXX) - XXX - XXXX"
-        type="tel"
-        on:input={handlePhoneChange}
-        bind:value={phoneInputValue}
-      />
-      <button class="button is-success is-rounded is-medium" {disabled}>
-        <span class="icon">
-          <i class="mdi mdi-message-text-fast" />
-        </span>
-        <span>Send Invitation</span>
-      </button>
-    </form>
-  {:else}
-    <div class="is-flex is-flex-direction-column is-justify-content-space-between has-text-centered tile">
-      <p class="title mb-6">Video chat invite sent!</p>
-      <p class="subtitle">{`to ${phoneInputValue} from ${fromInputValue}`}</p>
-      <button
-        class="button is-success is-rounded is-medium"
-        on:click={() => {
-          window.location.href = `sip:${sipAddress}`;
-        }}>Join</button
-      >
     </div>
-  {/if}
-</div>
+    <div class="columns is-centered">
+      <div class="column is-7">
+        <MaskedInput
+          class="input is-rounded is-medium control"
+          options={phoneNumberOption}
+          placeholder="+1 (XXX) - XXX - XXXX"
+          type="tel"
+          on:input={handlePhoneChange}
+          bind:value={phoneInputValue}
+        />
+      </div>
+      <div class="column is-centered has-text-centered">
+        <button class="button is-success is-rounded is-medium is-fullwidth" {disabled}>
+          <span class="icon">
+            <i class="mdi mdi-message-text-fast" />
+          </span>
+          <span>Send Invite</span>
+        </button>
+      </div>
+    </div>
+  </form>
+{:else}
+  <p class="title is-size-4 has-text-centered">Video chat invite sent!</p>
+  <p class="subtitle has-text-centered mb-6">
+    {`A video chat link was sent to ${phoneInputValue}.`}
+  </p>
+  <button
+    class="button is-success is-rounded is-medium is-fullwidth mt-6"
+    on:click={() => {
+      window.location.href = `sip:${sipAddress}`;
+    }}>Join</button
+  >
+{/if}
