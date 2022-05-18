@@ -100,3 +100,9 @@
     </div>
   {/if}
 </div>
+
+<style>
+  #qr-code {
+    border-radius: 0.25rem;
+  }
+</style>
