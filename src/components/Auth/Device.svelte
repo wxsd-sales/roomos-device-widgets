@@ -82,7 +82,7 @@
         </code> and enter code:
       </p>
       <br />
-      <code id="user-code" class="subtitle has-text-weight-semibold">{authorizeResponse?.user_code}</code>
+      <code id="user-code" class="subtitle has-text-weight-semibold has-text-link">{authorizeResponse?.user_code}</code>
     </div>
   </div>
   {#if authorizeResponse && !$webexOauthSessionWritable?.access_token && expired === false}
