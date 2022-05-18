@@ -1,4 +1,4 @@
-import { WebexUserStatus } from "./types";
+import { WebexUserStatus } from './types';
 
 export const DOC_LINK = 'https://developer.webex.com/docs/getting-started#accounts-and-authentication';
 
@@ -63,5 +63,9 @@ export const AVATAR_ICONS = {
   [WebexUserStatus.OOO]: 'airplane',
   [WebexUserStatus.PENDING]: 'account-clock',
   [WebexUserStatus.PRESENTING]: 'presentation',
-  [WebexUserStatus.UNKNOWN]: 'help-circle',
- }  
+  [WebexUserStatus.UNKNOWN]: 'help-circle'
+};
+
+export const GUEST_DEMO_SERVER_URL = 'https://wxsd.wbx.ninja/wxsd-guest-demo';
+
+export const IMI_CONNECT_SMS_HOOK_URL = 'https://hooks-us.imiconnect.io/events';

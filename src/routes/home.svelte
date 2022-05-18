@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Contacts from '../components/Contacts/index.svelte';
+  import GuestDemoSmsInvitation from '../components/GuestDemoSMSInvitation.svelte';
 </script>
 
 <!-- <div class="container">
@@ -36,6 +36,6 @@
   </div>
 </div> -->
 
-<div class="hero is-fullheight columns is-centered m-8">
-  <Contacts />
+<div class="hero is-fullheight is-centered m-8">
+  <GuestDemoSmsInvitation />
 </div>

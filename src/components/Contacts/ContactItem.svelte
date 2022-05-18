@@ -1,7 +1,7 @@
 <script lang="ts">
   import Avatar from '../Avatar.svelte';
   import { onMount } from 'svelte';
-  import type {WebexPerson} from '$lib/types';
+  import type { WebexPerson } from '$lib/types';
 
   export let person: WebexPerson;
 
@@ -13,10 +13,7 @@
 <div class="box">
   <div class="columns">
     <div class="column is-1">
-      <Avatar
-        person={person}
-        size={4}
-      />
+      <Avatar {person} size={4} />
     </div>
     <div class="column is-10">
       <p class="title">{person.displayName}</p>

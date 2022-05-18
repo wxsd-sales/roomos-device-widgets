@@ -46,6 +46,8 @@
   },
   "type": "module",
   "dependencies": {
+    "libphonenumber-js": "^1.9.53",
+    "svelte-imask": "^1.2.0",
     "validator": "^13.7.0"
   }
 }

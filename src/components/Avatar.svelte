@@ -1,8 +1,8 @@
 <script lang="ts">
   import { WebexUserStatus } from '$lib/types';
   import type { WebexPerson } from '$lib/types';
-  import {contactsListSession} from '$lib/store';
-import { AVATAR_ICONS } from '$lib/constants';
+  import { contactsListSession } from '$lib/store';
+  import { AVATAR_ICONS } from '$lib/constants';
 
   export let person: WebexPerson;
   export let size: number;
@@ -16,7 +16,6 @@ import { AVATAR_ICONS } from '$lib/constants';
   $: cssVarStyles = Object.entries(styles)
     .map(([key, value]) => `--${key}:${value}`)
     .join(';');
-
 </script>
 
 <figure class="image is-128*128 avatarContainer" style={cssVarStyles}>

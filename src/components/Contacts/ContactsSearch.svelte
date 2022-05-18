@@ -21,7 +21,7 @@
     } else {
       option.displayName = input;
     }
-    
+
     people = ((await $webexPeopleInstanceMemory.listPeople(option)) as Array<WebexPerson>) || [];
     searchIsLoading = true;
   };
@@ -37,10 +37,16 @@
 <div class="container">
   <div class="field">
     <p class="control has-icons-right">
-      <input class="input is-medium" type="text" placeholder="Search...." bind:this={inputField} on:input={searchPeople} />
-        {#if searchIsLoading}
-          <span class="icon is-small is-right loader is-loading" />
-        {/if}
+      <input
+        class="input is-medium"
+        type="text"
+        placeholder="Search...."
+        bind:this={inputField}
+        on:input={searchPeople}
+      />
+      {#if searchIsLoading}
+        <span class="icon is-small is-right loader is-loading" />
+      {/if}
     </p>
   </div>
   {#if people.length}
@@ -49,12 +55,11 @@
         <ContactSearchItem {person} {selectPerson} />
       {/each}
     </div>
-  {:else if false}
-  {/if}
+  {:else if false}{/if}
 </div>
 
 <style>
- .loader {
+  .loader {
     height: 1rem !important;
     width: 1rem !important;
     margin: 1rem;
