@@ -61,11 +61,9 @@
       class="is-flex is-flex-direction-column is-justify-content-space-between tile"
       on:submit|preventDefault={sendInvites}
     >
-      <p class="subtitle">
-        Text a video chat link to a family member. Enter their mobile number and click the invite button.
-      </p>
+      <p class="subtitle mb-1">Text a video chat link to a guest.</p>
       <input
-        class="input mb-4"
+        class="input mb-2 is-rounded is-medium"
         placeholder="From"
         type="text"
         bind:value={fromInputValue}
@@ -73,21 +71,26 @@
         on:input={handleFromChange}
       />
       <MaskedInput
-        class="input mb-4"
+        class="input mb-2 is-rounded is-medium"
         options={phoneNumberOption}
         placeholder="+1 (XXX) - XXX - XXXX"
         type="tel"
         on:input={handlePhoneChange}
         bind:value={phoneInputValue}
       />
-      <button class="button is-success is-rounded is-large" {disabled}>Send Invitation</button>
+      <button class="button is-success is-rounded is-medium" {disabled}>
+        <span class="icon">
+          <i class="mdi mdi-message-text-fast" />
+        </span>
+        <span>Send Invitation</span>
+      </button>
     </form>
   {:else}
     <div class="is-flex is-flex-direction-column is-justify-content-space-between has-text-centered tile">
       <p class="title mb-6">Video chat invite sent!</p>
       <p class="subtitle">{`to ${phoneInputValue} from ${fromInputValue}`}</p>
       <button
-        class="button is-success is-rounded is-large"
+        class="button is-success is-rounded is-medium"
         on:click={() => {
           window.location.href = `sip:${sipAddress}`;
         }}>Join</button

@@ -91,7 +91,7 @@
     </div>
   {:else}
     <div class="column is-12 has-text-centered">
-      <button class="button is-active is-info is-rounded is-large" on:click={init}>
+      <button class="button is-active is-info is-rounded is-medium" on:click={init}>
         <span class="icon">
           <i class="mdi mdi-qrcode-plus" />
         </span>

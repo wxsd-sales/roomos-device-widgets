@@ -287,7 +287,7 @@
                 <div class="column is-4 is-center">
                   <button
                     on:click={dial(booking.call.Number, booking.meetingPlatform)}
-                    class="button is-success is-rounded is-large is-fullwidth"
+                    class="button is-success is-rounded is-medium is-fullwidth"
                   >
                     Join
                   </button>
@@ -302,11 +302,6 @@
                 <figure class="level-left image is-48x48"><img src={smokeParticles} alt="air-quality-index" /></figure>
                 {peripheralsAirQuality || '?'}
               </div>
-            </div>
-            <div class="columns is-mobile is-vcentered level">
-              <div class="column"><progress class="progress is-small is-success" value="25" max="25" /></div>
-              <div class="column"><progress class="progress is-large is-warning" value="25" max="25" /></div>
-              <div class="column"><progress class="progress is-small is-danger" value="25" max="25" /></div>
             </div>
             <div class="level is-mobile">
               <div class="level-item has-text-centered">
