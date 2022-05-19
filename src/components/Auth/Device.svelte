@@ -2,7 +2,7 @@
   import jsSHA from 'jssha/dist/sha3';
   import QRCode from 'qrcode';
   import { onMount } from 'svelte';
-  import { JsonRequest } from '../../lib/shared/json-request';
+  import { jsonRequest } from '../../lib/shared/json-request';
   import type { AuthorizeResponse } from '../../lib/types';
   import { webexOauthSessionWritable } from '../../lib/store';
 
@@ -12,19 +12,19 @@
   let tries = 0;
   let expired = true;
 
-  const jsonRequest = new JsonRequest('/actions', 'device');
+  const authRequest = jsonRequest('/actions', 'device');
   const sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
 
   function authorize() {
-    return jsonRequest.get('authorize');
+    return authRequest.get('authorize');
   }
 
   function token(deviceCode: string) {
-    return jsonRequest.get('token', { deviceCode: deviceCode });
+    return authRequest.get('token', { deviceCode: deviceCode });
   }
 
   function validateUrl() {
-    return jsonRequest.get('validateUrl');
+    return authRequest.get('validateUrl');
   }
 
   function updateQrCode(webexDeviceValidateUrl, imageElement) {
