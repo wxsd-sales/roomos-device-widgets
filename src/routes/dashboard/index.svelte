@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import overcastDay from '@bybas/weather-icons/production/line/all/overcast-day.svg';
+  import cloudy from '@bybas/weather-icons/production/line/openweathermap/03n.svg';
   import thermometer from '@bybas/weather-icons/production/line/all/thermometer.svg';
   import humidity from '@bybas/weather-icons/production/line/all/humidity.svg';
   import barometer from '@bybas/weather-icons/production/line/all/barometer.svg';
@@ -8,6 +8,10 @@
   import { roomosJsxapi } from '../../lib/roomos/jsxapi-wrapper/roomos-jsxapi';
   import Contacts from '../../components/Contacts/index.svelte';
   import GuestDemoSmsInvitation from '../../components/GuestDemoSMSInvitation.svelte';
+  import { jsonRequest } from '../../lib/shared/json-request';
+  import { page } from '$app/stores';
+  import { siMicrosoftteams } from 'simple-icons/icons';
+  import { siGooglemeet } from 'simple-icons/icons';
 
   let xapi;
   let bookings: { call: unknown; organizer: unknown; time: unknown; title: string; meetingPlatform: string }[] = [];
@@ -19,29 +23,47 @@
   let peripheralsAmbientNoise: number;
   let ambientSound: number;
   let peripheralsAirQuality: string;
+  let deviceSerial: string;
+  const cityId = $page.url.searchParams.get('id') || 4887398;
+  const units = $page.url.searchParams.get('units') || 'imperial';
+  const brandTitle = $page.url.searchParams.get('brandTitle') || import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco';
+  const brandSubtitle = $page.url.searchParams.get('brandSubtitle') || import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco';
+  let weather = {
+    place: 'Chicago, IL',
+    timezone: -18000,
+    temp: 56.8,
+    tempMin: 49.77,
+    tempMax: 55.65,
+    main: 'Clouds',
+    icon: cloudy
+  };
+
+  function convertToF(celsius) {
+    return (celsius * 9) / 5 + 32;
+  }
 
   async function updateSensorData() {
     [ambientTemperature, peripheralsAmbientTemperature] = await Promise.all(
       [
         xapi.Status.RoomAnalytics.AmbientTemperature.get(),
         xapi.Status.Peripherals.ConnectedDevice.RoomAnalytics.AmbientTemperature.get()
-      ].map((p) => p.catch(() => -1))
+      ].map((p) => p.catch(() => -0))
     ).then(([t1, t2]) => [Number(t1), Number(t2)]);
 
     [relativeHumidity, peripheralsRelativeHumidity] = await Promise.all(
       [
         xapi.Status.RoomAnalytics.RelativeHumidity.get(),
         xapi.Status.Peripherals.ConnectedDevice.RoomAnalytics.RelativeHumidity.get()
-      ].map((p) => p.catch(() => -1))
+      ].map((p) => p.catch(() => -0))
     ).then(([t1, t2]) => [Number(t1), Number(t2)]);
 
     ambientNoise = await xapi.Status.RoomAnalytics.AmbientNoise.Level.A.get()
       .then((n) => Number(n))
-      .catch(() => -1);
+      .catch(() => -0);
 
     ambientSound = await xapi.Status.RoomAnalytics.Sound.Level.A.get()
       .then((n) => Number(n))
-      .catch(() => -1);
+      .catch(() => -0);
 
     peripheralsAirQuality = await xapi.Status.Peripherals.ConnectedDevice.RoomAnalytics.AirQuality.Index.get()
       .then((i) => i)
@@ -181,20 +203,43 @@
       time: r.Time || {},
       organizer: r.Organizer || {},
       title: r.Title || '',
-      meetingPlatform: r.MeetingPlatform || ''
+      meetingPlatform: r.MeetingPlatform === 'GoogleMeet' ? 'GoogleMeet' : 'MSTeams'
     }));
 
     console.log(bookings);
   }
 
-  function dial(webRtcUrl, type: string) {
+  async function updateWeatherData() {
+    await jsonRequest('/weather')
+      .get(undefined, { id: cityId, units: units })
+      .then((r) => {
+        weather.place = `${r.name}, ${r.sys.country}`;
+        weather.main = r.weather[0].main;
+        weather.temp = r.main.temp;
+        weather.tempMin = r.main.temp_min;
+        weather.tempMax = r.main.temp_max;
+        weather.icon = cloudy;
+      })
+      .catch((r) => console.error(r));
+  }
+
+  async function dial(webRtcUrl, type?: string) {
     console.log(webRtcUrl, type);
+    const xcommandRequest = jsonRequest('/xapi', 'command');
+
+    type
+      ? await xcommandRequest
+          .get('webrtc.join', { url: webRtcUrl, type: type, serial: deviceSerial })
+          .then((r) => console.log(r))
+      : await xcommandRequest.get('webrtc.join', { url: webRtcUrl, serial: deviceSerial }).then((r) => console.log(r));
   }
 
   onMount(async () => {
+    await updateWeatherData();
     updateBookingData();
     xapi = await roomosJsxapi().initialize();
-    setInterval(updateSensorData, 3000);
+    deviceSerial = await xapi.Status.SystemUnit.Hardware.Module.SerialNumber.get();
+    setTimeout(updateSensorData, 3000);
   });
 </script>
 
@@ -206,14 +251,14 @@
   poster="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-poster-00001.jpg"
   class="is-brand-video"
 >
-  <!--  <source-->
-  <!--    src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.webm"-->
-  <!--    type="video/webm"-->
-  <!--  />-->
-  <!--  <source-->
-  <!--    src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.mp4"-->
-  <!--    type="video/mp4"-->
-  <!--  />-->
+  <source
+    src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.webm"
+    type="video/webm"
+  />
+  <source
+    src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.mp4"
+    type="video/mp4"
+  />
 </video>
 
 <section class="hero is-black is-fullheight">
@@ -222,26 +267,32 @@
     <div class="container is-block mt-2 p-2">
       <div class="columns is-size-4">
         <div class="column is-7 has-text-white">
-          <h1 class="title is-brand-title has-text-white">{import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco'}</h1>
+          <h1 class="title is-brand-title has-text-white">{brandTitle}</h1>
           <h2 class="subtitle is-brand-subtitle has-text-white px-1">
-            {import.meta.env.EXPOSED_BRAND_SUBTITLE || 'Bridge to Possible.'}
+            {brandSubtitle}
           </h2>
         </div>
         <div class="column is-5 has-text-weight-light">
-          <p class="level-right has-text-weight-medium has-text-grey-light is-size-6 mb-3">Chicago, IL</p>
+          <p class="level-right has-text-weight-medium has-text-grey-light is-size-6 mb-3">{weather.place}</p>
           <div class="level is-mobile mb-0">
             <div class="level-left">Sun, Sep 15, 2021</div>
             <div class="level-right">12:45 PM</div>
           </div>
           <div class="level is-mobile">
             <div class="level-left">
-              <p class="level-item">72 &deg;C</p>
-              <p class="level-item is-size-6"><small>H: 70&deg;C</small></p>
-              <p class="level-item is-size-6"><small>L: 70&deg;C</small></p>
+              <p class="level-item">{weather.temp.toFixed(0)}&deg;{units === 'imperial' ? 'F' : 'C'}</p>
+              <p class="level-item is-size-6">
+                <small>H: {weather.tempMax.toFixed(0)}&deg;{units === 'imperial' ? 'F' : 'C'}</small>
+              </p>
+              <p class="level-item is-size-6">
+                <small>L: {weather.tempMin.toFixed(0)}&deg;{units === 'imperial' ? 'F' : 'C'}</small>
+              </p>
             </div>
             <div class="level-right has-text-right">
-              <figure class="level-item image is-32x32"><img src={overcastDay} alt="" /></figure>
-              <p class="level-item">Rainy</p>
+              <figure class="level-item image is-32x32">
+                <img src={weather.icon} alt={weather.main} />
+              </figure>
+              <p class="level-item">{weather.main}</p>
             </div>
           </div>
         </div>
@@ -289,7 +340,10 @@
                     on:click={dial(booking.call.Number, booking.meetingPlatform)}
                     class="button is-success is-rounded is-medium is-fullwidth"
                   >
-                    Join
+                    <!--{#if booking.meetingPlatform === 'GoogleMeet'}-->
+                    <!--  <img src={siGooglemeet.svg} />-->
+                    <!--{/if}-->
+                    <span>Join</span>
                   </button>
                 </div>
               {/each}
@@ -360,7 +414,7 @@
   }
 
   .is-translucent-black {
-    background-color: hsl(0, 0%, 0%, 0.8);
+    background-color: hsl(0, 0%, 0%, 0.7);
     box-shadow: none;
   }
   #sms-title {
