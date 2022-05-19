@@ -104,8 +104,8 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <button on:click={handleOnClick} class="button is-rounded is-primary">{buttonContent}</button>
-          <button class="button is-danger is-rounded" on:click={toggleSignOutModal}> Sign Out </button>
+          <button on:click={handleOnClick} class="button is-rounded is-primary is-light">{buttonContent}</button>
+          <button class="button is-danger is-rounded is-light" on:click={toggleSignOutModal}> Sign Out </button>
         </div>
       </div>
     </div>
@@ -134,7 +134,7 @@
   {/if}
 </div>
 
-<!-- 
+<!--
 <nav class="navbar mb-8">
   <div class="container is-fluid is-block">
       <div class="navbar-start">
@@ -194,13 +194,13 @@
       <p class="is-size-4 has-white-text">You are about to logout. Would you like to continue?</p>
       <div class="columns mt-4">
         <div class="column">
-          <button 
+          <button
             class="button is-medium is-rounded is-success is-fullwidth"
             on:click={() => {webexOauthSessionWritable.set(null)}}>Yes</button>
         </div>
         <div class="column">
-          <button 
-            class="button is-medium is-rounded is-danger is-fullwidth" 
+          <button
+            class="button is-medium is-rounded is-danger is-fullwidth"
             on:click={toggleSignOutModal}>No</button>
         </div>
       </div>
