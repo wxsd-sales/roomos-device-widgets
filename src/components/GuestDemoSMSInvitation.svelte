@@ -3,6 +3,7 @@
   import { MaskedInput } from 'svelte-imask';
   import { jsonRequest } from '$lib/shared/json-request';
   import { GUEST_DEMO_SERVER_URL, IMI_CONNECT_SMS_HOOK_URL } from '$lib/constants';
+  import { deviceSerial } from '../lib/store';
 
   const sipAddress = 'kiosk.wxsd@webex.com';
   let disabled = true;
@@ -53,6 +54,12 @@
     disabled = true;
     displayInputs = false;
   };
+
+  const makeSIPCall = async (number) => {
+    const xcommandRequest = jsonRequest('/xapi', 'command');
+
+    await xcommandRequest.get('dial', { number: number, serial: $deviceSerial }).then((r) => console.log(r));
+  };
 </script>
 
 {#if displayInputs}
@@ -94,10 +101,7 @@
   <p class="subtitle has-text-centered mb-6">
     {`A video chat link was sent to ${phoneInputValue}.`}
   </p>
-  <button
-    class="button is-success is-rounded is-medium is-fullwidth mt-6"
-    on:click={() => {
-      window.location.href = `sip:${sipAddress}`;
-    }}>Join</button
-  >
+  <button class="button is-success is-rounded is-medium is-fullwidth mt-6" on:click={() => makeSIPCall(sipAddress)}>
+    Join
+  </button>
 {/if}
