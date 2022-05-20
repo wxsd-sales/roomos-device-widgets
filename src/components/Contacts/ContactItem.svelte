@@ -1,6 +1,6 @@
 <script lang="ts">
   import Avatar from '../Avatar.svelte';
-  import type { WebexPerson } from '$lib/types';
+  import { WebexUserStatus, type WebexPerson } from '$lib/types';
   import { AvatarSize } from '$lib/types';
 
   export let person: WebexPerson;
@@ -19,7 +19,11 @@
     <p class="subtitle is-size-6">{person.emails[0]}</p>
   </div>
   <div class="column is-2-tablet">
-    <button class="button is-success is-fullwidth is-rounded is-medium" on:click={makeSIPCall}>
+    <button
+      class="button is-success is-fullwidth is-rounded is-medium"
+      on:click={makeSIPCall}
+      disabled={person.status !== WebexUserStatus.ACTIVE}
+    >
       <span class="icon is-large">
         <i class="mdi mdi-phone" />
       </span>
@@ -27,10 +31,3 @@
     </button>
   </div>
 </div>
-
-<style>
-  /* .is-translucent-light {
-   background-color: hsl(0, 0%, 0%, 1);
-   box-shadow: none;
- } */
-</style>
