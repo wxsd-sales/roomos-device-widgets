@@ -9,7 +9,7 @@
   let disabled = true;
   let fromInputValue: string;
   let phoneInputValue: string;
-  let displayInputs = true;
+  let displayInputs = false;
 
   const phoneNumberOption = {
     mask: '+{1} (000) 000 - 0000'
@@ -97,10 +97,22 @@
     </div>
   </form>
 {:else}
-  <p class="title is-size-4 has-text-centered">Video chat invite sent!</p>
-  <p class="subtitle has-text-centered mb-6">
-    {`A video chat link was sent to ${phoneInputValue}.`}
-  </p>
+  <div class="columns">
+    <span
+      class="icon is-clickable"
+      on:click={() => {
+        displayInputs = true;
+      }}
+    >
+      <i class="mdi mdi-light mdi-24px mdi-arrow-left" />
+    </span>
+    <div class="column">
+      <p class="title is-size-4 has-text-centered ">Video chat invite sent!</p>
+      <p class="subtitle has-text-centered ">
+        {`A video chat link was sent to ${phoneInputValue}.`}
+      </p>
+    </div>
+  </div>
   <button class="button is-success is-rounded is-medium is-fullwidth mt-6" on:click={() => makeSIPCall(sipAddress)}>
     Join
   </button>

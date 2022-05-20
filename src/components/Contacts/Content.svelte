@@ -10,7 +10,6 @@
   import { contactsListSession } from '$lib/store';
   import Avatar from '../Avatar.svelte';
   import { AvatarSize, type WebexPerson } from '$lib/types';
-  import { clickOutside } from '$lib/helpers';
   import Modal from '../Modal.svelte';
 
   let buttonContent = MANAGE_CONTACTS;
