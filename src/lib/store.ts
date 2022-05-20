@@ -2,6 +2,7 @@ import { localStorage, sessionStorage, storage } from './shared/storage';
 import { StateKey, type WebexPerson } from './types';
 import type { Json } from './types';
 import type { WebexHttpPeopleResource } from './webex/http-wrapper/webex-http-people-resource';
+import type { Writable } from 'svelte/store';
 
 export const exampleWritable = storage<string>(StateKey.EXAMPLE_WRITABLE, 'example-writable-value');
 export const exampleLocalWritable = localStorage<string>(
@@ -18,3 +19,5 @@ export const webexOauthSessionWritable = sessionStorage<Json>(StateKey.WEBEX_OAU
 export const contactsListSession = sessionStorage<Array<WebexPerson>>(StateKey.CONTACTS_LIST, []);
 
 export const webexPeopleInstanceMemory = storage<WebexHttpPeopleResource>(StateKey.WEBEX_PEOPLE_INSTANCE, undefined);
+
+export const deviceSerial: Writable<string> = localStorage(StateKey.DEVICE_SERIAL);

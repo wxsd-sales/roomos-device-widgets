@@ -27,10 +27,34 @@ async function joinWebRtcPersonal(request) {
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+async function dialPersonal(request) {
+  const number = await request.url.searchParams.get('number');
+  const serial = await request.url.searchParams.get('serial');
+  const deviceId: string = await webexHttp(webexBotToken, 'devices')
+    .get('', { serial: serial })
+    .then((r) => r.items[0])
+    .then((r) => r.id);
+
+  return await webexHttp(webexBotToken, 'xapi').post('command/Message.Send', undefined, {
+    deviceId: deviceId,
+    arguments: {
+      Text: JSON.stringify({
+        type: 'command',
+        operation: 'Dial',
+        arguments: { Number: number }
+      })
+    }
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export function get(request) {
   switch (request.params?.endpoint) {
     case 'webrtc.join':
       return joinWebRtcPersonal(request);
+    case 'dial':
+      return dialPersonal(request);
     default:
       return { status: 404 };
   }

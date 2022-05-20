@@ -14,6 +14,9 @@
   import { siGooglemeet } from 'simple-icons/icons';
   import FoodMenu from '../../components/FoodMenu.svelte';
   import Modal from '../../components/Modal.svelte';
+  import { localStorage } from '../../lib/shared/storage';
+  import { StateKey } from '../../lib/types';
+  import { deviceSerial } from '../../lib/store';
 
   let xapi;
   let bookings: { call: unknown; organizer: unknown; time: unknown; title: string; meetingPlatform: string }[] = [];
@@ -25,7 +28,6 @@
   let peripheralsAmbientNoise: number;
   let ambientSound: number;
   let peripheralsAirQuality: string;
-  let deviceSerial: string;
   let showFoodMenu: boolean;
   let showModal = false;
   let showMTA: boolean;
@@ -73,12 +75,6 @@
     peripheralsAirQuality = await xapi.Status.Peripherals.ConnectedDevice.RoomAnalytics.AirQuality.Index.get()
       .then((i) => i)
       .catch(() => null);
-
-    console.log(ambientTemperature, peripheralsAmbientTemperature);
-    console.log(relativeHumidity, peripheralsRelativeHumidity);
-    console.log(ambientNoise);
-    console.log(ambientSound);
-    console.log(peripheralsAirQuality);
   }
 
   function updateBookingData() {
@@ -228,22 +224,21 @@
       .catch((r) => console.error(r));
   }
 
-  async function dial(webRtcUrl, type?: string) {
-    console.log(webRtcUrl, type);
+  async function dialWebrtc(webRtcUrl, type?: string) {
     const xcommandRequest = jsonRequest('/xapi', 'command');
 
     type
       ? await xcommandRequest
-          .get('webrtc.join', { url: webRtcUrl, type: type, serial: deviceSerial })
+          .get('webrtc.join', { url: webRtcUrl, type: type, serial: $deviceSerial })
           .then((r) => console.log(r))
-      : await xcommandRequest.get('webrtc.join', { url: webRtcUrl, serial: deviceSerial }).then((r) => console.log(r));
+      : await xcommandRequest.get('webrtc.join', { url: webRtcUrl, serial: $deviceSerial }).then((r) => console.log(r));
   }
 
   onMount(async () => {
     await updateWeatherData();
     updateBookingData();
     xapi = await roomosJsxapi().initialize();
-    deviceSerial = await xapi.Status.SystemUnit.Hardware.Module.SerialNumber.get();
+    deviceSerial.set(await xapi.Status.SystemUnit.Hardware.Module.SerialNumber.get());
     setTimeout(updateSensorData, 3000);
   });
 </script>
@@ -342,7 +337,7 @@
                 </div>
                 <div class="column is-4 is-center">
                   <button
-                    on:click={dial(booking.call.Number, booking.meetingPlatform)}
+                    on:click={dialWebrtc(booking.call.Number, booking.meetingPlatform)}
                     class="button is-success is-rounded is-medium is-fullwidth"
                   >
                     <!--{#if booking.meetingPlatform === 'GoogleMeet'}-->
@@ -439,7 +434,7 @@
     {#if showFoodMenu}
       <FoodMenu />
     {:else}
-      <figure class="image is-2by3">
+      <figure class="image">
         <img src={'https://upload.wikimedia.org/wikipedia/commons/0/04/NYC_subway-4D.svg'} alt="MTA" />
       </figure>
     {/if}

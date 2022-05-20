@@ -2,11 +2,15 @@
   import Avatar from '../Avatar.svelte';
   import { WebexUserStatus, type WebexPerson } from '$lib/types';
   import { AvatarSize } from '$lib/types';
+  import { deviceSerial } from '../../lib/store';
+  import { jsonRequest } from '../../lib/shared/json-request';
 
   export let person: WebexPerson;
 
-  const makeSIPCall = () => {
-    window.location.href = `sip:${person.emails[0]}`;
+  const makeSIPCall = async () => {
+    const xcommandRequest = jsonRequest('/xapi', 'command');
+
+    await xcommandRequest.get('dial', { number: person.emails[0], serial: $deviceSerial }).then((r) => console.log(r));
   };
 </script>
 
