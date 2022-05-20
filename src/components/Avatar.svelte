@@ -1,56 +1,42 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { WebexUserStatus } from '$lib/types';
-  import type { WebexPerson } from '$lib/types';
+  import type { WebexPerson, AvatarSize } from '$lib/types';
   import { contactsListSession } from '$lib/store';
   import { AVATAR_ICONS } from '$lib/constants';
 
   export let person: WebexPerson;
-  export let size: number;
-  let icon = '';
+  export let size: AvatarSize;
 
-  let styles = {
-    width: `${size}rem`,
-    height: `${size}rem`
+  const getNames = () => {
+    console.log(person);
   };
 
-  $: cssVarStyles = Object.entries(styles)
-    .map(([key, value]) => `--${key}:${value}`)
-    .join(';');
+  onMount(() => {
+    getNames();
+  });
 </script>
 
-<figure class="image is-64x64">
-  <img src="https://bulma.io/images/placeholders/64x64.png" />
-</figure>
-
-<!-- <img src="https://bulma.io/images/placeholders/64x64.png" /> -->
-<!-- <figure class="image is-64x64" style={cssVarStyles}>
+<figure class={`image is-${size}x${size}`}>
   {#if person.avatar}
-    <img class={`is-rounded avatar ${person.status}`} src={person.avatar} alt={person.displayName} />
+    <img class={`is-rounded ${person.status}`} src={person.avatar} alt={person.displayName} />
   {:else}
-    <div class={`initials is-size-4 ${person.status}`}>
+    <div class={`initials is-size-4 ${person.status}`} style={`height: ${size}px`}>
       {person.firstName.charAt(0)}{person.lastName.charAt(0)}
     </div>
   {/if}
   <span class="icon iconContainer has-text-danger">
     <i class={`mdi mdi-light mdi-36px mdi-${AVATAR_ICONS[person.status]}`} />
   </span>
-</figure> -->
+</figure>
 
-<!-- <style>
-  .avatar {
-    display: block;
-    /* width: var(--width);
-    height: var(--height); */
-  }
-
+<style>
   .initials {
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: gray;
     color: white;
-    /* width: var(--width);
-    height: var(--height); */
     border-radius: 50%;
   }
 
@@ -69,4 +55,4 @@
   .inactive {
     opacity: 0.5;
   }
-</style> -->
+</style>

@@ -63,7 +63,7 @@ export const AVATAR_ICONS = {
   [WebexUserStatus.OOO]: 'airplane',
   [WebexUserStatus.PENDING]: 'account-clock',
   [WebexUserStatus.PRESENTING]: 'presentation',
-  [WebexUserStatus.UNKNOWN]: 'help-circle'
+  [WebexUserStatus.UNKNOWN]: ''
 };
 
 export const GUEST_DEMO_SERVER_URL = 'https://wxsd.wbx.ninja/wxsd-guest-demo';

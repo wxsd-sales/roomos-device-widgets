@@ -79,3 +79,13 @@ export enum WebexUserStatus {
   PRESENTING = 'presenting',
   UNKNOWN = 'unknown'
 }
+
+export enum AvatarSize {
+  XXSMALL = 16,
+  XSMALL = 24,
+  SMALL = 32,
+  MEDIUM = 48,
+  LARGE = 64,
+  XLARGE = 96,
+  XXLARGE = 128
+}

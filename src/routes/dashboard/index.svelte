@@ -12,6 +12,8 @@
   import { page } from '$app/stores';
   import { siMicrosoftteams } from 'simple-icons/icons';
   import { siGooglemeet } from 'simple-icons/icons';
+  import FoodMenu from '../../components/FoodMenu.svelte';
+  import Modal from '../../components/Modal.svelte';
 
   let xapi;
   let bookings: { call: unknown; organizer: unknown; time: unknown; title: string; meetingPlatform: string }[] = [];
@@ -24,6 +26,9 @@
   let ambientSound: number;
   let peripheralsAirQuality: string;
   let deviceSerial: string;
+  let showFoodMenu: boolean;
+  let showModal = false;
+  let showMTA: boolean;
   const cityId = $page.url.searchParams.get('id') || 4887398;
   const units = $page.url.searchParams.get('units') || 'imperial';
   const brandTitle = $page.url.searchParams.get('brandTitle') || import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco';
@@ -251,14 +256,14 @@
   poster="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-poster-00001.jpg"
   class="is-brand-video"
 >
-  <source
+  <!-- <source
     src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.webm"
     type="video/webm"
   />
   <source
     src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.mp4"
     type="video/mp4"
-  />
+  /> -->
 </video>
 
 <section class="hero is-black is-fullheight">
@@ -301,7 +306,7 @@
   </nav>
 
   <!-- Hero content: will be in the middle -->
-  <div class="hero-body">
+  <div class="hero-body py-1">
     <div class="container">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
@@ -386,15 +391,60 @@
   <!-- Hero footer: will stick at the bottom -->
   <div class="hero-foot">
     <nav class="tabs">
-      <div class="container mb-1">
+      <div class="container mb-4">
         <ul class="">
-          <li><a class="button is-rounded is-light mx-1 is-primary has-text-primary-dark">Order Food</a></li>
-          <li><a class="button is-rounded is-light mx-1 is-primary has-text-primary-dark">MTA Map</a></li>
+          <li>
+            <a
+              class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
+              on:click={() => {
+                showModal = true;
+                showFoodMenu = true;
+              }}>Order Food</a
+            >
+          </li>
+          <li>
+            <a
+              class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
+              on:click={() => {
+                showModal = true;
+              }}>MTA Map</a
+            >
+          </li>
+          <li>
+            <a
+              class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
+              on:click={() => {
+                location.reload();
+              }}
+            >
+              <span class="icon">
+                <i class="mdi has-primary-text mdi-refresh" />
+              </span>
+            </a>
+          </li>
         </ul>
       </div>
     </nav>
   </div>
 </section>
+
+<Modal
+  {showModal}
+  toggleModal={() => {
+    showModal = false;
+    showFoodMenu = false;
+  }}
+>
+  <div class="box is-modal-translucent-black has-text-white">
+    {#if showFoodMenu}
+      <FoodMenu />
+    {:else}
+      <figure class="image is-2by3">
+        <img src={'https://upload.wikimedia.org/wikipedia/commons/0/04/NYC_subway-4D.svg'} alt="MTA" />
+      </figure>
+    {/if}
+  </div></Modal
+>
 
 <style>
   .is-brand-title {

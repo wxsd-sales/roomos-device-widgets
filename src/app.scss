@@ -55,3 +55,12 @@ body,
 .is-inline-grid {
   display: inline-grid;
 }
+
+.navbar-item img {
+  max-height: fit-content !important;
+}
+
+.is-modal-translucent-black {
+  background-color: hsl(0, 0%, 0%, 1);
+  box-shadow: none;
+}
