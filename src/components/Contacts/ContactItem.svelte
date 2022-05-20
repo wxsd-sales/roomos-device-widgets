@@ -1,6 +1,7 @@
 <script lang="ts">
   import Avatar from '../Avatar.svelte';
   import type { WebexPerson } from '$lib/types';
+  import { AvatarSize } from '$lib/types';
 
   export let person: WebexPerson;
 
@@ -9,9 +10,9 @@
   };
 </script>
 
-<div class="columns p-2 is-rounded is-vcentered is-mobile is-multiline">
+<div class="columns p-2 m-4 is-translucent-black box is-rounded is-vcentered is-mobile is-multiline">
   <div class="column is-align-items-center is-2-tablet is-2-mobile">
-    <Avatar {person} size={4} />
+    <Avatar {person} size={AvatarSize.LARGE} />
   </div>
   <div class="column is-8-tablet is-10-mobile">
     <p class="title is-size-4">{person.displayName}</p>
