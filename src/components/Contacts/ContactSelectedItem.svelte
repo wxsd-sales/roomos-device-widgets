@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { contactsListSession, webexPeopleInstanceMemory } from '$lib/store';
+  import { contactsListSession } from '$lib/store';
   import Avatar from '../Avatar.svelte';
   import { AvatarSize, type WebexPerson } from '$lib/types';
 

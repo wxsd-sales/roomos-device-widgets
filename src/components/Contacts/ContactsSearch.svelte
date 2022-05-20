@@ -1,8 +1,6 @@
 <script lang="ts">
   import ContactSearchItem from './ContactSearchItem.svelte';
-  import type { WebexHttpPeopleResource } from '$lib/webex/http-wrapper/webex-http-people-resource';
   import validator from 'validator';
-  import { onMount } from 'svelte';
   import type { WebexPeopleListQuery, WebexPerson } from '$lib/types';
   import { webexPeopleInstanceMemory, contactsListSession } from '$lib/store';
 

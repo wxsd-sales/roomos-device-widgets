@@ -17,15 +17,10 @@
   const peopleInstance = new WebexHttpPeopleResource($webexOauthSessionWritable.access_token);
   webexPeopleInstanceMemory.set(peopleInstance);
 
-  let isDropdownDisplayed = false;
   let isSignOutModalDisplayed = false;
 
   const handleOnClick = () => {
     buttonContent = buttonContent === MANAGE_CONTACTS ? VIEW_CONTACTS : MANAGE_CONTACTS;
-  };
-
-  const toggleDropdown = () => {
-    isDropdownDisplayed = !isDropdownDisplayed;
   };
 
   const toggleSignOutModal = () => {
@@ -48,7 +43,7 @@
   });
 </script>
 
-<nav class="navbar mb-1" role="navigation" aria-label="main navigation">
+<nav class="navbar mb-1" aria-label="main navigation">
   <div class="navbar-item has-dropdown is-clickable is-hoverable">
     {#if myPersonalDetails}
       <Avatar person={myPersonalDetails} size={AvatarSize.XLARGE} />
@@ -58,7 +53,14 @@
     {/if}
   </div>
 
-  <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+  <a
+    role="button"
+    class="navbar-burger"
+    href={null}
+    aria-label="menu"
+    aria-expanded="false"
+    data-target="navbarBasicExample"
+  >
     <span aria-hidden="true" />
     <span aria-hidden="true" />
     <span aria-hidden="true" />

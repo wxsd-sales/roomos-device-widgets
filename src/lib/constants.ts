@@ -57,25 +57,25 @@ export const VALID_DESTINATION = new RegExp(
 export const FOOD_MENU_URL = 'https://orderlina.menu/marcelas';
 
 export const AVATAR_ICONS = {
-  [WebexUserStatus.CALL]: {name: 'phone-outline', color: 'warning'},
-  [WebexUserStatus.DND]: {name: 'minus-circle', color: 'danger'},
-  [WebexUserStatus.MEETING]: {name: 'video', color: 'warning'},
-  [WebexUserStatus.OOO]: { name: 'airplane', color: 'grey'},
-  [WebexUserStatus.PENDING]: {name: 'account-clock', color: 'grey'},
-  [WebexUserStatus.PRESENTING]: {name: 'presentation', color: 'danger'},
-  [WebexUserStatus.INACTIVE]: {name: 'clock', color: 'grey'},
-  [WebexUserStatus.ACTIVE]: {name: 'checkbox-blank-circle', color: 'success'},
-  [WebexUserStatus.UNKNOWN]: {name: '', color: ''},
+  [WebexUserStatus.CALL]: { name: 'phone-outline', color: 'warning' },
+  [WebexUserStatus.DND]: { name: 'minus-circle', color: 'danger' },
+  [WebexUserStatus.MEETING]: { name: 'video', color: 'warning' },
+  [WebexUserStatus.OOO]: { name: 'airplane', color: 'grey' },
+  [WebexUserStatus.PENDING]: { name: 'account-clock', color: 'grey' },
+  [WebexUserStatus.PRESENTING]: { name: 'presentation', color: 'danger' },
+  [WebexUserStatus.INACTIVE]: { name: 'clock', color: 'grey' },
+  [WebexUserStatus.ACTIVE]: { name: 'checkbox-blank-circle', color: 'success' },
+  [WebexUserStatus.UNKNOWN]: { name: '', color: '' }
 };
 
 export const ICON_SIZES = {
   [AvatarSize.XXSMALL]: { background: '0.25rem', svg: '1em' },
   [AvatarSize.XSMALL]: { background: '0.5rem', svg: '1em' },
-  [AvatarSize.SMALL]:  { background: '0.75rem', svg: '1em' },
+  [AvatarSize.SMALL]: { background: '0.75rem', svg: '1em' },
   [AvatarSize.MEDIUM]: { background: '1rem', svg: '1em' },
   [AvatarSize.LARGE]: { background: '1.65rem', svg: '24px' },
   [AvatarSize.XLARGE]: { background: '1.85rem', svg: '24px' },
-  [AvatarSize.XXLARGE]: { background: '2.35rem', svg: '36px' },
+  [AvatarSize.XXLARGE]: { background: '2.35rem', svg: '36px' }
 };
 
 export const GUEST_DEMO_SERVER_URL = 'https://wxsd.wbx.ninja/wxsd-guest-demo';

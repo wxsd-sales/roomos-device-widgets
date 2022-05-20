@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { WebexUserStatus } from '$lib/types';
   import type { WebexPerson, AvatarSize } from '$lib/types';
-  import { contactsListSession } from '$lib/store';
   import { AVATAR_ICONS, ICON_SIZES } from '$lib/constants';
 
   export let person: WebexPerson;

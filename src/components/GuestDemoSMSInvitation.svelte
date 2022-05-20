@@ -22,7 +22,7 @@
       disabled = true;
     }
   };
-  const handlePhoneChange = (event?: any) => {
+  const handlePhoneChange = () => {
     validate(fromInputValue, phoneInputValue);
   };
 
