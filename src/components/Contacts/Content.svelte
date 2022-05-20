@@ -35,9 +35,11 @@
   onMount(async () => {
     myPersonalDetails = await peopleInstance.getMyOwnDetails();
     const interval = setInterval(async () => {
-      $contactsListSession = await Promise.all(
+      const peoplePromises: Promise<Array<WebexPerson>> = Promise.all(
         $contactsListSession.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id))
       );
+
+      $contactsListSession = await peoplePromises;
     }, 5000);
 
     return () => {
@@ -65,7 +67,7 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
       <div class="navbar-item">
-        <h2 class="title">Favorite Contacts</h2>
+        <h2 class="title">Contacts</h2>
       </div>
     </div>
 

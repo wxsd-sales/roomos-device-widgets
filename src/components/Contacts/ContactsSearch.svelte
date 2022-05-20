@@ -34,7 +34,10 @@
   };
 
   const selectPerson = (person: WebexPerson) => {
-    $contactsListSession = [person, ...$contactsListSession];
+    if (!$contactsListSession.some((item) => item.id === person.id)) {
+      $contactsListSession = [person, ...$contactsListSession];
+    }
+
     people = [];
     inputField.value = '';
     searchIsLoading = false;

@@ -3,31 +3,35 @@
   import { WebexUserStatus } from '$lib/types';
   import type { WebexPerson, AvatarSize } from '$lib/types';
   import { contactsListSession } from '$lib/store';
-  import { AVATAR_ICONS } from '$lib/constants';
+  import { AVATAR_ICONS, ICON_SIZES } from '$lib/constants';
 
   export let person: WebexPerson;
   export let size: AvatarSize;
 
-  const getNames = () => {
-    console.log(person);
+  const getName = () => {
+    if (person.firstName && person.lastName) return `${person.firstName.charAt(0)}${person.lastName.charAt(0)}`;
+
+    return person.emails[0].charAt(0);
   };
 
-  onMount(() => {
-    getNames();
-  });
+  $: cssVarStyles = Object.entries({ width: ICON_SIZES[size].background, height: ICON_SIZES[size].background })
+    .map(([key, value]) => `--${key}:${value}`)
+    .join(';');
 </script>
 
 <figure class={`image is-${size}x${size}`}>
   {#if person.avatar}
     <img class={`is-rounded ${person.status}`} src={person.avatar} alt={person.displayName} />
   {:else}
-    <div class={`initials is-size-4 ${person.status}`} style={`height: ${size}px`}>
-      {person.firstName.charAt(0)}{person.lastName.charAt(0)}
+    <div class={`initials is-size-4`} style={`height: ${size}px`}>
+      {getName()}
     </div>
   {/if}
-  <span class="icon iconContainer has-text-danger">
-    <i class={`mdi mdi-light mdi-36px mdi-${AVATAR_ICONS[person.status]}`} />
-  </span>
+  {#if person.status !== WebexUserStatus.UNKNOWN}
+    <span class={`icon iconContainer has-text-${AVATAR_ICONS[person.status].color}`} style={cssVarStyles}>
+      <i class={`mdi mdi-${ICON_SIZES[size].svg} mdi-${AVATAR_ICONS[person.status].name}`} />
+    </span>
+  {/if}
 </figure>
 
 <style>
@@ -41,18 +45,12 @@
   }
 
   .iconContainer {
-    display: inline-block;
+    background-color: black;
+    width: var(--width);
+    height: var(--height);
+    border-radius: 50%;
     position: absolute;
-    top: 0;
-    left: 0;
-    margin: 0 auto;
-    transform: translateX(50%) translateY(25%);
-  }
-  .active {
-    border: 2px solid green;
-  }
-
-  .inactive {
-    opacity: 0.5;
+    bottom: 0;
+    right: 0;
   }
 </style>

@@ -88,5 +88,5 @@ export enum AvatarSize {
   MEDIUM = 48,
   LARGE = 64,
   XLARGE = 96,
-  XXLARGE = 128
+  XXLARGE = 128,
 }

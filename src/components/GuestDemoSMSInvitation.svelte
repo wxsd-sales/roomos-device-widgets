@@ -9,7 +9,7 @@
   let disabled = true;
   let fromInputValue: string;
   let phoneInputValue: string;
-  let displayInputs = false;
+  let displayInputs = true;
 
   const phoneNumberOption = {
     mask: '+{1} (000) 000 - 0000'
@@ -63,7 +63,7 @@
 </script>
 
 {#if displayInputs}
-  <form class="" on:submit|preventDefault={sendInvites}>
+  <form on:submit|preventDefault={sendInvites}>
     <p class="title is-size-4">Text a video chat link to a guest</p>
     <div class="field control">
       <input

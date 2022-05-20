@@ -7,6 +7,7 @@
 
   export let person: WebexPerson;
 
+  const disabled = person.status !== WebexUserStatus.ACTIVE;
   const makeSIPCall = async () => {
     const xcommandRequest = jsonRequest('/xapi', 'command');
 
@@ -25,8 +26,9 @@
   <div class="column is-2-tablet">
     <button
       class="button is-success is-fullwidth is-rounded is-medium"
+      class:disabled
       on:click={makeSIPCall}
-      disabled={person.status !== WebexUserStatus.ACTIVE}
+      {disabled}
     >
       <span class="icon is-large">
         <i class="mdi mdi-phone" />
@@ -35,3 +37,9 @@
     </button>
   </div>
 </div>
+
+<style>
+  .disabled {
+    opacity: 0.3;
+  }
+</style>
