@@ -123,11 +123,6 @@
 </Modal>
 
 <style>
-  .is-modal-translucent-black {
-    background-color: hsl(0, 0%, 0%, 1);
-    box-shadow: none;
-  }
-
   .contactsContainer {
     height: 37rem;
     overflow-y: scroll;
