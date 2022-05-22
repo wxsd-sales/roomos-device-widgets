@@ -43,7 +43,11 @@
   };
 
   function convertToF(celsius) {
-    return (celsius * 9) / 5 + 32;
+    if (!celsius) {
+      return celsius;
+    }
+
+    return units === 'imperial' ? ((celsius * 9) / 5 + 32).toFixed(2) : celsius.toFixed(2);
   }
 
   async function updateSensorData() {
@@ -417,7 +421,10 @@
               <div class="level-item has-text-centered">
                 <figure class="level-left image is-48x48"><img src={thermometer} alt="ambient-temperature" /></figure>
                 <p class="is-size-4 level-right has-text-weight-semibold">
-                  {ambientTemperature || peripheralsAmbientTemperature || '?'} &deg;C
+                  {convertToF(ambientTemperature) || convertToF(peripheralsAmbientTemperature) || '?'} &deg;{units ===
+                  'imperial'
+                    ? 'F'
+                    : 'C'}
                 </p>
               </div>
               <div class="level-item has-text-centered">
