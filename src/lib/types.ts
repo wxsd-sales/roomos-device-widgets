@@ -17,7 +17,8 @@ export enum StateKey {
   WEBEX = 'webex',
   CONTACTS_LIST = 'contactsList',
   WEBEX_PEOPLE_INSTANCE = 'webexPeopleInstance',
-  DEVICE_SERIAL = 'deviceId'
+  DEVICE_SERIAL = 'deviceId',
+  ACTIVE_CALL = 'activeCall'
 }
 
 export enum WebexHttpErrorPrefix {

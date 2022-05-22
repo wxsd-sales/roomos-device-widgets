@@ -21,3 +21,5 @@ export const contactsListSession = sessionStorage<Array<WebexPerson>>(StateKey.C
 export const webexPeopleInstanceMemory = storage<WebexHttpPeopleResource>(StateKey.WEBEX_PEOPLE_INSTANCE, undefined);
 
 export const deviceSerial: Writable<string> = localStorage(StateKey.DEVICE_SERIAL);
+
+export const activeCall: Writable<{ status?: string; uuid?: string }> = storage(StateKey.ACTIVE_CALL, {});
