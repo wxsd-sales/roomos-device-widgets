@@ -8,6 +8,7 @@ async function joinWebRtcPersonal(request) {
   const url = await request.url.searchParams.get('url');
   const type = await request.url.searchParams.get('type');
   const serial = await request.url.searchParams.get('serial');
+  const uuid = await request.url.searchParams.get('uuid');
   const deviceId: string = await webexHttp(webexBotToken, 'devices')
     .get('', { serial: serial })
     .then((r) => r.items[0])
@@ -19,6 +20,7 @@ async function joinWebRtcPersonal(request) {
       Text: JSON.stringify({
         type: 'command',
         operation: 'WebRTC.Join',
+        uuid: uuid,
         arguments: { Url: url, Type: type, Title: type }
       })
     }
@@ -30,6 +32,7 @@ async function joinWebRtcPersonal(request) {
 async function dialPersonal(request) {
   const number = await request.url.searchParams.get('number');
   const serial = await request.url.searchParams.get('serial');
+  const uuid = await request.url.searchParams.get('uuid');
   const deviceId: string = await webexHttp(webexBotToken, 'devices')
     .get('', { serial: serial })
     .then((r) => r.items[0])
@@ -41,7 +44,29 @@ async function dialPersonal(request) {
       Text: JSON.stringify({
         type: 'command',
         operation: 'Dial',
+        uuid: uuid,
         arguments: { Number: number }
+      })
+    }
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+async function disconnect(request) {
+  const serial = await request.url.searchParams.get('serial');
+  const deviceId: string = await webexHttp(webexBotToken, 'devices')
+    .get('', { serial: serial })
+    .then((r) => r.items[0])
+    .then((r) => r.id);
+
+  return await webexHttp(webexBotToken, 'xapi').post('command/Message.Send', undefined, {
+    deviceId: deviceId,
+    arguments: {
+      Text: JSON.stringify({
+        type: 'command',
+        operation: 'Call.Disconnect',
+        arguments: {}
       })
     }
   });
@@ -55,6 +80,8 @@ export function get(request) {
       return joinWebRtcPersonal(request);
     case 'dial':
       return dialPersonal(request);
+    case 'call.disconnect':
+      return disconnect(request);
     default:
       return { status: 404 };
   }
