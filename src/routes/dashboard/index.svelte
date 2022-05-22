@@ -27,6 +27,7 @@
   let peripheralsAirQuality: string;
   let showFoodMenu: boolean;
   let showModal = false;
+  let date = new Date();
 
   const cityId = $page.url.searchParams.get('id') || 4887398;
   const units = $page.url.searchParams.get('units') || 'imperial';
@@ -273,8 +274,13 @@
       .get('webrtc.join', { url: webRtcUrl, type: type, serial: $deviceSerial, uuid: uuid })
       .then(() => pollWebrtcStatus(uuid));
   }
+  function updateDate() {
+    date = new Date(new Date().getTime() + weather.timezone);
+  }
 
   onMount(async () => {
+    //TODO: Update timer logic
+    setInterval(updateDate, 1000 * 60);
     await updateWeatherData();
     updateBookingData();
     xapi = await roomosJsxapi().initialize();
@@ -315,8 +321,10 @@
         <div class="column is-5 has-text-weight-light">
           <p class="level-right has-text-weight-medium has-text-grey-light is-size-6 mb-3">{weather.place}</p>
           <div class="level is-mobile mb-0">
-            <div class="level-left">Sun, Sep 15, 2021</div>
-            <div class="level-right">12:45 PM</div>
+            <div class="level-left">
+              {date.toLocaleDateString([], { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+            </div>
+            <div class="level-right">{date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
           </div>
           <div class="level is-mobile">
             <div class="level-left">
