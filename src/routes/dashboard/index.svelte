@@ -524,7 +524,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    filter: brightness(60%);
+    filter: brightness(0.55);
   }
 
   .is-translucent-black {
