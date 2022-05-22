@@ -46,4 +46,4 @@ export const jsonRequest = (
   charset?: string,
   authScheme?: string,
   credentials?: string
-) => new JsonRequest(baseUrl, resource, authScheme, credentials, charset);
+) => new JsonRequest(baseUrl, resource, charset, authScheme, credentials);
