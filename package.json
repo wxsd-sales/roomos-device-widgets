@@ -2,6 +2,7 @@
   "name": "room-navigator-widgets",
   "version": "0.0.1",
   "scripts": {
+    "start": "svelte-kit build && svelte-kit preview",
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "package": "svelte-kit package",
