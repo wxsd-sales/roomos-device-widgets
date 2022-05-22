@@ -297,14 +297,14 @@
   poster="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-poster-00001.jpg"
   class="is-brand-video"
 >
-  <!-- <source
+  <source
     src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.webm"
     type="video/webm"
   />
   <source
     src="https://assets.website-files.com/61eb3600c6f037f539a83578/61eb3600c6f03751b6a83599_Bloomberg_60_LANDING_PAGE_210825-transcode.mp4"
     type="video/mp4"
-  /> -->
+  />
 </video>
 
 <section class="hero is-black is-fullheight">
