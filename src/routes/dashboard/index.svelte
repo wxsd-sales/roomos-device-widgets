@@ -10,13 +10,10 @@
   import GuestDemoSmsInvitation from '../../components/GuestDemoSMSInvitation.svelte';
   import { jsonRequest } from '../../lib/shared/json-request';
   import { page } from '$app/stores';
-  import { siMicrosoftteams } from 'simple-icons/icons';
-  import { siGooglemeet } from 'simple-icons/icons';
   import FoodMenu from '../../components/FoodMenu.svelte';
   import Modal from '../../components/Modal.svelte';
-  import { localStorage } from '../../lib/shared/storage';
-  import { StateKey } from '../../lib/types';
-  import { deviceSerial } from '../../lib/store';
+  import { activeCall, deviceSerial } from '../../lib/store';
+  import { v4 as uuidv4 } from 'uuid';
 
   let xapi;
   let bookings: { call: unknown; organizer: unknown; time: unknown; title: string; meetingPlatform: string }[] = [];
@@ -30,7 +27,7 @@
   let peripheralsAirQuality: string;
   let showFoodMenu: boolean;
   let showModal = false;
-  let showMTA: boolean;
+
   const cityId = $page.url.searchParams.get('id') || 4887398;
   const units = $page.url.searchParams.get('units') || 'imperial';
   const brandTitle = $page.url.searchParams.get('brandTitle') || import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco';
@@ -77,6 +74,8 @@
       .catch(() => null);
   }
 
+  const xcommandRequest = jsonRequest('/xapi', 'command');
+
   function updateBookingData() {
     const rawBookings = {
       Booking: [
@@ -89,7 +88,7 @@
             Calls: {
               Call: [
                 {
-                  Number: 'https://meet.google.com/xhc-iaqz-xci?hs=224',
+                  Number: 'https://meet.google.com/fbh-zbuk-mbp?hs=224',
                   Protocol: 'WebRTC',
                   id: 1
                 }
@@ -105,7 +104,7 @@
           MeetingPlatform: 'GoogleMeet',
           Organizer: {
             Email: '',
-            FirstName: 'William Mills',
+            FirstName: 'Ashesh Singh',
             Id: 'be81be28-0014-4009-ad79-350f53ec8d35',
             LastName: ''
           },
@@ -200,14 +199,13 @@
     };
 
     bookings = rawBookings.Booking.filter(() => true).map((r) => ({
+      id: uuidv4(),
       call: r.DialInfo.Calls.Call[0] || {},
       time: r.Time || {},
       organizer: r.Organizer || {},
       title: r.Title || '',
       meetingPlatform: r.MeetingPlatform === 'GoogleMeet' ? 'GoogleMeet' : 'MSTeams'
     }));
-
-    console.log(bookings);
   }
 
   async function updateWeatherData() {
@@ -224,14 +222,52 @@
       .catch((r) => console.error(r));
   }
 
-  async function dialWebrtc(webRtcUrl, type?: string) {
-    const xcommandRequest = jsonRequest('/xapi', 'command');
+  // TODO: Remove Duplicate
+  function pollWebrtcStatus(uuid) {
+    let tries = 0;
+    let intervalId = setInterval(async () => {
+      if (tries < 3) {
+        const status = await jsonRequest('/check', 'uuids').get(uuid);
+        console.log(status);
+        if (status == null) {
+          console.log('clearing interval id', intervalId);
+          clearInterval(intervalId);
+          $activeCall.uuid = undefined;
+          $activeCall.status = undefined;
+        } else if (status?.e) {
+          tries = tries + 1;
+        } else {
+          $activeCall.uuid = uuid;
+          if ($activeCall.status?.includes('is-loading') && $activeCall.status?.includes('is-success')) {
+            $activeCall.status = 'is-danger';
+          }
+          if ($activeCall.status?.includes('is-loading') && $activeCall.status?.includes('is-danger')) {
+            $activeCall.status = undefined;
+          }
+        }
+      } else {
+        console.log('clearing interval id', intervalId);
+        clearInterval(intervalId);
+        $activeCall.uuid = undefined;
+        $activeCall.status = undefined;
+      }
+    }, 2000);
+  }
 
-    type
-      ? await xcommandRequest
-          .get('webrtc.join', { url: webRtcUrl, type: type, serial: $deviceSerial })
-          .then((r) => console.log(r))
-      : await xcommandRequest.get('webrtc.join', { url: webRtcUrl, serial: $deviceSerial }).then((r) => console.log(r));
+  // TODO: Remove Duplicate
+  async function disconnect() {
+    $activeCall.status = 'is-loading is-danger';
+
+    return await xcommandRequest.get('call.disconnect', { serial: $deviceSerial });
+  }
+
+  async function dialWebrtc(webRtcUrl, type: string, uuid: string) {
+    $activeCall.uuid = uuid;
+    $activeCall.status = 'is-loading is-success';
+
+    return await xcommandRequest
+      .get('webrtc.join', { url: webRtcUrl, type: type, serial: $deviceSerial, uuid: uuid })
+      .then(() => pollWebrtcStatus(uuid));
   }
 
   onMount(async () => {
@@ -336,15 +372,35 @@
                   </p>
                 </div>
                 <div class="column is-4 is-center">
-                  <button
-                    on:click={dialWebrtc(booking.call.Number, booking.meetingPlatform)}
-                    class="button is-success is-rounded is-medium is-fullwidth"
-                  >
-                    <!--{#if booking.meetingPlatform === 'GoogleMeet'}-->
-                    <!--  <img src={siGooglemeet.svg} />-->
-                    <!--{/if}-->
-                    <span>Join</span>
-                  </button>
+                  {#if $activeCall?.uuid == null}
+                    <button
+                      on:click={dialWebrtc(booking.call.Number, booking.meetingPlatform, booking.id)}
+                      class="button is-success is-rounded is-medium is-fullwidth"
+                    >
+                      {#if booking.meetingPlatform === 'GoogleMeet'}
+                        <figure class="image is-32x32">
+                          <img src="googlemeet.svg" alt="" />
+                        </figure>
+                      {:else if booking.meetingPlatform === 'MSTeams'}
+                        <figure class="image is-32x32">
+                          <img src="microsoftteams.svg" alt="" />
+                        </figure>
+                      {:else}
+                        <span class="icon">
+                          <i class="mdi mdi-phone" />
+                        </span>
+                      {/if}
+                    </button>
+                  {:else if $activeCall?.uuid === booking.id}
+                    <button
+                      on:click={() => disconnect()}
+                      class="button {$activeCall?.status} is-rounded is-medium is-fullwidth"
+                    >
+                      <span class="icon">
+                        <i class="mdi mdi-phone-hangup" />
+                      </span>
+                    </button>
+                  {/if}
                 </div>
               {/each}
             </div>
@@ -400,9 +456,7 @@
           <li>
             <a
               class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
-              on:click={() => {
-                showModal = true;
-              }}>MTA Map</a
+              on:click={() => (showModal = true)}>MTA Map</a
             >
           </li>
           <li>
