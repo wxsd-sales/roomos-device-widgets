@@ -3,24 +3,21 @@
   import { MaskedInput } from 'svelte-imask';
   import { jsonRequest } from '$lib/shared/json-request';
   import { GUEST_DEMO_SERVER_URL, IMI_CONNECT_SMS_HOOK_URL } from '$lib/constants';
-  import { deviceSerial } from '../lib/store';
+  import { activeCall, deviceSerial } from '../lib/store';
+  import { v4 as uuidv4 } from 'uuid';
 
   const sipAddress = 'kiosk.wxsd@webex.com';
+  const uuid = uuidv4();
+  const xcommandRequest = jsonRequest('/xapi', 'command');
   let disabled = true;
   let fromInputValue: string;
   let phoneInputValue: string;
   let displayInputs = true;
 
-  const phoneNumberOption = {
-    mask: '+{1} (000) 000 - 0000'
-  };
+  const phoneNumberOption = { mask: '+{1} (000) 000 - 0000' };
 
   const validate = (from: string, phone: string) => {
-    if (isValidPhoneNumber(`+${phone}`) && from) {
-      disabled = false;
-    } else {
-      disabled = true;
-    }
+    disabled = !(isValidPhoneNumber(`+${phone}`) && from);
   };
   const handlePhoneChange = () => {
     validate(fromInputValue, phoneInputValue);
@@ -55,10 +52,52 @@
     displayInputs = false;
   };
 
-  const makeSIPCall = async (number) => {
-    const xcommandRequest = jsonRequest('/xapi', 'command');
+  // TODO: Remove Duplicate
+  function pollGuestJoinStatus(uuid) {
+    let tries = 0;
+    let intervalId = setInterval(async () => {
+      if (tries < 3) {
+        const status = await jsonRequest('/check', 'uuids').get(uuid);
+        console.log(status);
+        if (status == null) {
+          console.log('clearing interval id', intervalId);
+          clearInterval(intervalId);
+          $activeCall.uuid = undefined;
+          $activeCall.status = undefined;
+        } else if (status?.e) {
+          tries = tries + 1;
+        } else {
+          $activeCall.uuid = uuid;
+          if ($activeCall.status?.includes('is-loading') && $activeCall.status?.includes('is-success')) {
+            $activeCall.status = 'is-danger';
+          }
+          if ($activeCall.status?.includes('is-loading') && $activeCall.status?.includes('is-danger')) {
+            $activeCall.status = undefined;
+          }
+        }
+      } else {
+        console.log('clearing interval id', intervalId);
+        clearInterval(intervalId);
+        $activeCall.uuid = undefined;
+        $activeCall.status = undefined;
+      }
+    }, 2000);
+  }
 
-    await xcommandRequest.get('dial', { number: number, serial: $deviceSerial }).then((r) => console.log(r));
+  // TODO: Remove Duplicate
+  async function disconnect() {
+    $activeCall.status = 'is-loading is-danger';
+
+    return await xcommandRequest.get('call.disconnect', { serial: $deviceSerial });
+  }
+
+  const makeSIPCall = async (number, uuid) => {
+    $activeCall.uuid = uuid;
+    $activeCall.status = 'is-loading is-success';
+
+    await xcommandRequest
+      .get('dial', { number: number, serial: $deviceSerial, uuid: uuid })
+      .then(() => pollGuestJoinStatus(uuid));
   };
 </script>
 
@@ -88,7 +127,7 @@
       </div>
       <div class="column is-centered has-text-centered">
         <button class="button is-success is-rounded is-medium is-fullwidth" {disabled}>
-          <span class="icon">
+          <span class="icon is-medium">
             <i class="mdi mdi-message-text-fast" />
           </span>
           <span>Send Invite</span>
@@ -113,7 +152,20 @@
       </p>
     </div>
   </div>
-  <button class="button is-success is-rounded is-medium is-fullwidth mt-6" on:click={() => makeSIPCall(sipAddress)}>
-    Join
-  </button>
+  {#if $activeCall?.uuid == null}
+    <button
+      class="button is-success is-rounded is-medium is-fullwidth mt-6"
+      on:click={() => makeSIPCall(sipAddress, uuid)}
+    >
+      <span class="icon is-medium">
+        <i class="mdi mdi-phone" />
+      </span>
+    </button>
+  {:else if $activeCall?.uuid === uuid}
+    <button class="button {$activeCall?.status} is-rounded is-medium is-fullwidth mt-6" on:click={() => disconnect()}>
+      <span class="icon is-medium">
+        <i class="mdi mdi-phone-hangup" />
+      </span>
+    </button>
+  {/if}
 {/if}
