@@ -2,17 +2,14 @@
   import Avatar from '../Avatar.svelte';
   import { WebexUserStatus, type WebexPerson } from '$lib/types';
   import { AvatarSize } from '$lib/types';
-  import { deviceSerial } from '../../lib/store';
-  import { jsonRequest } from '../../lib/shared/json-request';
+  import { activeCall } from '$lib/store';
 
   export let person: WebexPerson;
+  export let uuid: string;
+  export let makeSIPCall: (email: string, uuid: string) => void;
+  export let disconnect: () => void;
 
   const disabled = person.status !== WebexUserStatus.ACTIVE;
-  const makeSIPCall = async () => {
-    const xcommandRequest = jsonRequest('/xapi', 'command');
-
-    await xcommandRequest.get('dial', { number: person.emails[0], serial: $deviceSerial }).then((r) => console.log(r));
-  };
 </script>
 
 <div class="columns p-2 m-4 is-translucent-black box is-rounded is-vcentered is-mobile is-multiline">
@@ -24,17 +21,24 @@
     <p class="subtitle is-size-6">{person.emails[0]}</p>
   </div>
   <div class="column is-2-tablet">
-    <button
-      class="button is-success is-fullwidth is-rounded is-medium"
-      class:disabled
-      on:click={makeSIPCall}
-      {disabled}
-    >
-      <span class="icon is-large">
-        <i class="mdi mdi-phone" />
-      </span>
-      <span>Call</span>
-    </button>
+    {#if $activeCall?.uuid == null}
+      <button
+        class="button is-success is-fullwidth is-rounded is-medium  is-fullwidth"
+        class:disabled
+        on:click={makeSIPCall(person.emails[0], uuid)}
+        {disabled}
+      >
+        <span class="icon is-large">
+          <i class="mdi mdi-phone" />
+        </span>
+      </button>
+    {:else if $activeCall?.uuid === uuid}
+      <button class="button {$activeCall?.status} is-rounded is-medium is-fullwidth" on:click={() => disconnect()}>
+        <span class="icon">
+          <i class="mdi mdi-phone-hangup" />
+        </span>
+      </button>
+    {/if}
   </div>
 </div>
 

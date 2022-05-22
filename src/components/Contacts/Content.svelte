@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { webexOauthSessionWritable } from '$lib/store';
+  import { activeCall, deviceSerial, webexOauthSessionWritable } from '$lib/store';
   import ContactsSearch from './ContactsSearch.svelte';
   import ContactItem from './ContactItem.svelte';
   import { WebexHttpPeopleResource } from '$lib/webex/http-wrapper/webex-http-people-resource';
@@ -11,9 +11,12 @@
   import Avatar from '../Avatar.svelte';
   import { AvatarSize, type WebexPerson } from '$lib/types';
   import Modal from '../Modal.svelte';
+  import { jsonRequest } from '../../lib/shared/json-request';
+  import { v4 as uuidv4 } from 'uuid';
 
   let buttonContent = MANAGE_CONTACTS;
   let myPersonalDetails: WebexPerson;
+  const xcommandRequest = jsonRequest('/xapi', 'command');
   const peopleInstance = new WebexHttpPeopleResource($webexOauthSessionWritable.access_token);
   webexPeopleInstanceMemory.set(peopleInstance);
 
@@ -25,6 +28,54 @@
 
   const toggleSignOutModal = () => {
     isSignOutModalDisplayed = !isSignOutModalDisplayed;
+  };
+
+  // TODO: Remove Duplicate
+  function pollCallStatus(uuid) {
+    let tries = 0;
+    let intervalId = setInterval(async () => {
+      if (tries < 3) {
+        const status = await jsonRequest('/check', 'uuids').get(uuid);
+        console.log(status);
+        if (status == null) {
+          console.log('clearing interval id', intervalId);
+          clearInterval(intervalId);
+          $activeCall.uuid = undefined;
+          $activeCall.status = undefined;
+        } else if (status?.e) {
+          tries = tries + 1;
+        } else {
+          $activeCall.uuid = uuid;
+          if ($activeCall.status?.includes('is-loading') && $activeCall.status?.includes('is-success')) {
+            $activeCall.status = 'is-danger';
+          }
+          if ($activeCall.status?.includes('is-loading') && $activeCall.status?.includes('is-danger')) {
+            $activeCall.status = undefined;
+          }
+        }
+      } else {
+        console.log('clearing interval id', intervalId);
+        clearInterval(intervalId);
+        $activeCall.uuid = undefined;
+        $activeCall.status = undefined;
+      }
+    }, 2000);
+  }
+
+  // TODO: Remove Duplicate
+  async function disconnect() {
+    $activeCall.status = 'is-loading is-danger';
+
+    return await xcommandRequest.get('call.disconnect', { serial: $deviceSerial });
+  }
+
+  const makeSIPCall = async (email, uuid) => {
+    $activeCall.uuid = uuid;
+    $activeCall.status = 'is-loading is-success';
+
+    await xcommandRequest
+      .get('dial', { number: email, serial: $deviceSerial, uuid: uuid })
+      .then(() => pollCallStatus(uuid));
   };
 
   onMount(async () => {
@@ -86,7 +137,7 @@
 <div class="container contactsContainer">
   {#if buttonContent === MANAGE_CONTACTS}
     {#each $contactsListSession as person}
-      <ContactItem {person} />
+      <ContactItem {person} uuid={uuidv4()} {makeSIPCall} {disconnect} />
     {/each}
   {:else}
     <div class="box viewContainer">
@@ -113,9 +164,7 @@
       <div class="column">
         <button
           class="button is-medium is-rounded is-success is-fullwidth"
-          on:click={() => {
-            webexOauthSessionWritable.set(null);
-          }}>Yes</button
+          on:click={() => webexOauthSessionWritable.set(null)}>Yes</button
         >
       </div>
       <div class="column">
