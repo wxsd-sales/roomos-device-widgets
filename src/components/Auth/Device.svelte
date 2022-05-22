@@ -33,24 +33,31 @@
     );
   }
 
+  let pollTokenEndpointId;
+
   function pollTokenEndpoint(deviceCode: string, interval = 2, expiresIn = 300) {
     tries = 0;
 
-    const id = setInterval(() => {
+    pollTokenEndpointId = setInterval(() => {
       tries = tries + 1;
-      if (tries >= expiresIn / interval || $webexOauthSessionWritable) {
-        console.info('Clearing setInterval id:', id);
-        clearInterval(id);
+      if (tries >= expiresIn / (interval * 2) || $webexOauthSessionWritable) {
+        console.info('Clearing setInterval id:', pollTokenEndpointId);
+        clearInterval(pollTokenEndpointId);
         expired = true;
       }
 
       token(deviceCode)
         .then((r) => webexOauthSessionWritable.set(r))
-        .catch((e) => console.error(e));
-    }, interval * 1100);
+        .catch((e) => console.info(e));
+    }, 1000);
   }
 
   function init() {
+    if (pollTokenEndpointId) {
+      expired = true;
+      clearInterval(pollTokenEndpointId);
+    }
+
     return Promise.all([authorize(), validateUrl()])
       .then(([r1, r2]) => {
         authorizeResponse = r1;
@@ -87,7 +94,7 @@
   </div>
   {#if authorizeResponse && !$webexOauthSessionWritable?.access_token && expired === false}
     <div class="column is-12 has-text-centered" class:is-hidden={expired}>
-      Expires in {(authorizeResponse.expires_in / authorizeResponse.interval).toFixed(0) - tries} seconds
+      Expires in {(authorizeResponse.expires_in / (authorizeResponse.interval * 2)).toFixed(0) - tries} seconds
     </div>
   {:else}
     <div class="column is-12 has-text-centered">
