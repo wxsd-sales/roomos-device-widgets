@@ -22,8 +22,7 @@ const config = {
 
     vite: {
       css: { preprocessorOptions: { scss: { additionalData: '@use "src/variables.scss" as *;' } } },
-      envPrefix: 'EXPOSED',
-      optimizeDeps: { include: ['lodash.get', 'lodash.isequal', 'lodash.clonedeep'] }
+      envPrefix: 'EXPOSED'
     }
   }
 };
