@@ -41,7 +41,6 @@
     "sass": "^1.49.11",
     "simple-icons": "^6.22.0",
     "svelte": "^3.44.0",
-    "svelte-carousel": "^1.0.19",
     "svelte-check": "^2.2.6",
     "svelte-imask": "^1.2.0",
     "svelte-preprocess": "^4.10.5",
