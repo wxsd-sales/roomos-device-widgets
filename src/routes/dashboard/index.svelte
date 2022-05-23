@@ -284,9 +284,23 @@
     setInterval(updateDate, 1000 * 60);
     await updateWeatherData();
     updateBookingData();
-    xapi = await roomosJsxapi().initialize();
-    deviceSerial.set(await xapi.Status.SystemUnit.Hardware.Module.SerialNumber.get());
-    setTimeout(updateSensorData, 3000);
+
+    // page parameter for serial is ignored on a device with jsxapi access
+
+    let serial;
+    try {
+      xapi = await roomosJsxapi().initialize();
+      serial = await xapi.Status.SystemUnit.Hardware.Module.SerialNumber.get();
+      deviceSerial.set(serial);
+      setInterval(updateSensorData, 10000);
+    } catch (e) {
+      console.error(e);
+    }
+
+    if (serial == null) {
+      serial = $page.url.searchParams.get('serial');
+      deviceSerial.set(serial);
+    }
   });
 </script>
 
