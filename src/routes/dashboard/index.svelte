@@ -129,7 +129,7 @@
             StartTime: '2022-05-16T18:37:00Z',
             StartTimeBuffer: 300
           },
-          Title: 'Google Meeting Test',
+          Title: 'Test Google Meet meeting',
           Webex: {
             DialInNumbers: {},
             Enabled: 'False',
