@@ -40,7 +40,7 @@
 
     pollTokenEndpointId = setInterval(() => {
       tries = tries + 1;
-      if (tries >= expiresIn / (interval * 2) || $webexOauthSessionWritable) {
+      if (tries >= expiresIn / interval || $webexOauthSessionWritable) {
         console.info('Clearing setInterval id:', pollTokenEndpointId);
         clearInterval(pollTokenEndpointId);
         expired = true;
@@ -97,7 +97,7 @@
   </div>
   {#if authorizeResponse && !$webexOauthSessionWritable?.access_token && expired === false}
     <div class="column is-12 has-text-centered" class:is-hidden={expired}>
-      Expires in {(authorizeResponse.expires_in / (authorizeResponse.interval * 2)).toFixed(0) - tries} seconds
+      Expires in {(authorizeResponse.expires_in / authorizeResponse.interval).toFixed(0) - tries} seconds
     </div>
   {:else}
     <div class="column is-12 has-text-centered">
