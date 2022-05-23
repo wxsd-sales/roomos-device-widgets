@@ -1,7 +1,7 @@
 <script lang="ts">
   import jsSHA from 'jssha/dist/sha3';
   import QRCode from 'qrcode';
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { jsonRequest } from '../../lib/shared/json-request';
   import type { AuthorizeResponse } from '../../lib/types';
   import { webexOauthSessionWritable } from '../../lib/store';
@@ -11,9 +11,9 @@
   let qrImage: HTMLImageElement;
   let tries = 0;
   let expired = true;
+  let sha: jsSHA;
 
   const authRequest = jsonRequest('/actions', 'device');
-  const sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
 
   function authorize() {
     return authRequest.get('authorize');
@@ -48,19 +48,21 @@
 
       token(deviceCode)
         .then((r) => webexOauthSessionWritable.set(r))
-        .catch((e) => console.info(e));
+        .catch(() => null);
     }, 1000);
   }
 
   function init() {
     if (pollTokenEndpointId) {
       expired = true;
+      sha = undefined;
       clearInterval(pollTokenEndpointId);
     }
 
     return Promise.all([authorize(), validateUrl()])
       .then(([r1, r2]) => {
         authorizeResponse = r1;
+        sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
         sha.update(authorizeResponse.user_code);
         webexDeviceValidateUrl = r2.validateUrl + '?userCode=' + sha.getHash('HEX');
       })
@@ -71,6 +73,7 @@
       .finally(() => (expired = false));
   }
   onMount(() => init());
+  onDestroy(() => clearInterval(pollTokenEndpointId));
 </script>
 
 <div class="columns is-multiline v-ce">

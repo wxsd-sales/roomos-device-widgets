@@ -20,7 +20,7 @@ async function authorize() {
       scope: webexClientScope
     })
     .then((r) => ({ body: r as AuthorizeResponse }))
-    .catch((e) => ({ status: 400, message: e }));
+    .catch(() => ({ status: 400 }));
 }
 
 async function token(deviceCode: string) {
@@ -34,7 +34,7 @@ async function token(deviceCode: string) {
       grant_type: webexDeviceGrantType
     })
     .then((r) => ({ body: r as AuthorizeResponse }))
-    .catch((e) => ({ status: 400, message: e }));
+    .catch(() => ({ status: 400 }));
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
