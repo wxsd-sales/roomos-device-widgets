@@ -475,31 +475,31 @@
       <div class="container mb-4 level">
         <ul class="level-left">
           <li>
-            <a
+            <button
               class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
               on:click={() => {
                 showModal = true;
                 showFoodMenu = true;
-              }}>Order Food</a
-            >
-          </li>
-          <li>
-            <a
-              class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
-              on:click={() => (showModal = true)}>MTA Map</a
-            >
-          </li>
-          <li>
-            <a
-              class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
-              on:click={() => {
-                location.reload();
               }}
+            >
+              Order Food
+            </button>
+          </li>
+          <li>
+            <button
+              class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
+              on:click={() => (showModal = true)}>MTA Map</button
+            >
+          </li>
+          <li>
+            <button
+              class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
+              on:click={() => location.reload()}
             >
               <span class="icon">
                 <i class="mdi has-primary-text mdi-refresh" />
               </span>
-            </a>
+            </button>
           </li>
         </ul>
         <p class="level-right has-text-grey-lighter has-text-weight-bold mx-6 has-text-centered is-block">
