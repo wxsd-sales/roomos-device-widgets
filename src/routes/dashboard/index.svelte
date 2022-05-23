@@ -32,7 +32,8 @@
   const cityId = $page.url.searchParams.get('id') || 4887398;
   const units = $page.url.searchParams.get('units') || 'imperial';
   const brandTitle = $page.url.searchParams.get('brandTitle') || import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco';
-  const brandSubtitle = $page.url.searchParams.get('brandSubtitle') || import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco';
+  const brandSubtitle =
+    $page.url.searchParams.get('brandSubtitle') || import.meta.env.EXPOSED_BRAND_SUBTITLE || 'Bridge to possible.';
   let weather = {
     place: 'Chicago, IL',
     timezone: -18000,
