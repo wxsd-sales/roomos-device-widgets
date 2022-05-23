@@ -458,8 +458,8 @@
   <!-- Hero footer: will stick at the bottom -->
   <div class="hero-foot">
     <nav class="tabs">
-      <div class="container mb-4">
-        <ul class="">
+      <div class="container mb-4 level">
+        <ul class="level-left">
           <li>
             <a
               class="button is-rounded is-light mx-1 is-primary has-text-primary-dark"
@@ -488,6 +488,13 @@
             </a>
           </li>
         </ul>
+        <p class="level-right has-text-grey-lighter has-text-weight-bold mx-6 has-text-centered is-block">
+          Made with
+          <span class="icon-text has-text-danger">
+            <i class="mdi mdi-heart" />
+          </span>
+          by the WXSD team <span class="is-hidden-mobile">(wxsd@external.cisco.com)</span>
+        </p>
       </div>
     </nav>
   </div>
