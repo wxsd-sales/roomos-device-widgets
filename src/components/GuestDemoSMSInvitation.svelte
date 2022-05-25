@@ -141,6 +141,8 @@
       class="icon is-clickable"
       on:click={() => {
         displayInputs = true;
+        fromInputValue = '';
+        phoneInputValue = '';
       }}
     >
       <i class="mdi mdi-light mdi-24px mdi-arrow-left" />
