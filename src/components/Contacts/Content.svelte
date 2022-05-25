@@ -78,19 +78,18 @@
       .then(() => pollCallStatus(uuid));
   };
 
+  const handleLogOut = () => {
+    contactsListSession.set([]);
+    webexOauthSessionWritable.set(null);
+  };
+
   onMount(async () => {
     myPersonalDetails = await peopleInstance.getMyOwnDetails();
-    const interval = setInterval(async () => {
-      const peoplePromises: Promise<Array<WebexPerson>> = Promise.all(
-        $contactsListSession.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id))
-      );
 
-      $contactsListSession = await peoplePromises;
-    }, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    //Update Contacts List Initially!
+    $contactsListSession = await Promise.all(
+      $contactsListSession.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id))
+    );
   });
 </script>
 
@@ -162,10 +161,7 @@
     <p class="is-size-4 has-white-text">You are about to logout. Would you like to continue?</p>
     <div class="columns mt-4">
       <div class="column">
-        <button
-          class="button is-medium is-rounded is-success is-fullwidth"
-          on:click={() => webexOauthSessionWritable.set(null)}>Yes</button
-        >
+        <button class="button is-medium is-rounded is-success is-fullwidth" on:click={handleLogOut}>Yes</button>
       </div>
       <div class="column">
         <button class="button is-medium is-rounded is-danger is-fullwidth" on:click={toggleSignOutModal}>No</button>

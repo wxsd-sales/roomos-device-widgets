@@ -2,9 +2,14 @@
   import { WebexUserStatus } from '$lib/types';
   import type { WebexPerson, AvatarSize } from '$lib/types';
   import { AVATAR_ICONS, ICON_SIZES } from '$lib/constants';
+  import { onMount } from 'svelte';
+  import { webexPeopleInstanceMemory } from '$lib/store';
 
   export let person: WebexPerson;
   export let size: AvatarSize;
+  export let updatePersonStatus = (status: WebexUserStatus) => {
+    console.log(`${status} for user ${person.displayName}`);
+  };
 
   const getName = () => {
     if (person.firstName && person.lastName) return `${person.firstName.charAt(0)}${person.lastName.charAt(0)}`;
@@ -15,6 +20,20 @@
   $: cssVarStyles = Object.entries({ width: ICON_SIZES[size].background, height: ICON_SIZES[size].background })
     .map(([key, value]) => `--${key}:${value}`)
     .join(';');
+
+  onMount(async () => {
+    const interval = setInterval(async () => {
+      try {
+        person = await $webexPeopleInstanceMemory.getPersonDetails(person.id);
+        updatePersonStatus(person.status);
+      } catch (error) {
+        // Do not update the person object
+      }
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  });
 </script>
 
 <figure class={`image is-${size}x${size}`}>

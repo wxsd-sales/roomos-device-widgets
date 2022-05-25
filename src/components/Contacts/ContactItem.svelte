@@ -8,11 +8,17 @@
   export let uuid: string;
   export let makeSIPCall: (email: string, uuid: string) => void;
   export let disconnect: () => void;
+
+  let status: WebexUserStatus = person.status;
+
+  const updatePersonStatus = (newStatus: WebexUserStatus) => {
+    status = newStatus;
+  };
 </script>
 
 <div class="columns p-2 m-4 is-translucent-black box is-rounded is-vcentered is-mobile is-multiline">
   <div class="column is-align-items-center is-2-tablet is-2-mobile">
-    <Avatar {person} size={AvatarSize.LARGE} />
+    <Avatar {person} size={AvatarSize.LARGE} {updatePersonStatus} />
   </div>
   <div class="column is-8-tablet is-10-mobile">
     <p class="title is-size-4">{person.displayName}</p>
@@ -22,9 +28,9 @@
     {#if $activeCall?.uuid == null}
       <button
         class="button is-success is-fullwidth is-rounded is-medium  is-fullwidth"
-        class:disabled={person.status !== WebexUserStatus.ACTIVE}
+        class:disabled={status !== WebexUserStatus.ACTIVE}
         on:click={makeSIPCall(person.emails[0], uuid)}
-        disabled={person.status !== WebexUserStatus.ACTIVE}
+        disabled={status !== WebexUserStatus.ACTIVE}
       >
         <span class="icon is-large">
           <i class="mdi mdi-phone" />
