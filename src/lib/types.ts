@@ -67,7 +67,7 @@ export type WebexPerson = {
   lastName?: string;
   orgId: string;
   phoneNumbers: Array<string>;
-  status: WebexUserStatus;
+  status?: WebexUserStatus;
 };
 
 export enum WebexUserStatus {

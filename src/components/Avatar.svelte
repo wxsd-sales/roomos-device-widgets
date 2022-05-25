@@ -24,8 +24,11 @@
   onMount(async () => {
     const interval = setInterval(async () => {
       try {
-        person = await $webexPeopleInstanceMemory.getPersonDetails(person.id);
-        updatePersonStatus(person.status);
+        const newPerson = await $webexPeopleInstanceMemory.getPersonDetails(person.id);
+        newPerson.status = newPerson.status ? newPerson.status : person.status;
+        person = { ...newPerson };
+
+        updatePersonStatus(person.status || WebexUserStatus.UNKNOWN);
       } catch (error) {
         // Do not update the person object
       }
@@ -45,8 +48,11 @@
     </div>
   {/if}
   {#if person.status !== WebexUserStatus.UNKNOWN}
-    <span class={`icon iconContainer has-text-${AVATAR_ICONS[person.status].color}`} style={cssVarStyles}>
-      <i class={`mdi mdi-${ICON_SIZES[size].svg} mdi-${AVATAR_ICONS[person.status].name}`} />
+    <span
+      class={`icon iconContainer has-text-${AVATAR_ICONS[person.status || WebexUserStatus.UNKNOWN].color}`}
+      style={cssVarStyles}
+    >
+      <i class={`mdi mdi-${ICON_SIZES[size].svg} mdi-${AVATAR_ICONS[person.status || WebexUserStatus.UNKNOWN].name}`} />
     </span>
   {/if}
 </figure>

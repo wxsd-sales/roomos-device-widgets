@@ -9,7 +9,7 @@
   export let makeSIPCall: (email: string, uuid: string) => void;
   export let disconnect: () => void;
 
-  let status: WebexUserStatus = person.status;
+  let status: WebexUserStatus = person.status || WebexUserStatus.UNKNOWN;
 
   const updatePersonStatus = (newStatus: WebexUserStatus) => {
     status = newStatus;
