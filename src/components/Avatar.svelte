@@ -32,7 +32,7 @@
       } catch (error) {
         // Do not update the person object
       }
-    }, 5000);
+    }, 10000);
     return () => {
       clearInterval(interval);
     };

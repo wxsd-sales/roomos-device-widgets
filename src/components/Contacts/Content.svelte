@@ -22,8 +22,9 @@
 
   let isSignOutModalDisplayed = false;
 
-  const handleOnClick = () => {
+  const handleOnClick = async () => {
     buttonContent = buttonContent === MANAGE_CONTACTS ? VIEW_CONTACTS : MANAGE_CONTACTS;
+    await updateContatcs();
   };
 
   const toggleSignOutModal = () => {
@@ -83,13 +84,17 @@
     webexOauthSessionWritable.set(null);
   };
 
+  const updateContatcs = async () => {
+    $contactsListSession = await Promise.all(
+      $contactsListSession.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id))
+    );
+  };
+
   onMount(async () => {
     myPersonalDetails = await peopleInstance.getMyOwnDetails();
 
     //Update Contacts List Initially!
-    $contactsListSession = await Promise.all(
-      $contactsListSession.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id))
-    );
+    await updateContatcs();
   });
 </script>
 
