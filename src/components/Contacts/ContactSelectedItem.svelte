@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { contactsListSession } from '$lib/store';
   import Avatar from '../Avatar.svelte';
   import { AvatarSize, type WebexPerson } from '$lib/types';
 
   export let person: WebexPerson;
+  export let removePerson: (person: WebexPerson) => void;
 
-  const removePerson = () => {
-    $contactsListSession = $contactsListSession.filter((item) => item !== person);
+  const handleRemove = async () => {
+    await removePerson(person);
   };
 </script>
 
 <div class="box p-2 m-2 is-translucent-black has-text-white">
   <div class="columns">
     <div class="column is-flex is-justify-content-end ">
-      <span class="icon is-clickable" on:click={removePerson}>
+      <span class="icon is-clickable" on:click={handleRemove}>
         <i class={`mdi mdi-light mdi-24px mdi-close`} />
       </span>
     </div>

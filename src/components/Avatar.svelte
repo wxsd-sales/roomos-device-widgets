@@ -7,9 +7,7 @@
 
   export let person: WebexPerson;
   export let size: AvatarSize;
-  export let updatePersonStatus = (status: WebexUserStatus) => {
-    console.log(`${status} for user ${person.displayName}`);
-  };
+  export let updatePersonStatus = (status?: WebexUserStatus) => status;
 
   const getName = () => {
     if (person.firstName && person.lastName) return `${person.firstName.charAt(0)}${person.lastName.charAt(0)}`;

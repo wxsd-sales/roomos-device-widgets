@@ -7,7 +7,6 @@
   import { MANAGE_CONTACTS, VIEW_CONTACTS } from '$lib/constants';
   import { webexPeopleInstanceMemory } from '$lib/store';
   import ContactSelectedItem from './ContactSelectedItem.svelte';
-  import { contactsListSession } from '$lib/store';
   import Avatar from '../Avatar.svelte';
   import { AvatarSize, type WebexPerson } from '$lib/types';
   import Modal from '../Modal.svelte';
@@ -15,6 +14,7 @@
   import { v4 as uuidv4 } from 'uuid';
 
   let buttonContent = MANAGE_CONTACTS;
+  let contacts: Array<WebexPerson> = [];
   let myPersonalDetails: WebexPerson;
   const xcommandRequest = jsonRequest('/xapi', 'command');
   const peopleInstance = new WebexHttpPeopleResource($webexOauthSessionWritable.access_token);
@@ -70,6 +70,37 @@
     return await xcommandRequest.get('call.disconnect', { serial: $deviceSerial });
   }
 
+  const postContacts = async (newContacts: Array<WebexPerson>) => {
+    try {
+      await jsonRequest('/user', 'contacts').post(undefined, undefined, {
+        userID: myPersonalDetails.id,
+        contacts: newContacts.map(({ id }) => id)
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getContacts = async (currentUserID: string) => {
+    try {
+      return await jsonRequest('/user', 'contacts').get(undefined, { userID: currentUserID });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const removePerson = async (person: WebexPerson) => {
+    contacts = contacts.filter((item) => item !== person);
+    await postContacts(contacts);
+  };
+
+  const addPerson = async (person: WebexPerson) => {
+    if (!contacts.some((item) => item.id === person.id)) {
+      contacts = [person, ...contacts];
+      await postContacts(contacts);
+    }
+  };
+
   const makeSIPCall = async (email, uuid) => {
     $activeCall.uuid = uuid;
     $activeCall.status = 'is-loading is-success';
@@ -80,21 +111,17 @@
   };
 
   const handleLogOut = () => {
-    contactsListSession.set([]);
     webexOauthSessionWritable.set(null);
   };
 
   const updateContatcs = async () => {
-    $contactsListSession = await Promise.all(
-      $contactsListSession.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id))
-    );
+    contacts = await Promise.all(contacts.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id)));
   };
 
   onMount(async () => {
     myPersonalDetails = await peopleInstance.getMyOwnDetails();
-
-    //Update Contacts List Initially!
-    await updateContatcs();
+    const people = await getContacts(myPersonalDetails.id);
+    contacts = await Promise.all(people.map((id: string) => $webexPeopleInstanceMemory.getPersonDetails(id)));
   });
 </script>
 
@@ -140,20 +167,20 @@
 </nav>
 <div class="container contactsContainer">
   {#if buttonContent === MANAGE_CONTACTS}
-    {#each $contactsListSession as person}
+    {#each contacts as person}
       <ContactItem {person} uuid={uuidv4()} {makeSIPCall} {disconnect} />
     {/each}
   {:else}
     <div class="box viewContainer">
       <div class="columns">
         <div class="column">
-          <ContactsSearch />
+          <ContactsSearch {addPerson} />
         </div>
       </div>
       <div class="columns is-multiline">
-        {#each $contactsListSession as person}
+        {#each contacts as person}
           <div class="column is-4 ">
-            <ContactSelectedItem {person} />
+            <ContactSelectedItem {person} {removePerson} />
           </div>
         {/each}
       </div>

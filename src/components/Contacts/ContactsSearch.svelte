@@ -2,7 +2,9 @@
   import ContactSearchItem from './ContactSearchItem.svelte';
   import validator from 'validator';
   import type { WebexPeopleListQuery, WebexPerson } from '$lib/types';
-  import { webexPeopleInstanceMemory, contactsListSession } from '$lib/store';
+  import { webexPeopleInstanceMemory } from '$lib/store';
+
+  export let addPerson: (person: WebexPerson) => void;
 
   let people: Array<WebexPerson> = [];
   let inputField: HTMLInputElement;
@@ -31,11 +33,8 @@
     searchIsLoading = false;
   };
 
-  const selectPerson = (person: WebexPerson) => {
-    if (!$contactsListSession.some((item) => item.id === person.id)) {
-      $contactsListSession = [person, ...$contactsListSession];
-    }
-
+  const selectPerson = async (person: WebexPerson) => {
+    await addPerson(person);
     people = [];
     inputField.value = '';
     searchIsLoading = false;
