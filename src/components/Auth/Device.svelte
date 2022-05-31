@@ -87,12 +87,14 @@
       <p class="is-size-4">Can't scan the QR code?</p>
       <br />
       <p>
-        Visit <code id="verification-uri" class="has-text-link">
+        Visit <code id="verification-uri" class="has-text-black">
           {authorizeResponse?.verification_uri}
         </code> and enter code:
       </p>
       <br />
-      <code id="user-code" class="subtitle has-text-weight-semibold has-text-link">{authorizeResponse?.user_code}</code>
+      <code id="user-code" class="subtitle has-text-weight-semibold has-text-danger"
+        >{authorizeResponse?.user_code}</code
+      >
     </div>
   </div>
   {#if authorizeResponse && !$webexOauthSessionWritable?.access_token && expired === false}
