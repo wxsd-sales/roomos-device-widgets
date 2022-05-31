@@ -76,13 +76,13 @@
   onDestroy(() => clearInterval(pollTokenEndpointId));
 </script>
 
-<div class="columns is-multiline v-ce">
-  <div class="column is-two-fifths" class:is-invisible={expired}>
+<div class="columns is-multiline is-vcentered is-align-content-center is-align-items-center" id="qr-container">
+  <div class="column is-two-fifths" class:is-hidden={expired}>
     <figure class="has-text-centered">
       <img bind:this={qrImage} id="qr-code" alt="Webex QR Code" src="" />
     </figure>
   </div>
-  <div class="column has-text-centered-mobile is-align-items-center is-flex-tablet" class:is-invisible={expired}>
+  <div class="column has-text-centered-mobile is-align-items-center is-flex-tablet" class:is-hidden={expired}>
     <div>
       <p class="is-size-4">Can't scan the QR code?</p>
       <br />
@@ -114,5 +114,8 @@
 <style>
   #qr-code {
     border-radius: 0.25rem;
+  }
+  #qr-container {
+    height: 100%;
   }
 </style>
