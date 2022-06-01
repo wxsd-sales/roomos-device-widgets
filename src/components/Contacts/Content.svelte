@@ -150,9 +150,13 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <div class="navbar-item">
-        <h2 class="title">Contacts</h2>
+      <div class="navbar-item is-flex is-flex-direction-column is-align-items-flex-start">
+        <h2 class="title mb-3">Contacts</h2>
+        {#if myPersonalDetails}
+          <h3 class="is-size-5 is-italic">{myPersonalDetails.displayName}</h3>
+        {/if}
       </div>
+      <div class="navbar-item" />
     </div>
 
     <div class="navbar-end">
