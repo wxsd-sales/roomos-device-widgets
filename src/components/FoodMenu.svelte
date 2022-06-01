@@ -3,7 +3,7 @@
 </script>
 
 <figure class="image">
-  <img src="dummy-food-menu.png" />
+  <img src="dummy-food-menu.png" alt="food-menu" />
 </figure>
 
 <style>
