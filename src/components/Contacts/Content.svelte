@@ -168,7 +168,11 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <button on:click={toggleContactsView} class="button is-rounded is-warning is-light">{buttonContent}</button>
+        <button on:click={toggleContactsView} class="button is-rounded is-warning is-light">
+          <span class="icon is-large">
+            <i class={`mdi mdi-24px ${buttonContent === VIEW_CONTACTS ? 'mdi-account-eye' : 'mdi-account-cog'}`} />
+          </span>
+        </button>
       </div>
       <div class="navbar-item  is-clickable is-hoverable">
         <button
