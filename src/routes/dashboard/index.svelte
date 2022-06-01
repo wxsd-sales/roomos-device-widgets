@@ -28,6 +28,7 @@
   let showModal = false;
   let date = new Date();
 
+  const deviceId = $page.url.searchParams.get('deviceId');
   const cityId = $page.url.searchParams.get('id') || 4887398;
   const units = $page.url.searchParams.get('units') || 'imperial';
   const brandTitle = $page.url.searchParams.get('brandTitle') || import.meta.env.EXPOSED_BRAND_TITLE || 'Cisco';
@@ -52,18 +53,20 @@
   }
 
   async function updateSensorData() {
+    const connectedDevice = deviceId
+      ? xapi.Status.Peripherals.ConnectedDevice[parseInt(deviceId)]
+      : xapi.Status.Peripherals.ConnectedDevice;
+
     [ambientTemperature, peripheralsAmbientTemperature] = await Promise.all(
-      [
-        xapi.Status.RoomAnalytics.AmbientTemperature.get(),
-        xapi.Status.Peripherals.ConnectedDevice.RoomAnalytics.AmbientTemperature.get()
-      ].map((p) => p.catch(() => -0))
+      [xapi.Status.RoomAnalytics.AmbientTemperature.get(), connectedDevice.RoomAnalytics.AmbientTemperature.get()].map(
+        (p) => p.catch(() => -0)
+      )
     ).then(([t1, t2]) => [Number(t1), Number(t2)]);
 
     [relativeHumidity, peripheralsRelativeHumidity] = await Promise.all(
-      [
-        xapi.Status.RoomAnalytics.RelativeHumidity.get(),
-        xapi.Status.Peripherals.ConnectedDevice.RoomAnalytics.RelativeHumidity.get()
-      ].map((p) => p.catch(() => -0))
+      [xapi.Status.RoomAnalytics.RelativeHumidity.get(), connectedDevice.RoomAnalytics.RelativeHumidity.get()].map(
+        (p) => p.catch(() => -0)
+      )
     ).then(([t1, t2]) => [Number(t1), Number(t2)]);
 
     ambientNoise = await xapi.Status.RoomAnalytics.AmbientNoise.Level.A.get()
@@ -74,7 +77,7 @@
       .then((n) => Number(n))
       .catch(() => -0);
 
-    peripheralsAirQuality = await xapi.Status.Peripherals.ConnectedDevice.RoomAnalytics.AirQuality.Index.get()
+    peripheralsAirQuality = await connectedDevice.RoomAnalytics.AirQuality.Index.get()
       .then((i) => i)
       .catch(() => null);
   }
