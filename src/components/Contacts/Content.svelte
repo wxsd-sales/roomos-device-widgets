@@ -168,21 +168,21 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <button on:click={toggleContactsView} class="button is-rounded is-warning is-light">
+        <button on:click={toggleContactsView} class="button is-info">
           <span class="icon is-large">
-            <i class={`mdi mdi-24px ${buttonContent === VIEW_CONTACTS ? 'mdi-account-eye' : 'mdi-account-cog'}`} />
+            <i class={`mdi mdi-36px ${buttonContent === VIEW_CONTACTS ? 'mdi-account-eye' : 'mdi-account-cog'}`} />
           </span>
         </button>
       </div>
-      <div class="navbar-item  is-clickable is-hoverable">
+      <div class="navbar-item is-clickable is-hoverable">
         <button
-          class="button is-rounded is-info"
+          class="button is-warning"
           on:click={() => {
             hideDropDown = false;
           }}
         >
           <span class="icon is-large">
-            <i class="mdi mdi-24px mdi-cog" />
+            <i class="mdi has-text-white mdi-36px mdi-cog" />
           </span>
         </button>
         <div class:is-hidden={hideDropDown} class="navbar-dropdown is-right is-translucent-black is-size-5">
