@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, setContext } from 'svelte';
+  import { onMount } from 'svelte';
   import { activeCall, deviceSerial, webexOauthSessionWritable, contactsStatusMode } from '$lib/store';
   import ContactsSearch from './ContactsSearch.svelte';
   import ContactItem from './ContactItem.svelte';
@@ -182,8 +182,8 @@
           </span>
         </button>
         <div class:is-hidden={hideDropDown} class="navbar-dropdown is-right is-translucent-black is-size-5">
-          <a class="navbar-item" on:click={toggleStatusMode}> {`${disableStatusMode} Presence Status`} </a>
-          <a class="navbar-item" on:click={toggleSignOutModal}> Sign Out </a>
+          <a href={null} class="navbar-item" on:click={toggleStatusMode}> {`${disableStatusMode} Presence Status`} </a>
+          <a href={null} class="navbar-item" on:click={toggleSignOutModal}> Sign Out </a>
         </div>
       </div>
     </div>
