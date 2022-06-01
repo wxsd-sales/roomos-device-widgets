@@ -10,7 +10,6 @@
   import GuestDemoSmsInvitation from '../../components/GuestDemoSMSInvitation.svelte';
   import { jsonRequest } from '../../lib/shared/json-request';
   import { page } from '$app/stores';
-  import FoodMenu from '../../components/FoodMenu.svelte';
   import Modal from '../../components/Modal.svelte';
   import { activeCall, deviceSerial } from '../../lib/store';
   import { v4 as uuidv4 } from 'uuid';
@@ -523,7 +522,9 @@
 >
   <div class="box is-modal-translucent-black has-text-white">
     {#if showFoodMenu}
-      <FoodMenu />
+      <figure class="image">
+        <img src="dummy-food-menu.png" alt="Food Menu" />
+      </figure>
     {:else}
       <figure class="image">
         <img src={'https://upload.wikimedia.org/wikipedia/commons/0/04/NYC_subway-4D.svg'} alt="MTA" />
