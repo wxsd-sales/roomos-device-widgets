@@ -2,7 +2,9 @@
   import { FOOD_MENU_URL } from '../lib/constants';
 </script>
 
-<iframe src={FOOD_MENU_URL} frameborder="0" id="foodOrderMenuIframe" title="contacts" />
+<figure class="image">
+  <img src="dummy-food-menu.png" />
+</figure>
 
 <style>
   #foodOrderMenuIframe {
