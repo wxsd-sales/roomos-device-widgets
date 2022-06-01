@@ -18,7 +18,8 @@ export enum StateKey {
   CONTACTS_LIST = 'contactsList',
   WEBEX_PEOPLE_INSTANCE = 'webexPeopleInstance',
   DEVICE_SERIAL = 'deviceId',
-  ACTIVE_CALL = 'activeCall'
+  ACTIVE_CALL = 'activeCall',
+  CONTACTS_STATUS_MODE = 'contactsStatusMode'
 }
 
 export enum WebexHttpErrorPrefix {
@@ -90,4 +91,9 @@ export enum AvatarSize {
   LARGE = 64,
   XLARGE = 96,
   XXLARGE = 128
+}
+
+export enum ContactsStatusMode {
+  POLLING = 'polling',
+  NONE = 'none'
 }

@@ -1,34 +1,48 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { activeCall, deviceSerial, webexOauthSessionWritable } from '$lib/store';
+  import { onMount, setContext } from 'svelte';
+  import { activeCall, deviceSerial, webexOauthSessionWritable, contactsStatusMode } from '$lib/store';
   import ContactsSearch from './ContactsSearch.svelte';
   import ContactItem from './ContactItem.svelte';
   import { WebexHttpPeopleResource } from '$lib/webex/http-wrapper/webex-http-people-resource';
-  import { MANAGE_CONTACTS, VIEW_CONTACTS } from '$lib/constants';
+  import { MANAGE_CONTACTS, VIEW_CONTACTS, ENABLE, DISABLE } from '$lib/constants';
   import { webexPeopleInstanceMemory } from '$lib/store';
   import ContactSelectedItem from './ContactSelectedItem.svelte';
   import Avatar from '../Avatar.svelte';
-  import { AvatarSize, type WebexPerson } from '$lib/types';
+  import { AvatarSize, ContactsStatusMode, type WebexPerson } from '$lib/types';
   import Modal from '../Modal.svelte';
   import { jsonRequest } from '../../lib/shared/json-request';
   import { v4 as uuidv4 } from 'uuid';
 
   let buttonContent = MANAGE_CONTACTS;
+  let disableStatusMode = DISABLE;
   let contacts: Array<WebexPerson> = [];
   let myPersonalDetails: WebexPerson;
+  let hideDropDown = false;
   const xcommandRequest = jsonRequest('/xapi', 'command');
   const peopleInstance = new WebexHttpPeopleResource($webexOauthSessionWritable.access_token);
+
   webexPeopleInstanceMemory.set(peopleInstance);
 
   let isSignOutModalDisplayed = false;
 
-  const handleOnClick = async () => {
+  const toggleContactsView = async () => {
     buttonContent = buttonContent === MANAGE_CONTACTS ? VIEW_CONTACTS : MANAGE_CONTACTS;
-    await updateContatcs();
+  };
+
+  const toggleStatusMode = () => {
+    if (disableStatusMode === ENABLE) {
+      disableStatusMode = DISABLE;
+      $contactsStatusMode = ContactsStatusMode.POLLING;
+    } else {
+      disableStatusMode = ENABLE;
+      $contactsStatusMode = ContactsStatusMode.NONE;
+    }
+    hideDropDown = true;
   };
 
   const toggleSignOutModal = () => {
     isSignOutModalDisplayed = !isSignOutModalDisplayed;
+    hideDropDown = true;
   };
 
   // TODO: Remove Duplicate
@@ -114,10 +128,6 @@
     webexOauthSessionWritable.set(null);
   };
 
-  const updateContatcs = async () => {
-    contacts = await Promise.all(contacts.map(({ id }) => $webexPeopleInstanceMemory.getPersonDetails(id)));
-  };
-
   onMount(async () => {
     myPersonalDetails = await peopleInstance.getMyOwnDetails();
     const people = await getContacts(myPersonalDetails.id);
@@ -129,9 +139,6 @@
   <div class="navbar-item has-dropdown is-clickable is-hoverable">
     {#if myPersonalDetails}
       <Avatar person={myPersonalDetails} size={AvatarSize.XLARGE} />
-      <!-- <div class="navbar-dropdown">
-        <a class="navbar-item " on:click={toggleSignOutModal}> Sign Out </a>
-      </div> -->
     {/if}
   </div>
 
@@ -153,7 +160,7 @@
       <div class="navbar-item is-flex is-flex-direction-column is-align-items-flex-start">
         <h2 class="title mb-3">Contacts</h2>
         {#if myPersonalDetails}
-          <h3 class="is-size-5 is-italic">{myPersonalDetails.displayName}</h3>
+          <h3 class="is-size-5 ">{myPersonalDetails.displayName}</h3>
         {/if}
       </div>
       <div class="navbar-item" />
@@ -161,35 +168,47 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <div class="buttons">
-          <button on:click={handleOnClick} class="button is-rounded is-primary is-light">{buttonContent}</button>
-          <button class="button is-danger is-rounded is-light" on:click={toggleSignOutModal}> Sign Out </button>
+        <button on:click={toggleContactsView} class="button is-rounded is-warning is-light">{buttonContent}</button>
+      </div>
+      <div class="navbar-item  is-clickable is-hoverable">
+        <button
+          class="button is-rounded is-info"
+          on:click={() => {
+            hideDropDown = false;
+          }}
+        >
+          <span class="icon is-large">
+            <i class="mdi mdi-24px mdi-cog" />
+          </span>
+        </button>
+        <div class:is-hidden={hideDropDown} class="navbar-dropdown is-right is-translucent-black is-size-5">
+          <a class="navbar-item" on:click={toggleStatusMode}> {`${disableStatusMode} Presence Status`} </a>
+          <a class="navbar-item" on:click={toggleSignOutModal}> Sign Out </a>
         </div>
       </div>
     </div>
   </div>
 </nav>
 <div class="container contactsContainer">
-  {#if buttonContent === MANAGE_CONTACTS}
+  <div class:is-hidden={buttonContent === VIEW_CONTACTS}>
     {#each contacts as person}
       <ContactItem {person} uuid={uuidv4()} {makeSIPCall} {disconnect} />
     {/each}
-  {:else}
-    <div class="box viewContainer">
-      <div class="columns">
-        <div class="column">
-          <ContactsSearch {addPerson} />
-        </div>
-      </div>
-      <div class="columns is-multiline">
-        {#each contacts as person}
-          <div class="column is-4 ">
-            <ContactSelectedItem {person} {removePerson} />
-          </div>
-        {/each}
+  </div>
+  <div class:is-hidden={buttonContent === MANAGE_CONTACTS} class="box viewContainer">
+    <div class="columns">
+      <div class="column">
+        <ContactsSearch {addPerson} />
       </div>
     </div>
-  {/if}
+    <div class="columns is-multiline">
+      {#each contacts as person}
+        <div class="column is-4 ">
+          <ContactSelectedItem {person} {removePerson} />
+        </div>
+      {/each}
+    </div>
+  </div>
 </div>
 
 <Modal showModal={isSignOutModalDisplayed} toggleModal={toggleSignOutModal}>

@@ -1,13 +1,19 @@
 <script lang="ts">
-  import { WebexUserStatus } from '$lib/types';
+  import { ContactsStatusMode, WebexUserStatus } from '$lib/types';
   import type { WebexPerson, AvatarSize } from '$lib/types';
   import { AVATAR_ICONS, ICON_SIZES } from '$lib/constants';
   import { onMount } from 'svelte';
-  import { webexPeopleInstanceMemory } from '$lib/store';
+  import { contactsStatusMode, webexPeopleInstanceMemory } from '$lib/store';
 
   export let person: WebexPerson;
   export let size: AvatarSize;
   export let updatePersonStatus = (status?: WebexUserStatus) => status;
+
+  let interval: ReturnType<typeof setInterval>;
+
+  $: cssVarStyles = Object.entries({ width: ICON_SIZES[size].background, height: ICON_SIZES[size].background })
+    .map(([key, value]) => `--${key}:${value}`)
+    .join(';');
 
   const getName = () => {
     if (person.firstName && person.lastName) return `${person.firstName.charAt(0)}${person.lastName.charAt(0)}`;
@@ -15,25 +21,30 @@
     return person.emails[0].charAt(0);
   };
 
-  $: cssVarStyles = Object.entries({ width: ICON_SIZES[size].background, height: ICON_SIZES[size].background })
-    .map(([key, value]) => `--${key}:${value}`)
-    .join(';');
+  const updatePerson = async () => {
+    const newPerson = await $webexPeopleInstanceMemory.getPersonDetails(person.id);
+    newPerson.status = newPerson.status ? newPerson.status : person.status;
+    person = { ...newPerson };
 
-  onMount(async () => {
-    const interval = setInterval(async () => {
-      try {
-        const newPerson = await $webexPeopleInstanceMemory.getPersonDetails(person.id);
-        newPerson.status = newPerson.status ? newPerson.status : person.status;
-        person = { ...newPerson };
+    updatePersonStatus(person.status || WebexUserStatus.UNKNOWN);
+  };
 
-        updatePersonStatus(person.status || WebexUserStatus.UNKNOWN);
-      } catch (error) {
-        // Do not update the person object
+  onMount(() => {
+    contactsStatusMode.subscribe(async (mode) => {
+      if (mode === ContactsStatusMode.POLLING) {
+        await updatePerson();
+
+        interval = setInterval(async () => {
+          await updatePerson();
+        }, 10000);
+      } else {
+        if (interval) {
+          clearInterval(interval);
+          person.status = WebexUserStatus.UNKNOWN;
+          updatePersonStatus(WebexUserStatus.UNKNOWN);
+        }
       }
-    }, 10000);
-    return () => {
-      clearInterval(interval);
-    };
+    });
   });
 </script>
 

@@ -1,18 +1,22 @@
 <script lang="ts">
   import Avatar from '../Avatar.svelte';
-  import { WebexUserStatus, type WebexPerson } from '$lib/types';
+  import { ContactsStatusMode, WebexUserStatus, type WebexPerson } from '$lib/types';
   import { AvatarSize } from '$lib/types';
-  import { activeCall } from '$lib/store';
+  import { activeCall, contactsStatusMode } from '$lib/store';
 
   export let person: WebexPerson;
   export let uuid: string;
   export let makeSIPCall: (email: string, uuid: string) => void;
   export let disconnect: () => void;
 
-  let status: WebexUserStatus = person.status || WebexUserStatus.UNKNOWN;
+  let callDisabled = person.status !== WebexUserStatus.ACTIVE;
 
   const updatePersonStatus = (newStatus: WebexUserStatus) => {
-    status = newStatus;
+    if ($contactsStatusMode === ContactsStatusMode.POLLING) {
+      callDisabled = newStatus !== WebexUserStatus.ACTIVE;
+    } else {
+      callDisabled = false;
+    }
   };
 </script>
 
@@ -28,9 +32,8 @@
     {#if $activeCall?.uuid == null}
       <button
         class="button is-success is-fullwidth is-rounded is-medium  is-fullwidth"
-        class:disabled={status !== WebexUserStatus.ACTIVE}
         on:click={makeSIPCall(person.emails[0], uuid)}
-        disabled={status !== WebexUserStatus.ACTIVE}
+        disabled={callDisabled}
       >
         <span class="icon is-large">
           <i class="mdi mdi-phone" />

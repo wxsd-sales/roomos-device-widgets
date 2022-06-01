@@ -81,3 +81,6 @@ export const ICON_SIZES = {
 export const GUEST_DEMO_SERVER_URL = 'https://wxsd.wbx.ninja/wxsd-guest-demo';
 
 export const IMI_CONNECT_SMS_HOOK_URL = 'https://hooks-us.imiconnect.io/events';
+
+export const ENABLE = 'Enable';
+export const DISABLE = 'Disable';

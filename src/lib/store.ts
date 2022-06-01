@@ -1,8 +1,9 @@
 import { localStorage, sessionStorage, storage } from './shared/storage';
-import { StateKey } from './types';
+import { ContactsStatusMode, StateKey } from './types';
 import type { Json } from './types';
 import type { WebexHttpPeopleResource } from './webex/http-wrapper/webex-http-people-resource';
 import type { Writable } from 'svelte/store';
+import { ENABLE } from './constants';
 
 export const exampleWritable = storage<string>(StateKey.EXAMPLE_WRITABLE, 'example-writable-value');
 export const exampleLocalWritable = localStorage<string>(
@@ -21,3 +22,5 @@ export const webexPeopleInstanceMemory = storage<WebexHttpPeopleResource>(StateK
 export const deviceSerial: Writable<string> = localStorage(StateKey.DEVICE_SERIAL);
 
 export const activeCall: Writable<{ status?: string; uuid?: string }> = storage(StateKey.ACTIVE_CALL, {});
+
+export const contactsStatusMode: Writable<ContactsStatusMode> = storage(StateKey.CONTACTS_STATUS_MODE, ContactsStatusMode.POLLING);
