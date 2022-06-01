@@ -6,6 +6,8 @@
   import type { AuthorizeResponse } from '../../lib/types';
   import { webexOauthSessionWritable } from '../../lib/store';
 
+  export let text: string;
+
   let authorizeResponse: AuthorizeResponse;
   let webexDeviceValidateUrl: string;
   let qrImage: HTMLImageElement;
@@ -77,12 +79,15 @@
 </script>
 
 <div class="columns is-multiline is-vcentered is-align-content-center is-align-items-center" id="qr-container">
-  <div class="column is-two-fifths" class:is-hidden={expired}>
+  <div class="column is-12" class:is-hidden={expired}>
+    <p class="has-text-centered">{text}</p>
+  </div>
+  <div class="column is-12" class:is-hidden={expired}>
     <figure class="has-text-centered">
       <img bind:this={qrImage} id="qr-code" alt="Webex QR Code" src="" />
     </figure>
   </div>
-  <div class="column has-text-centered-mobile is-align-items-center is-flex-tablet" class:is-hidden={expired}>
+  <div class="column has-text-centered is-align-items-center" class:is-hidden={expired}>
     <div>
       <p class="is-size-4">Can't scan the QR code?</p>
       <br />
