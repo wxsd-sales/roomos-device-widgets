@@ -92,9 +92,9 @@
       <p class="is-size-4">Can't scan the QR code?</p>
       <br />
       <p>
-        Visit <code id="verification-uri" class="has-text-black">
+        Visit <span id="verification-uri" class="has-text-weight-bold is-family-monospace">
           {authorizeResponse?.verification_uri}
-        </code> and enter code:
+        </span> and enter code:
       </p>
       <br />
       <code id="user-code" class="subtitle has-text-weight-semibold has-text-danger"
