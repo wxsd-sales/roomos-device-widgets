@@ -79,7 +79,7 @@
 </script>
 
 <div class="columns is-multiline is-vcentered is-align-content-center is-align-items-center" id="qr-container">
-  <div class="column is-12" class:is-hidden={expired}>
+  <div class="column is-12">
     <p class="has-text-centered">{text}</p>
   </div>
   <div class="column is-12" class:is-hidden={expired}>
