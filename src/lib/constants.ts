@@ -54,8 +54,6 @@ export const VALID_DESTINATION = new RegExp(
   'i'
 );
 
-export const FOOD_MENU_URL = 'https://orderlina.menu/marcelas';
-
 export const AVATAR_ICONS = {
   [WebexUserStatus.CALL]: { name: 'phone-outline', color: 'warning' },
   [WebexUserStatus.DND]: { name: 'minus-circle', color: 'danger' },
