@@ -1,6 +1,7 @@
 <script lang="ts">
   import jsSHA from 'jssha/dist/sha3';
   import QRCode from 'qrcode';
+  import moment from 'moment';
   import { onDestroy, onMount } from 'svelte';
   import { jsonRequest } from '../../lib/shared/json-request';
   import type { AuthorizeResponse } from '../../lib/types';
@@ -49,7 +50,10 @@
       }
 
       token(deviceCode)
-        .then((r) => webexOauthSessionWritable.set(r))
+        .then((token) => {
+          token['expiration_date'] = moment().add(token.expires_in, 'seconds');
+          webexOauthSessionWritable.set(token);
+        })
         .catch(() => null);
     }, 1000);
   }

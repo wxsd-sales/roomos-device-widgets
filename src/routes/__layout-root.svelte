@@ -2,6 +2,8 @@
 <script>
   import '../app.scss';
   import { onMount } from 'svelte';
+  import { webexOauthSessionWritable } from '$lib/store';
+  import moment from 'moment';
 
   onMount(() => {
     // if this functions returns it indicates javascript is enabled on the browser
@@ -41,6 +43,12 @@
       console.error('Cookies are disabled.');
       document.getElementById('cookies-warning').classList.remove('is-hidden');
       document.getElementById('app').classList.add('is-invisible');
+    }
+
+    if ($webexOauthSessionWritable) {
+      if (moment().isAfter($webexOauthSessionWritable?.expiration_date)) {
+        webexOauthSessionWritable.set(null);
+      }
     }
   });
 </script>
