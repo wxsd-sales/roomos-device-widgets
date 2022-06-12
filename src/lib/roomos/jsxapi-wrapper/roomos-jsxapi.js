@@ -15,7 +15,7 @@ export class RoomosJsxapi {
   /**
    * Initialize the core RoomOS JSXAPI instance.
    *
-   * @return {Promise<XAPI | string>}
+   * @returns {Promise<XAPI | string>}
    */
   async initialize() {
     try {
@@ -32,6 +32,6 @@ export class RoomosJsxapi {
  *
  * @param {Record<string, unknown>} [config]
  *
- * @return {RoomosJsxapi}
+ * @returns {RoomosJsxapi}
  */
 export const roomosJsxapi = (config) => new RoomosJsxapi(config);

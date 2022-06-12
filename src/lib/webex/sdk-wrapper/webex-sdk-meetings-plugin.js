@@ -24,10 +24,10 @@ export class WebexSdkMeetingsPlugin {
    * @param {Webex} webex
    * @param {string} destination
    * @param {HTMLVideoElement} localVideo
-   * @param {HTMLVideoElement|null} localShare
+   * @param {HTMLVideoElement | null} localShare
    * @param {HTMLAudioElement} remoteAudio
    * @param {HTMLVideoElement} remoteVideo
-   * @param {HTMLVideoElement|null} remoteShare
+   * @param {HTMLVideoElement | null} remoteShare
    * @param {HTMLButtonElement} toggleAudioButton
    * @param {HTMLButtonElement} toggleVideoButton
    * @param {HTMLButtonElement} toggleShareButton
@@ -38,7 +38,7 @@ export class WebexSdkMeetingsPlugin {
    * @param {function} handleMeetingLeave
    * @param {function} handleMediaReady
    *
-   * @return {Promise<Meeting>}
+   * @returns {Promise<Meeting>}
    */
   startMeeting(
     webex,
@@ -77,10 +77,10 @@ export class WebexSdkMeetingsPlugin {
    *
    * @param {Meeting} meeting
    * @param {HTMLVideoElement} localVideo
-   * @param {HTMLVideoElement|null} localShare
+   * @param {HTMLVideoElement | null} localShare
    * @param {HTMLAudioElement} remoteAudio
    * @param {HTMLVideoElement} remoteVideo
-   * @param {HTMLVideoElement|null} remoteShare
+   * @param {HTMLVideoElement | null} remoteShare
    * @param {HTMLButtonElement} toggleAudioButton
    * @param {HTMLButtonElement} toggleVideoButton
    * @param {HTMLButtonElement} toggleShareButton
@@ -91,7 +91,7 @@ export class WebexSdkMeetingsPlugin {
    * @param {function} handleMeetingLeave
    * @param {function} handleMediaReady
    *
-   * @return void
+   * @returns Void
    */
   #bindMeetingEvents(
     meeting,
@@ -111,8 +111,7 @@ export class WebexSdkMeetingsPlugin {
     handleMediaReady
   ) {
     /**
-     *
-     * @param {{type: string, stream?: MediaStream}} media
+     * @param {{ type: string; stream?: MediaStream }} media
      * @param isReady
      */
     const toggleStream = (media, isReady) => {
@@ -216,7 +215,7 @@ export class WebexSdkMeetingsPlugin {
    *
    * @param {Meeting} meeting
    *
-   * @returns void
+   * @returns Void
    */
   #joinMeeting(meeting) {
     meeting.join().then(() => {
@@ -240,6 +239,6 @@ export class WebexSdkMeetingsPlugin {
 /**
  * Instantiates the Webex SDK Meetings Plugin wrapper.
  *
- * @return {WebexSdkMeetingsPlugin}
+ * @returns {WebexSdkMeetingsPlugin}
  */
 export const webexSdkMeetingsPlugin = () => new WebexSdkMeetingsPlugin();

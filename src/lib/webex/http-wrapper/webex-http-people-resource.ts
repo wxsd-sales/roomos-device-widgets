@@ -1,5 +1,5 @@
 import { WebexHttp } from './webex-http';
-import type { Json, WebexPeopleListQuery } from '../../types';
+import type { JSONObject } from '@sveltejs/kit/types/private';
 
 export class WebexHttpPeopleResource extends WebexHttp {
   /**
@@ -17,7 +17,7 @@ export class WebexHttpPeopleResource extends WebexHttp {
    * @param personId
    * @param query
    *
-   * @return {Promise<Json | string>}
+   * @returns {Promise<Json | string>}
    */
   getPersonDetails(personId: string, query?: { callingData: boolean }) {
     return this.get(personId, query);
@@ -28,7 +28,7 @@ export class WebexHttpPeopleResource extends WebexHttp {
    *
    * @param query
    *
-   * @return {Promise<Json | string>}
+   * @returns {Promise<Json | string>}
    */
   getMyOwnDetails(query?: { callingData: boolean }) {
     return this.get('me', query);
@@ -39,10 +39,20 @@ export class WebexHttpPeopleResource extends WebexHttp {
    *
    * @param query
    *
-   * @return {Promise<Json[] | string>}
+   * @returns {Promise<Json[] | string>}
    */
-  listPeople(query?: WebexPeopleListQuery) {
-    return this.get(undefined, query).then((r: { items: Json[] }) => r.items);
+  listPeople(query?: {
+    email?: string;
+    displayName?: string;
+    id?: string;
+    orgId?: string;
+    callingData?: boolean;
+    locationId?: string;
+    max?: number;
+  }) {
+    return this.get(undefined, query)
+      .then((r) => r.json())
+      .then((r: { items: JSONObject[] }) => r.items);
   }
 }
 
@@ -51,6 +61,6 @@ export class WebexHttpPeopleResource extends WebexHttp {
  *
  * @param accessToken
  *
- * @return {WebexHttpPeopleResource}
+ * @returns {WebexHttpPeopleResource}
  */
 export const webexHttpPeopleResource = (accessToken: string) => new WebexHttpPeopleResource(accessToken);

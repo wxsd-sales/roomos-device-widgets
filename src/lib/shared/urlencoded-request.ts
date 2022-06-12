@@ -1,8 +1,7 @@
-import type { Json, RequestMethod } from '../types';
+import type { JSONObject, HttpMethod } from '@sveltejs/kit/types/private';
 import { FetchWrapper } from './fetch-wrapper';
 
-export class UrlEncodedRequest extends FetchWrapper {
-  public resourceUrl = '/';
+export class UrlEncodedRequest<T> extends FetchWrapper<T> {
   protected headers: Headers = new Headers({ 'Content-type': 'application/x-www-form-urlencoded' });
 
   /**
@@ -13,24 +12,18 @@ export class UrlEncodedRequest extends FetchWrapper {
    * @param authScheme
    * @param credentials
    */
-  constructor(baseUrl = '/', resource = '', authScheme = 'Bearer', credentials?: string) {
+  constructor(baseUrl = '/', resource = '', authScheme?: string, credentials?: string) {
     super(baseUrl, resource, authScheme, credentials);
-    this.resourceUrl = baseUrl + (resource ? '/' + resource : '');
-    credentials ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
+    authScheme ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
   }
 
-  /**
-   *  @inheritDoc
-   */
-  protected makeRequest(method: RequestMethod, url: string, body?: Json) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const requestBody = body ? new URLSearchParams(body) : '';
-    const request = body
-      ? new Request(url, { method: method, headers: this.headers, body: requestBody })
-      : new Request(url, { method: method, headers: this.headers });
+  /** @inheritDoc */
+  protected makeRequest(method: HttpMethod, url: string, body?: JSONObject) {
+    const requestBody = body ? new URLSearchParams(body as Record<string, string>).toString() : '';
 
-    return fetch(request);
+    return body
+      ? fetch(url, { method: 'POST', headers: this.headers, body: requestBody })
+      : fetch(url, { method: method, headers: this.headers });
   }
 }
 
@@ -39,5 +32,5 @@ export class UrlEncodedRequest extends FetchWrapper {
  *
  * @type {UrlEncodedRequest}
  */
-export const urlEncodedRequest = (baseUrl = '/', resource = '', authScheme = 'Bearer', credentials?: string) =>
+export const urlEncodedRequest = (baseUrl = '/', resource?: string, authScheme?: string, credentials?: string) =>
   new UrlEncodedRequest(baseUrl, resource, authScheme, credentials);

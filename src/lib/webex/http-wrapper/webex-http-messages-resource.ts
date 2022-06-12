@@ -1,5 +1,5 @@
 import { WebexHttp } from './webex-http';
-import type { Json } from '../../types';
+import type { JSONObject } from '@sveltejs/kit/types/private';
 
 export class WebexHttpMessagesResource extends WebexHttp {
   /**
@@ -16,10 +16,12 @@ export class WebexHttpMessagesResource extends WebexHttp {
    *
    * @param query
    *
-   * @return {Promise<Json[]> | string}
+   * @returns {Promise<JSONObject[]>}
    */
   listDirectMessages(query: { parentId?: string; personId: string } | { parentId?: string; personEmail: string }) {
-    return this.get('direct', query).then((r: { items: Json[] }) => r.items);
+    return this.get('direct', query)
+      .then((r) => r.json())
+      .then((r: { items: JSONObject[] }) => r.items);
   }
 
   /**
@@ -27,7 +29,7 @@ export class WebexHttpMessagesResource extends WebexHttp {
    *
    * @param query
    *
-   * @return {Promise<Json[]> | string}
+   * @returns {Promise<JSONObject[]>}
    */
   listMessages(query: {
     roomId: string;
@@ -37,7 +39,20 @@ export class WebexHttpMessagesResource extends WebexHttp {
     beforeMessage?: string;
     max?: number;
   }) {
-    return this.get(undefined, query).then((r: { items: Json[] }) => r.items);
+    return this.get(undefined, query)
+      .then((r) => r.json())
+      .then((r: { items: JSONObject[] }) => r.items);
+  }
+
+  /**
+   * Send a plain text message to a room.
+   *
+   * @param body
+   *
+   * @returns {Promise<JSONObject>}
+   */
+  createMessage(body: { roomId: string; text: string } | { roomId: string; markdown: string }) {
+    return this.post(undefined, undefined, body).then((r) => r.json() as Promise<JSONObject>);
   }
 }
 
@@ -46,6 +61,6 @@ export class WebexHttpMessagesResource extends WebexHttp {
  *
  * @param accessToken
  *
- * @return {WebexHttpMessagesResource}
+ * @returns {WebexHttpMessagesResource}
  */
 export const webexHttpMessagesResource = (accessToken: string) => new WebexHttpMessagesResource(accessToken);

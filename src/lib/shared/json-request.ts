@@ -1,8 +1,7 @@
-import type { Json, RequestMethod } from '../types';
+import type { HttpMethod, JSONValue } from '@sveltejs/kit/types/private';
 import { FetchWrapper } from './fetch-wrapper';
 
-export class JsonRequest extends FetchWrapper {
-  public resourceUrl = '/';
+export class JsonRequest extends FetchWrapper<JSONValue> {
   protected headers: Headers = new Headers({ 'Content-type': 'application/json' });
 
   /**
@@ -10,28 +9,20 @@ export class JsonRequest extends FetchWrapper {
    *
    * @param baseUrl
    * @param resource
-   * @param charset
    * @param authScheme
    * @param credentials
    */
-  constructor(baseUrl = '/', resource = '', charset?: string, authScheme?: string, credentials?: string) {
+  constructor(baseUrl = '/', resource?: string, authScheme?: string, credentials?: string) {
     super(baseUrl, resource, authScheme, credentials);
-    this.resourceUrl = baseUrl + (resource ? '/' + resource : '');
-    charset
-      ? this.headers.set('Content-type', 'application/json' + ';' + charset)
-      : this.headers.set('Content-type', 'application/json');
-    credentials ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
+    authScheme ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
+    this.headers.set('Accept', 'application/json');
   }
 
-  /**
-   *  @inheritDoc
-   */
-  protected makeRequest(method: RequestMethod, url: string, body?: Json) {
-    const request = body
-      ? new Request(url, { method: method, headers: this.headers, body: JSON.stringify(body) })
-      : new Request(url, { method: method, headers: this.headers });
-
-    return fetch(request);
+  /** @inheritDoc */
+  protected makeRequest(method: HttpMethod, url: string, body?: JSONValue) {
+    return body
+      ? fetch(url, { method: method, headers: this.headers, body: JSON.stringify(body) })
+      : fetch(url, { method: method, headers: this.headers });
   }
 }
 
@@ -40,10 +31,5 @@ export class JsonRequest extends FetchWrapper {
  *
  * @type {JsonRequest}
  */
-export const jsonRequest = (
-  baseUrl = '/',
-  resource = '',
-  charset?: string,
-  authScheme?: string,
-  credentials?: string
-) => new JsonRequest(baseUrl, resource, charset, authScheme, credentials);
+export const jsonRequest = (baseUrl = '/', resource?: string, authScheme?: string, credentials?: string) =>
+  new JsonRequest(baseUrl, resource, authScheme, credentials);

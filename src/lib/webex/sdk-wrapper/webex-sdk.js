@@ -1,4 +1,4 @@
-import { WEBEX_CONFIG } from '../../constants';
+import { WEBEX_SDK_CONFIG } from '../../constants';
 import { WebexSdkErrorPrefix } from '../../types';
 
 export class WebexSdk {
@@ -11,7 +11,7 @@ export class WebexSdk {
    * @param {string} accessToken
    * @param {Record<string, unknown>} config
    */
-  constructor(accessToken, config = WEBEX_CONFIG) {
+  constructor(accessToken, config = WEBEX_SDK_CONFIG) {
     this.#accessToken = accessToken;
     this.#config = config;
   }
@@ -19,7 +19,7 @@ export class WebexSdk {
   /**
    * Initialize the core Webex instance from the SDK.
    *
-   * @return {Promise<Webex | string>}
+   * @returns {Promise<Webex | string>}
    */
   initialize() {
     return new Promise((resolve) => {
@@ -36,6 +36,6 @@ export class WebexSdk {
  * @param {string} accessToken
  * @param {Record<string, unknown>} config
  *
- * @return {WebexSdk}
+ * @returns {WebexSdk}
  */
-export const webexSdk = (accessToken, config = WEBEX_CONFIG) => new WebexSdk(accessToken, config);
+export const webexSdk = (accessToken, config = WEBEX_SDK_CONFIG) => new WebexSdk(accessToken, config);

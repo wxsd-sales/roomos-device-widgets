@@ -1,6 +1,5 @@
 import { JsonRequest } from '../../shared/json-request';
 import { WEBEX_API_ENDPOINT } from '../../constants';
-import { WebexHttpErrorPrefix } from '../../types';
 
 export class WebexHttp extends JsonRequest {
   /**
@@ -10,7 +9,7 @@ export class WebexHttp extends JsonRequest {
    * @param accessToken
    */
   constructor(resource: string, accessToken: string) {
-    super(WEBEX_API_ENDPOINT, resource, 'UTF-8', 'Bearer', accessToken);
+    super(WEBEX_API_ENDPOINT, resource, 'Bearer', accessToken);
   }
 
   /**
@@ -18,24 +17,10 @@ export class WebexHttp extends JsonRequest {
    *
    * @param response
    *
-   * @return {Promise<any>}
+   * @returns {Promise<any>}
    */
   protected handleResponse(response: Response) {
-    const onFailure = (r: Response) => {
-      if (r?.status === 401) {
-        return WebexHttpErrorPrefix.INVALID_EXPIRED_ACCESS_TOKEN;
-      } else if (r?.status >= 500) {
-        return WebexHttpErrorPrefix.UNEXPECTED_SERVER_ERROR;
-      } else if (r?.status >= 400) {
-        return WebexHttpErrorPrefix.UNEXPECTED_CLIENT_ERROR;
-      } else {
-        return WebexHttpErrorPrefix.UNEXPECTED_ERROR;
-      }
-    };
-
-    return response.ok
-      ? response.json()
-      : Promise.reject(response).catch(async (r) => `${onFailure(r)}: ${await r.json()}`);
+    return response.ok ? Promise.resolve(response) : Promise.reject(response);
   }
 
   /**
@@ -44,7 +29,7 @@ export class WebexHttp extends JsonRequest {
    * @param response
    */
   paginate() {
-    throw Error('Not Implemented.');
+    throw Error('Not implemented.');
   }
 }
 
@@ -54,6 +39,6 @@ export class WebexHttp extends JsonRequest {
  * @param accessToken
  * @param resource
  *
- * @return {WebexHttp}
+ * @returns {WebexHttp}
  */
 export const webexHttp = (accessToken: string, resource = '') => new WebexHttp(resource, accessToken);

@@ -1,8 +1,7 @@
-import type { Json } from '../types';
-import { RequestMethod } from '../types';
+import type { JSONObject, HttpMethod } from '@sveltejs/kit/types/private';
 
-export abstract class FetchWrapper {
-  public resourceUrl = '/';
+export abstract class FetchWrapper<T> {
+  public resourceUrl = '';
   protected headers: Headers = new Headers();
 
   /**
@@ -13,9 +12,9 @@ export abstract class FetchWrapper {
    * @param authScheme
    * @param credentials
    */
-  protected constructor(baseUrl = '/', resource = '', authScheme = 'Bearer', credentials?: string) {
+  protected constructor(baseUrl = '/', resource?: string, authScheme?: string, credentials?: string) {
     this.resourceUrl = baseUrl + (resource ? '/' + resource : '');
-    credentials ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
+    authScheme ? this.headers.set('Authorization', authScheme + ' ' + credentials) : null;
   }
 
   /**
@@ -24,12 +23,10 @@ export abstract class FetchWrapper {
    * @param endpoint
    * @param parameters
    *
-   * @return {string}
+   * @returns {string}
    */
-  protected formUrl(endpoint?: string, parameters?: Json) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const query = parameters ? `?${new URLSearchParams(parameters)}` : '';
+  protected formUrl(endpoint?: string, parameters?: JSONObject) {
+    const query = parameters ? `?${new URLSearchParams(parameters as Record<string, string>)}` : '';
 
     return endpoint ? `${this.resourceUrl}/${endpoint}${query}` : `${this.resourceUrl}${query}`;
   }
@@ -39,27 +36,25 @@ export abstract class FetchWrapper {
    *
    * @param response
    *
-   * @return {Promise<any>}
+   * @returns {Promise<Response>}
    */
   protected handleResponse(response: Response) {
-    return response.ok ? response.json() : Promise.reject(response);
+    return response.ok ? Promise.resolve(response) : Promise.reject(response);
   }
 
   /**
-   *  Makes a resource request.
+   * Makes a resource request.
    *
    * @param method
    * @param url
    * @param body
    *
-   * @return {Promise<Response>}
+   * @returns {Promise<Response>}
    */
-  protected makeRequest(method: RequestMethod, url: string, body?: unknown) {
-    const request = body
-      ? new Request(url, { method: method, headers: this.headers, body: body as string })
-      : new Request(url, { method: method, headers: this.headers });
-
-    return fetch(request);
+  protected makeRequest(method: HttpMethod, url: string, body?: unknown) {
+    return body
+      ? fetch(url, { method: method, headers: this.headers, body: body as string })
+      : fetch(url, { method: method, headers: this.headers });
   }
 
   /**
@@ -68,12 +63,12 @@ export abstract class FetchWrapper {
    * @param endpoint
    * @param parameters
    *
-   * @return {Promise<any>}
+   * @returns {Promise<Response>}
    */
-  delete(endpoint?: string, parameters?: Json) {
+  delete(endpoint?: string, parameters?: JSONObject) {
     const url = this.formUrl(endpoint, parameters);
 
-    return this.makeRequest(RequestMethod.DELETE, url).then((r) => this.handleResponse(r));
+    return this.makeRequest('DELETE', url).then((r) => this.handleResponse(r));
   }
 
   /**
@@ -82,12 +77,12 @@ export abstract class FetchWrapper {
    * @param endpoint
    * @param parameters
    *
-   * @return {Promise<any>}
+   * @returns {Promise<Response>}
    */
-  get(endpoint?: string, parameters?: Json) {
+  get(endpoint?: string, parameters?: JSONObject) {
     const url = this.formUrl(endpoint, parameters);
 
-    return this.makeRequest(RequestMethod.GET, url).then((r) => this.handleResponse(r));
+    return this.makeRequest('GET', url).then((r) => this.handleResponse(r));
   }
 
   /**
@@ -97,12 +92,12 @@ export abstract class FetchWrapper {
    * @param parameters
    * @param body
    *
-   * @return {Promise<any>}
+   * @returns {Promise<Response>}
    */
-  patch(endpoint?: string, parameters?: Json, body?: Json) {
+  patch(endpoint?: string, parameters?: JSONObject, body?: T) {
     const url = this.formUrl(endpoint, parameters);
 
-    return this.makeRequest(RequestMethod.PATCH, url, body).then((r) => this.handleResponse(r));
+    return this.makeRequest('PATCH', url, body).then((r) => this.handleResponse(r));
   }
 
   /**
@@ -112,12 +107,12 @@ export abstract class FetchWrapper {
    * @param parameters
    * @param body
    *
-   * @return {Promise<any>}
+   * @returns {Promise<Response>}
    */
-  post(endpoint?: string, parameters?: Json, body?: Json) {
+  post(endpoint?: string, parameters?: JSONObject, body?: T) {
     const url = this.formUrl(endpoint, parameters);
 
-    return this.makeRequest(RequestMethod.POST, url, body).then((r) => this.handleResponse(r));
+    return this.makeRequest('POST', url, body).then((r) => this.handleResponse(r));
   }
 
   /**
@@ -127,11 +122,11 @@ export abstract class FetchWrapper {
    * @param parameters
    * @param body
    *
-   * @return {Promise<any>}
+   * @returns {Promise<Response>}
    */
-  put(endpoint?: string, parameters?: Json, body?: Json) {
+  put(endpoint?: string, parameters?: JSONObject, body?: T) {
     const url = this.formUrl(endpoint, parameters);
 
-    return this.makeRequest(RequestMethod.PUT, url, body).then((r) => this.handleResponse(r));
+    return this.makeRequest('PUT', url, body).then((r) => this.handleResponse(r));
   }
 }
