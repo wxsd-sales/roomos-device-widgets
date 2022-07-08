@@ -1,11 +1,11 @@
-/* Write your global styles here, in SCSS syntax. Variables and mixins from the src/variables.scss file are available here without importing */
+/* Write your global styles here, in SCSS syntax. */
 /* Import only what you need from Bulma */
 
 // Variables
 @import 'variables';
 
 // Fonts
-@import '@mdi/font/css/materialdesignicons.css'; // SCSS import not working at the moment
+@import '@mdi/font/scss/materialdesignicons';
 
 // Import Bulma styles
 @import 'bulma/sass/utilities/_all';
@@ -17,9 +17,30 @@
 @import 'bulma/sass/helpers/_all';
 @import 'bulma/sass/layout/_all';
 
+:root {
+  --brand-title-size: calc(#{$title-size} * 2 + 0.35);
+  --brand-subtitle-size: calc(#{$title-size} * 0.5 + 0.35);
+  --border-radius: #{$radius};
+  --border-radius-large: #{$radius-large};
+  --size-1: #{$size-1};
+  --size-2: #{$size-2};
+  --size-3: #{$size-3};
+  --size-4: #{$size-4};
+  --size-5: #{$size-5};
+  --size-6: #{$size-6};
+  --size-7: #{$size-7};
+}
+
 html,
-body,
+body {
+  min-height: 100%;
+}
+
 #app {
+  min-height: 100vh;
+}
+
+.is-fullheight {
   height: 100%;
 }
 
@@ -35,32 +56,3 @@ body,
 //.column {
 //  outline: lightblue dashed 2px;
 //}
-
-.is-translucent-white {
-  background-color: hsl(0, 0%, 100%, 0.65);
-  box-shadow: none;
-}
-
-.is-translucent-black {
-  background-color: hsl(0, 0%, 0%, 0.65);
-  box-shadow: none;
-}
-
-.is-overflow-ellipse {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.is-inline-grid {
-  display: inline-grid;
-}
-
-.navbar-item img {
-  max-height: fit-content !important;
-}
-
-.is-modal-translucent-black {
-  background-color: hsl(0, 0%, 0%, 1);
-  box-shadow: none;
-}
