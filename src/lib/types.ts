@@ -1,99 +1,77 @@
-export type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
+import type { JSONObject } from '@sveltejs/kit/types/private';
 
-export enum RequestMethod {
-  DELETE = 'DELETE',
-  GET = 'GET',
-  PATCH = 'PATCH',
-  POST = 'POST',
-  PUT = 'PUT'
+export interface RoomAnalytics {
+  ambientNoiseLevelA?: number;
+  ambientTemperature?: number;
+  airQualityIndex?: number;
+  peopleCountCapacity?: number;
+  peopleCountCurrent?: number;
+  soundLevelA?: number;
+  relativeHumidity?: number;
+  peoplePresence?: boolean;
+  t3AlarmDetected?: boolean;
+  engagementCloseProximity?: boolean;
+}
+
+export interface Peripheral {
+  id: number;
+  status: number;
+  roomAnalytics?: RoomAnalytics;
+  networkAddress?: string;
+  softwareInfo?: string;
+  hardwareInfo?: string;
+  serialNumber?: string;
+  type?:
+    | 'AudioAmplifier'
+    | 'AudioMicrophone'
+    | 'Byod'
+    | 'Camera'
+    | 'ControlSystem'
+    | 'InputDevice'
+    | 'ISDNLink'
+    | 'Other'
+    | 'SpeakerTracker'
+    | 'TouchPanel'
+    | 'Headset'
+    | 'RoomScheduler'
+    | 'PersistentWebApp';
+  name?: string;
+  location?: 'OutsideRoom' | 'InsideRoom';
+}
+
+export interface Call {
+  id: number;
+  connectedAt: number;
+  callbackNumber: string;
+  status:
+    | 'Connected'
+    | 'Connecting'
+    | 'Dialling'
+    | 'Disconnecting'
+    | 'EarlyMedia'
+    | 'Idle'
+    | 'OnHold'
+    | 'Preserved'
+    | 'RemotePreserved'
+    | 'Ringing';
+  remoteNumber: string;
+  displayName: string;
+  callType: 'Audio' | 'AudioCanEscalate' | 'ForwardAllCall' | 'Unknown' | 'Video';
+  direction: 'Incoming' | 'Outgoing';
+  answerState: 'Answered' | 'Autoanswered' | 'Ignored' | 'Unanswered';
+  protocol: 'Unknown' | 'H320' | 'H323' | 'SIP' | 'Spark' | 'WebRTC';
+  capabilities?: JSONObject;
+  bookingId?: string;
+}
+
+export interface Status {
+  roomAnalytics?: RoomAnalytics;
+  peripherals?: Peripheral[];
+  calls?: Call[];
 }
 
 export enum StateKey {
-  WEBEX_OAUTH = 'webexOauth',
-  WEBEX_USER = 'webexUser',
   EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
   EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',
-  EXAMPLE_WRITABLE = 'exampleWritable',
-  WEBEX = 'webex',
-  CONTACTS_LIST = 'contactsList',
-  WEBEX_PEOPLE_INSTANCE = 'webexPeopleInstance',
-  DEVICE_SERIAL = 'deviceId',
-  ACTIVE_CALL = 'activeCall',
-  CONTACTS_STATUS_MODE = 'contactsStatusMode'
-}
-
-export enum WebexHttpErrorPrefix {
-  INVALID_EXPIRED_ACCESS_TOKEN = 'Invalid or expired access token',
-  UNEXPECTED_CLIENT_ERROR = 'Unexpected client error',
-  UNEXPECTED_ERROR = 'Unexpected error',
-  UNEXPECTED_SERVER_ERROR = 'Unexpected server error'
-}
-
-export enum WebexSdkErrorPrefix {
-  INITIALIZATION = 'Could not initialize Webex',
-  INITIALIZE_MEETINGS = 'Could not initialize meetings plugin',
-  LISTEN_MESSAGES = 'Could not listen for messages',
-  START_MEETING = 'Could not start meeting'
-}
-
-export enum RoomosJsxapiErrorPrefix {
-  INITIALIZATION = 'Could not initialize RoomOS JSXAPI'
-}
-
-export interface AuthorizeResponse {
-  device_code: string;
-  expires_in: number;
-  user_code: string;
-  verification_uri: string;
-  interval: number;
-}
-
-export type WebexPeopleListQuery = {
-  email?: string;
-  displayName?: string;
-  id?: string;
-  orgId?: string;
-  callingData?: boolean;
-  locationId?: string;
-  max?: number;
-  showAllTypes?: false;
-};
-
-export type WebexPerson = {
-  id: string;
-  displayName: string;
-  emails: Array<string>;
-  avatar?: string;
-  firstName?: string;
-  lastName?: string;
-  orgId: string;
-  phoneNumbers: Array<string>;
-  status?: WebexUserStatus;
-};
-
-export enum WebexUserStatus {
-  ACTIVE = 'active',
-  CALL = 'call',
-  DND = 'DoNotDisturb',
-  INACTIVE = 'inactive',
-  MEETING = 'meeting',
-  OOO = 'OutOfOffice',
-  PENDING = 'pending',
-  PRESENTING = 'presenting',
-  UNKNOWN = 'unknown'
-}
-
-export enum AvatarSize {
-  XXSMALL = 16,
-  XSMALL = 24,
-  SMALL = 32,
-  MEDIUM = 48,
-  LARGE = 64,
-  XLARGE = 96,
-  XXLARGE = 128
-}
-
-export enum ContactsStatusMode {
-  POLLING = 'polling',
-  NONE = 'none'
+  EXAMPLE_WRITABLE = 'exampleWritable'
 }
