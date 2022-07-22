@@ -3,8 +3,12 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare namespace App {
-  // interface Locals {}
+  interface Locals {
+    session?: import('./database/entities/session').Session;
+  }
   // interface Platform {}
-  // interface Session {}
+  interface Session {
+    isAuthenticated: boolean;
+  }
   // interface Stuff {}
 }
