@@ -3,5 +3,7 @@ module.exports = {
   singleQuote: true,
   trailingComma: 'none',
   printWidth: 120,
-  quoteProps: 'consistent'
+  quoteProps: 'consistent',
+  plugins: ['prettier-plugin-jsdoc'],
+  jsdocSeparateReturnsFromParam: true
 };
