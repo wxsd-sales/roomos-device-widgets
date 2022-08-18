@@ -90,8 +90,6 @@ export const POST: RequestHandler = async (requestEvent: RequestEvent) => {
     return { status: 400 };
   }
 
-  console.log(body);
-
   return webexHttp(header.authorization, 'xapi')
     .post('command/Dial', undefined, {
       deviceId: params.id,

@@ -49,7 +49,6 @@ export const POST: RequestHandler = async (requestEvent: RequestEvent) => {
   const body = plainToInstance(RequestBodyDTO, await requestEvent.request.json());
   const bodyValidationErrors = validateSync(body, classValidationOptions);
   if (bodyValidationErrors.length > 0) {
-    console.log(bodyValidationErrors);
     return { status: 400 };
   }
 
