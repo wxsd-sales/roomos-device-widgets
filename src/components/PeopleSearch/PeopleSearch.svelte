@@ -6,7 +6,7 @@
   import Person from '../Person/Person.svelte';
 
   export let accessToken;
-  export let placeholder = 'Search using email or name';
+  export let placeholder = 'Search with email or name';
   export let excludeIds = [];
 
   let term = '';
