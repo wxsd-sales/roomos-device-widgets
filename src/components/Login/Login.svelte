@@ -21,7 +21,6 @@
           type="email"
           placeholder="Email"
           name="email"
-          autocomplete="email"
           bind:value={email}
           required
         />
@@ -40,7 +39,6 @@
           type="password"
           placeholder="Password"
           name="password"
-          autocomplete="password"
           required
           bind:this={passwordInputElement}
         />
