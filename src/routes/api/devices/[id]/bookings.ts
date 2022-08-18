@@ -20,7 +20,7 @@ export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
   class RequestHeaderDTO {
     @Expose()
     @Matches(VALID_ACCESS_TOKEN)
-    @Transform(({ obj }) => obj?.authorization.toString().replace(/^Bearer /i, ''))
+    @Transform(({ obj }) => obj?.authorization?.toString()?.replace(/^Bearer /i, ''))
     public readonly authorization!: string;
   }
 
