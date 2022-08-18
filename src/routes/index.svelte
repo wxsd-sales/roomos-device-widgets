@@ -93,13 +93,6 @@
     .map((e) => ({ text: demo?.[`button${e}Text`], link: demo?.[`button${e}Link`] }));
 
   let activeModalLink = undefined;
-  let tokenResponse = undefined;
-
-  function handleClick(e: Event) {
-    if (import.meta.env.DEV) console.info(e);
-
-    activeModalLink = undefined;
-  }
 </script>
 
 <Background imageLink={demo.backgroundPoster} filter="brightness({demo.backgroundBrightness}%)" />
@@ -209,7 +202,7 @@
 
 {#if activeModalLink}
   <div id="app-model">
-    <Modal isActive={activeModalLink != null} on:click={handleClick}>
+    <Modal isActive={activeModalLink != null} on:click={() => (activeModalLink = undefined)}>
       <figure class="image is-16by9">
         <iframe src={activeModalLink} class="has-ratio" />
       </figure>
