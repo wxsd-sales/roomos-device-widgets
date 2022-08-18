@@ -228,7 +228,7 @@
     @extend .px-0;
   }
   #device-code > :global(div.favourite-contacts-container) {
-    height: calc(3.7 * (30px + 8px + 24px + 24px) - 45px);
+    height: calc(3.7 * (30px + 8px + 24px + 24px) - 25.2px);
     overflow-y: auto;
     overflow-x: hidden;
   }
