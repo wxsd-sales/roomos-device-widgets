@@ -75,3 +75,15 @@ export enum StateKey {
   EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',
   EXAMPLE_WRITABLE = 'exampleWritable'
 }
+
+export interface TokenResponse {
+  id?: string;
+  scope: string;
+  expiresIn: number;
+  expiresAt: number;
+  accessToken: string;
+  tokenType: string;
+  refreshToken: string;
+  refreshTokenExpiresIn: number;
+  refreshTokenExpiresAt: number;
+}

@@ -1,16 +1,9 @@
 <script lang="ts">
+  import type { TokenResponse } from './types/token-response';
+  import { writable } from 'svelte/store';
   import Person from '../Person/Person.svelte';
-  import { onMount } from 'svelte';
 
-  export let id: string = undefined;
-  export let scope: string;
-  export let expiresIn: string;
-  export let expiresAt: Date;
-  export let accessToken: string;
-  export let tokenType: string;
-  export let refreshToken: string;
-  export let refreshTokenExpiresIn: string;
-  export let refreshTokenExpiresAt: string;
+  export let tokenResponseStore = writable<TokenResponse>(undefined);
 
   let isActive = false;
 </script>
@@ -19,7 +12,9 @@
   <div class="navbar-brand is-align-items-center">
     <div class="navbar-item avatar-navbar-item">
       <div class="is-hoverable title">
-        <Person {accessToken} bind:id />
+        {#if $tokenResponseStore?.accessToken}
+          <Person accessToken={$tokenResponseStore.accessToken} bind:id={$tokenResponseStore.id} />
+        {/if}
       </div>
     </div>
 
@@ -41,7 +36,10 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <button class="button is-rounded is-danger is-medium is-fullwidth" on:click={() => (accessToken = undefined)}>
+          <button
+            class="button is-rounded is-danger is-medium is-fullwidth"
+            on:click={() => tokenResponseStore.set(undefined)}
+          >
             <span class="icon">
               <i class="mdi mdi-logout" />
             </span>
@@ -53,8 +51,8 @@
   </div>
 </nav>
 
-{#if id}
-  <slot {id} {accessToken} />
+{#if $tokenResponseStore.id}
+  <slot />
 {/if}
 
 <style>

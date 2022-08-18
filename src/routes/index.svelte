@@ -1,6 +1,6 @@
 <script lang="ts">
   import { jsonRequest } from '../lib/shared/json-request';
-  import { derived, readable } from 'svelte/store';
+  import { derived, readable, writable } from 'svelte/store';
   import { browser } from '$app/env';
   import Weather from '$components/Weather/Weather.svelte';
   import Clock from '$components/Clock/Clock.svelte';
@@ -88,6 +88,8 @@
     return calls ?? [];
   });
 
+  export const tokenResponseStore = writable<TYPES.TokenResponse>();
+
   const buttons = ['A', 'B', 'C']
     .filter((e) => demo?.[`button${e}Text`] && demo?.[`button${e}Link`])
     .map((e) => ({ text: demo?.[`button${e}Text`], link: demo?.[`button${e}Link`] }));
@@ -122,11 +124,18 @@
         <!--lhs start-->
         <div class="tile is-7 is-vertical is-parent is-flex-widescreen is-flex-grow-1 is-justify-content-space-between">
           <div id="device-code" class="tile is-child box is-translucent-black has-text-white">
-            {#if tokenResponse == null}
-              <DeviceCode title="Favourite Contacts" on:newTokenResponse={(e) => (tokenResponse = e.detail)} />
+            {#if $tokenResponseStore?.accessToken == null}
+              <DeviceCode title="Favourite Contacts" on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)} />
             {:else}
-              <Authorized {...tokenResponse} let:id let:accessToken>
-                <FavouriteContacts {id} {accessToken} edit={false} {disconnect} {connect} {callsStore} />
+              <Authorized {tokenResponseStore}>
+                <FavouriteContacts
+                  id={$tokenResponseStore.id}
+                  accessToken={$tokenResponseStore.accessToken}
+                  edit={false}
+                  {disconnect}
+                  {connect}
+                  {callsStore}
+                />
               </Authorized>
             {/if}
           </div>
