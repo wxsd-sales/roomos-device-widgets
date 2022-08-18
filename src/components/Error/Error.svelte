@@ -1,6 +1,8 @@
 <script lang="ts">
   export let status = 500;
   export let error: Error | null = undefined;
+  export let backLink = '/';
+  export let backText = 'Home';
 </script>
 
 <section class="container is-error-container">
@@ -16,11 +18,11 @@
     </div>
     <slot />
     <div class="column is-12">
-      <a class="button is-link is-large is-fullwidth is-rounded" href="/">
+      <a class="button is-link is-large is-fullwidth is-rounded" href={backLink}>
         <span class="icon is-large">
           <i class="mdi mdi-arrow-left" />
         </span>
-        <span>Home</span>
+        <span>{backText}</span>
       </a>
     </div>
   </div>
