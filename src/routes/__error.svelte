@@ -32,7 +32,7 @@
   export let error = undefined;
 </script>
 
-<ErrorComponent {status} {error}>
+<ErrorComponent {status} {error} backLink="/login" backText="Home">
   {#if import.meta.env.DEV}
     <div class="column is-12">
       <details open>
