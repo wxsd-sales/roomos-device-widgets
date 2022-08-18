@@ -20,15 +20,42 @@
   export let deviceId = undefined;
   export let demo = undefined;
 
+  const defaultBookings = [
+    {
+      id: '1d308d49-a0f0-66a7-958d-f8a9361ae9a8',
+      number:
+        'https://teams.microsoft.com/l/meetup-join/19%3ameeting_MjU1NjUwM2EtYTYwYS00MzkxLWJiYjAtYmEyODI1NjFjNGM4%40thread.v2/0?context=%7b%22Tid%22%3a%2269cf187c-bec0-4e17-8b94-4edc6bbb7214%22%2c%22Oid%22%3a%227ef27040-10d2-4bf8-9ac6-918ee374bb73%22%7d',
+      organizer: { name: 'William Mills', email: 'wimills@cisco.com' },
+      protocol: 'WebRTC',
+      platform: 'MicrosoftTeams',
+      time: { start: '2022-05-16T19:20:00Z', end: '2022-05-16T19:37:00Z', startBuffer: 300 },
+      title: 'Microsoft Teams Booking',
+      privacy: 'Private'
+    },
+    {
+      id: 'ee185ae7-ac99-6162-8ba2-f0482bcda22c',
+      number: 'https://meet.google.com/fbh-zbuk-mbp?hs=224',
+      organizer: { name: 'Ashesh Singh', email: 'ashessin@cisco.com' },
+      protocol: 'WebRTC',
+      platform: 'GoogleMeet',
+      time: { start: '2022-05-16T18:37:00Z', end: '2022-05-16T19:37:00Z', startBuffer: 300 },
+      title: 'Google Meet Booking',
+      privacy: 'Private'
+    }
+  ];
   export const devicesHttpApiRequest = jsonRequest('/api', `devices/${deviceId}`, 'Bearer', botToken);
 
+  export const getStatus = () => devicesHttpApiRequest.get('status').then((r) => r.json());
   export const disconnect = (id) => devicesHttpApiRequest.post('call-disconnect', undefined, { callId: id });
   export const connect = (id: string, destination: string, type?: 'MSTeams' | 'GoogleMeet' | '') =>
     type != null && type !== ''
       ? devicesHttpApiRequest.post('webrtc-join', undefined, { bookingId: id, url: destination, type })
       : devicesHttpApiRequest.post('dial', undefined, { bookingId: id, number: destination });
-  export const getBookings = () => devicesHttpApiRequest.get('bookings').then((r) => r.json());
-  export const getStatus = () => devicesHttpApiRequest.get('status').then((r) => r.json());
+  export const getBookings = () =>
+    devicesHttpApiRequest
+      .get('bookings')
+      .then((r) => r.json())
+      .then((r) => [...r, ...defaultBookings]);
 
   export const statusStore = readable<TYPES.Status>(undefined, (set) => {
     const interval = setInterval(async () => set(await getStatus()), 1000);
