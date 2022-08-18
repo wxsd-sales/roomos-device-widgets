@@ -8,30 +8,6 @@
   export let dataSource = 'RoomOS Devices';
   export let units: 'imperial' | 'metric' = 'imperial';
   export let roomAnalyticsStore = readable<RoomAnalytics>(undefined);
-
-  const temperatureFToC = (value: number) => ((value - 32) / 1.8).toFixed(1);
-  const temperatureCToF = (value: number) => (value * 1.8 + 32).toFixed(1);
-  const convertTemperature = (value?: number, toUnits: 'metric' | 'imperial' = 'imperial') => {
-    if (value == null) return undefined;
-    switch (toUnits) {
-      case 'imperial':
-        return temperatureCToF(value);
-      case 'metric':
-        return temperatureFToC(value);
-      default:
-        return undefined;
-    }
-  };
-  const temperatureSymbol = (units: 'metric' | 'imperial' = 'imperial') => {
-    switch (units) {
-      case 'imperial':
-        return '&deg;F';
-      case 'metric':
-        return '&deg;C';
-      default:
-        return undefined;
-    }
-  };
 </script>
 
 {#if title != null}
@@ -43,6 +19,7 @@
     {/if}
   </Title>
 {/if}
+
 <div
   class="columns is-mobile is-multiline has-text-centered"
   class:room-analytics-row={true}
@@ -63,8 +40,10 @@
     <RoomAnalyticsCard
       name="Temperature"
       icon="thermometer"
-      value={convertTemperature($roomAnalyticsStore?.ambientTemperature)}
-      units={temperatureSymbol(units)}
+      value={$roomAnalyticsStore?.ambientTemperature != null && units === 'imperial'
+        ? ($roomAnalyticsStore.ambientTemperature * 1.8 + 32).toFixed(1)
+        : $roomAnalyticsStore?.ambientTemperature}
+      units={units === 'metric' ? '\u2103' : '\u2109'}
     />
   </div>
   <div

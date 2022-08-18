@@ -24,7 +24,7 @@
     </div>
     <div class="level-right">
       {value ?? 'N/A'}
-      {@html value != null && units != null ? units : ''}
+      {value != null && units != null ? units : ''}
     </div>
   </div>
 </div>
