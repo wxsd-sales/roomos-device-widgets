@@ -83,7 +83,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     isStatic ? '' : Date.now() - d1.getTime() + ' ms' // static assets not handled by svelte-kit
   ].join(' ');
 
-  if (import.meta.env.PROD && !skipReporting && response.status >= 400) {
+  if (import.meta.env.PROD && !isStatic && !skipReporting && response.status >= 400) {
     webexHttpMessagesResource(env.WEBEX_NOTIFICATION_CHANNEL_TOKEN)
       .createMessage({
         roomId: env.WEBEX_NOTIFICATION_CHANNEL_ID,
