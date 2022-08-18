@@ -67,7 +67,7 @@
     "uuid": "^8.3.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=16"
   },
   "type": "module",
   "mikro-orm": {
