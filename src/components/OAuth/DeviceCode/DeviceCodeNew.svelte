@@ -24,7 +24,12 @@
   }
 </script>
 
-<button class="button is-primary is-rounded is-medium is-fullwidth" class:is-loading={isLoading} on:click={handleClick}>
+<button
+  class="button is-primary is-rounded is-medium is-fullwidth"
+  disabled={isLoading}
+  class:is-loading={isLoading}
+  on:click={handleClick}
+>
   <span class="icon">
     <i class="mdi mdi-qrcode-plus" />
   </span>

@@ -8,9 +8,9 @@
   let isActive = false;
 </script>
 
-<nav class="navbar is-spaced px-0 pt-0 authorized-nav" aria-label="navigation">
-  <div class="navbar-brand is-align-items-center">
-    <div class="navbar-item avatar-navbar-item">
+<nav class="navbar is-transparent is-spaced px-0 pt-0 authorized-nav" aria-label="navigation">
+  <div class="navbar-brand is-align-items-center avatar-navbar-brand">
+    <div class="navbar-item avatar-navbar-brand-item">
       <div class="is-hoverable title">
         {#if $tokenResponseStore?.accessToken}
           <Person accessToken={$tokenResponseStore.accessToken} bind:id={$tokenResponseStore.id} />
@@ -36,8 +36,9 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
+          <slot name="navbar-button" />
           <button
-            class="button is-rounded is-danger is-medium is-fullwidth"
+            class="button is-rounded is-danger is-medium is-flex-grow-1"
             on:click={() => tokenResponseStore.set(undefined)}
           >
             <span class="icon">
@@ -58,5 +59,9 @@
 <style>
   .navbar-item :global(img) {
     max-height: unset;
+  }
+
+  .avatar-navbar-brand {
+    flex-shrink: unset;
   }
 </style>

@@ -34,7 +34,7 @@
   </Title>
 {/if}
 
-<div class="columns is-multiline" class:bookings-container={true}>
+<div class="columns is-multiline is-align-content-start" class:bookings-container={true}>
   {#await bookings}
     <div class="column is-12">
       <progress class="progress is-small is-link" max="100">0%</progress>

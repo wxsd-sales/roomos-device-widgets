@@ -95,6 +95,7 @@
     .map((e) => ({ text: demo?.[`button${e}Text`], link: demo?.[`button${e}Link`] }));
 
   let activeModalLink = undefined;
+  let isUserListEditable = false;
 </script>
 
 <Background imageLink={demo.backgroundPoster} filter="brightness({demo.backgroundBrightness}%)" />
@@ -123,15 +124,24 @@
       <div class="tile is-ancestor is-block is-flex-widescreen">
         <!--lhs start-->
         <div class="tile is-7 is-vertical is-parent is-flex-widescreen is-flex-grow-1 is-justify-content-space-between">
-          <div id="device-code" class="tile is-child box is-translucent-black has-text-white">
+          <div id="device-code" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
             {#if $tokenResponseStore?.accessToken == null}
               <DeviceCode title="Favourite Contacts" on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)} />
             {:else}
               <Authorized {tokenResponseStore}>
+                <button
+                  slot="navbar-button"
+                  class="button is-rounded is-primary is-medium"
+                  on:click={() => (isUserListEditable = !isUserListEditable)}
+                >
+                  <span class="icon">
+                    <i class="mdi {isUserListEditable ? 'mdi-account-eye' : 'mdi-account-edit'}" />
+                  </span>
+                </button>
                 <FavouriteContacts
                   id={$tokenResponseStore.id}
                   accessToken={$tokenResponseStore.accessToken}
-                  edit={false}
+                  edit={isUserListEditable}
                   {disconnect}
                   {connect}
                   {callsStore}
@@ -139,7 +149,7 @@
               </Authorized>
             {/if}
           </div>
-          <div id="news" class="tile is-child box is-translucent-black has-text-white">
+          <div id="news" class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1">
             <News query={demo.newsUrl != null ? new URL(demo.newsUrl).searchParams.get('query') : 'webex'} />
           </div>
         </div>

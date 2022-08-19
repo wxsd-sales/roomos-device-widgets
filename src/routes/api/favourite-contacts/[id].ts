@@ -7,6 +7,7 @@ import {
   ArrayNotEmpty,
   ArrayUnique,
   IsArray,
+  IsIn,
   IsNotEmpty,
   IsString,
   validateSync
@@ -80,6 +81,10 @@ export const POST: RequestHandler = async (requestEvent: RequestEvent) => {
     @ArrayNotContains([requestEvent.params.id])
     @IsString({ each: true })
     public readonly ids!: Set<string>;
+
+    @Expose()
+    @IsIn(['add', 'remove'])
+    public readonly action!: 'add' | 'remove';
   }
 
   class ResponseDTO implements ToJSON {
@@ -106,12 +111,24 @@ export const POST: RequestHandler = async (requestEvent: RequestEvent) => {
     return { status: 400, body: { body: bodyValidationErrors } };
   }
 
-  return jsonRequest(env.UPSTASH_REDIS_REST_URL, undefined, 'Bearer', env.UPSTASH_REDIS_REST_TOKEN)
-    .post(undefined, undefined, ['sadd', 'favourite-contacts-' + params.id, ...Array.from(body.ids)])
-    .then((r: Response) => r.json())
-    .then((r: JSONObject) => ({
-      status: 200,
-      body: plainToInstance(ResponseDTO, r, classTransformOptions)
-    }))
-    .catch((e) => onFailure(e));
+  switch (body.action) {
+    case 'add':
+      return jsonRequest(env.UPSTASH_REDIS_REST_URL, undefined, 'Bearer', env.UPSTASH_REDIS_REST_TOKEN)
+        .post(undefined, undefined, ['sadd', 'favourite-contacts-' + params.id, ...Array.from(body.ids)])
+        .then((r: Response) => r.json())
+        .then((r: JSONObject) => ({
+          status: 200,
+          body: plainToInstance(ResponseDTO, r, classTransformOptions)
+        }))
+        .catch((e) => onFailure(e));
+    case 'remove':
+      return jsonRequest(env.UPSTASH_REDIS_REST_URL, undefined, 'Bearer', env.UPSTASH_REDIS_REST_TOKEN)
+        .post(undefined, undefined, ['srem', 'favourite-contacts-' + params.id, ...Array.from(body.ids)])
+        .then((r: Response) => r.json())
+        .then((r: JSONObject) => ({
+          status: 200,
+          body: plainToInstance(ResponseDTO, r, classTransformOptions)
+        }))
+        .catch((e) => onFailure(e));
+  }
 };

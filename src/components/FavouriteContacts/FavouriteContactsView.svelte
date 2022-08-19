@@ -10,14 +10,15 @@
   export let callsStore = readable([]);
   export let disconnect: (...args) => Promise<Response> = () => Promise.reject(undefined);
   export let connect: (...args) => Promise<Response> = () => Promise.reject(undefined);
+  export let removeContact: (...args) => Promise<Response> = () => Promise.reject(undefined);
 </script>
 
 <div class="columns is-multiline is-vcentered is-centered">
-  {#each ids as id}
+  {#each ids as id (id)}
     <div class="column is-12">
       <Person {id} {accessToken} size={48} let:email>
         {#if edit}
-          <FavouriteContactsRemove {id} {email} />
+          <FavouriteContactsRemove {id} {removeContact} on:remove />
         {:else}
           <Meet {id} destination={email} {disconnect} {connect} {callsStore} />
         {/if}
