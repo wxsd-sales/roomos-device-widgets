@@ -1,5 +1,6 @@
 /** @type {import('@mikro-orm/core').Options} */
 const config = {
+  forceUndefined: true,
   type: 'better-sqlite',
   dbName: '.data/app.sqlite3',
   entities: ['./src/database/entities'],
