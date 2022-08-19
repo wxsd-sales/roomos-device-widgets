@@ -12,6 +12,17 @@
   <div class="column is-full">
     <h2 class="title">Buttons</h2>
   </div>
+  <div class="column is-full content mb-0">
+    <p>Embed links that show up when you tap on their respective buttons at the bottom of the device's display.</p>
+    <p>
+      Please note that some pages/URLs
+      <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options" target="_blank">
+        deliberately prevent users from embedding them
+      </a>
+      on other sites as an <code>iframe</code> or <code>object</code>. It is your responsibility to ensure that the
+      above links are safe and embeddable.
+    </p>
+  </div>
   <!-- A -->
   <div class="column is-three-fifths">
     <label class="label" for="aLink">
@@ -112,16 +123,6 @@
     </div>
     <div class="help">
       <p>The name for the link</p>
-    </div>
-  </div>
-  <div class="column is-full content mb-0">
-    <div class="notification is-warning is-light px-5">
-      Please note that some pages/URLs
-      <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options" target="_blank">
-        deliberately prevent users from embedding them
-      </a>
-      inside a popup model (as an <code>iframe</code> or <code>object</code>). It is your responsibility to ensure that
-      the above links are safe and embeddable.
     </div>
   </div>
 </div>

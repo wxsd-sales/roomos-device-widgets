@@ -7,6 +7,12 @@
   <div class="column is-full">
     <h2 class="title">Weather</h2>
   </div>
+  <div class="column is-full content mb-0">
+    <p>
+      Show weather information for a particular city using data from
+      <a href="https://openweathermap.org/city/4887398" target="_blank">Open Weather Maps</a>.
+    </p>
+  </div>
   <div class="column is-three-fifths">
     <label class="label" for="units">Units <sup class="has-text-danger" title="required">*</sup></label>
     <div class="control has-icons-left">

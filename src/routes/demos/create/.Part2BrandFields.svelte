@@ -31,6 +31,12 @@
   <div class="column is-full">
     <h2 class="title">Brand</h2>
   </div>
+  <div class="column is-full content mb-0">
+    <p>
+      Set a custom image to appear in the top portion of the device's display. For best results, choose an off-white
+      image that is wide and has transparent background.
+    </p>
+  </div>
   <div class="column is-three-fifths">
     <label class="label" for="logo">Logo <sup class="has-text-danger" title="required">*</sup></label>
     <div class="file has-name is-fullwidth">

@@ -6,6 +6,9 @@
   <div class="column is-full">
     <h2 class="title">Guest Invite</h2>
   </div>
+  <div class="column is-full content mb-0">
+    <p>Set a default SIP enabled destination for a guest user (non Webex) to join over an invite via SMS.</p>
+  </div>
   <div class="column is-full">
     <label class="label" for="destination">SIP destination</label>
     <div class="control has-icons-left">

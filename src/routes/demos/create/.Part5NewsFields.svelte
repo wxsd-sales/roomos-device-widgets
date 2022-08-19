@@ -6,6 +6,9 @@
   <div class="column is-full">
     <h2 class="title">News</h2>
   </div>
+  <div class="column is-full content mb-0">
+    <p>Show news articles for a particular term using feed from Google News.</p>
+  </div>
   <div class="column is-full">
     <label class="label" for="url">Query</label>
     <div class="control has-icons-left">
