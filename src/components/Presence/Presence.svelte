@@ -2,9 +2,7 @@
   import { STATUS } from './constants/status';
   import { PRESENCE } from './constants/presence';
 
-  export let id = undefined;
-  export let accessToken = undefined;
-  export let status: STATUS;
+  export let status: STATUS = STATUS.UNKNOWN;
 
   $: icon = PRESENCE[status].icon;
   $: color = PRESENCE[status].color;
