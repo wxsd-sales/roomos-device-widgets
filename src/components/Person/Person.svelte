@@ -57,7 +57,7 @@
 </script>
 
 <section class="container person-container" data-person-id={id}>
-  <div class="columns is-vcentered is-centered is-mobile">
+  <div class="columns is-vcentered is-mobile">
     <div class="column is-narrow">
       <Avatar
         image={$personStore?.avatar?.replace(/~1600$/, '~640')}
