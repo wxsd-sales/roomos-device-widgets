@@ -15,8 +15,10 @@ import env from '$lib/environment';
  * >}
  */
 export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
+  const query = requestEvent.url.searchParams.get('q') ?? undefined;
+
   return urlEncodedRequest(env.GOOGLE_NEWS_RSS_URL)
-    .get(undefined, { q: requestEvent.url.searchParams.get('q') })
+    .get(undefined, query != null ? { q: query } : undefined)
     .then((r) => r.text())
     .then((r) => ({
       status: 200,

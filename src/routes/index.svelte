@@ -150,7 +150,7 @@
             {/if}
           </div>
           <div id="news" class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1">
-            <News query={demo.newsUrl != null ? new URL(demo.newsUrl).searchParams.get('query') : 'webex'} />
+            <News query={demo.newsUrl != null ? new URL(demo.newsUrl).searchParams.get('q') : undefined} />
           </div>
         </div>
         <!--lsh end-->

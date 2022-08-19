@@ -29,7 +29,7 @@
 
   export const getNewsResponse = () =>
     jsonRequest('/api')
-      .get('news', { q: query })
+      .get('news', query != null ? { q: query } : undefined)
       .then((r) => r.text())
       .then((r) => new DOMParser().parseFromString(r, 'application/xml'))
       .then((r) =>
