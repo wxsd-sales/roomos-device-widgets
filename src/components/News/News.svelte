@@ -78,21 +78,20 @@
             {@html newsItem.title.substring(0, newsItem.title.lastIndexOf('-'))}
           </p>
         </div>
-        <div class="level is-mobile has-text-weight-medium has-text-grey-light">
+        <div class="level is-mobile is-size-6 has-text-weight-medium has-text-grey-light">
           <div class="level-left">
             <figure class="level-item image is-16x16">
               <img
-                class="is-rounded"
+                class="is-rounded has-background-grey-light"
                 src="https://www.google.com/s2/favicons?sz=16&domain_url={newsItem.source.link}"
                 alt={newsItem.source.name}
               />
             </figure>
-            <p class="icon-text level-item is-size-6">
+            <p class="icon-text level-item">
               {newsItem.source.name}<span class="is-hidden-mobile">, {newsItem.source.link}</span>
             </p>
           </div>
-
-          <p class="level-right icon-text  is-size-6 mt-0">{getRelativeTime(new Date(newsItem.pubDate))}</p>
+          <p class="level-right mt-0">{getRelativeTime(new Date(newsItem.pubDate))}</p>
         </div>
       {/each}
       {#if news.length === 0}
