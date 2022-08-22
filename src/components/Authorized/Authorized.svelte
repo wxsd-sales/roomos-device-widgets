@@ -17,7 +17,6 @@
         {/if}
       </div>
     </div>
-
     <a
       role="button"
       class="navbar-burger"
@@ -38,7 +37,7 @@
         <div class="buttons">
           <slot name="navbar-button" />
           <button
-            class="button is-rounded is-danger is-medium is-flex-grow-1"
+            class="button is-rounded is-danger is-medium is-flex-grow-1 has-text-weight-bold"
             on:click={() => tokenResponseStore.set(undefined)}
           >
             <span class="icon">
