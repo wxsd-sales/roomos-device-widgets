@@ -5,10 +5,9 @@ import config from '../../../mikro-orm.config';
 import * as cookie from 'cookie';
 
 export const POST = async (requestEvent: RequestEvent) => {
-  const orm = await MikroORM.init({ ...config, ...{ entities: [User, Session] } });
-  const em = orm.em.fork();
-
   if (requestEvent.locals.session?.uuid && requestEvent.locals.session.user?.uuid) {
+    const orm = await MikroORM.init({ ...config, ...{ entities: [User, Session] } });
+    const em = orm.em.fork();
     const session = cookie.serialize('sessionId', '', { path: '/', maxAge: -1, sameSite: 'strict' });
 
     return await em
