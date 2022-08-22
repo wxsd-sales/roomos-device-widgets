@@ -66,20 +66,16 @@
         {size}
       />
     </div>
-    <div class="column">
-      <div class="columns is-gapless is-multiline is-vcentered is-centered">
-        <div class="column is-12">
-          <h2 class="has-text-weight-bold">
-            <span class="is-size-5 person-nickname">{$personStore?.nickName},</span>
-            <span class="has-text-grey-light is-size-6 person-email">
-              {$personStore?.emails[0].replace(/@.*$/, '')}
-            </span>
-          </h2>
-        </div>
-        <div class="column is-12 is-size-6 has-text-grey-light has-text-weight-normal person-last-activity">
-          {$personStore?.lastActivity ? 'last activity ~' + getRelativeTime(new Date($personStore?.lastActivity)) : ''}
-        </div>
-      </div>
+    <div class="column name-column">
+      <h2 class="has-text-weight-bold">
+        <span class="is-size-5 person-nickname">{$personStore?.nickName},</span>
+        <span class="has-text-grey-light is-size-6 person-email">
+          {$personStore?.emails[0].replace(/@.*$/, '')}
+        </span>
+      </h2>
+      <h3 class="is-size-6 has-text-grey-light has-text-weight-normal person-last-activity">
+        {$personStore?.lastActivity ? 'last activity ~' + getRelativeTime(new Date($personStore?.lastActivity)) : ''}
+      </h3>
     </div>
     {#if $$slots.default && id}
       <div class="column is-3">
@@ -88,3 +84,9 @@
     {/if}
   </div>
 </section>
+
+<style>
+  .name-column {
+    word-wrap: anywhere;
+  }
+</style>
