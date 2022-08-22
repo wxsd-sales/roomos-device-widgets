@@ -1,13 +1,15 @@
 <script lang="ts">
-  import type { AuthorizeResponse } from './types';
+  import type { AuthorizeResponse, TokenResponse } from './types';
   import DeviceCodeNew from './DeviceCodeNew.svelte';
   import DeviceCodeQr from './DeviceCodeQr.svelte';
   import DeviceCodeText from './DeviceCodeText.svelte';
   import DeviceCodeToken from './DeviceCodeToken.svelte';
-  import Title from '../../Title/Title.svelte';
+  import Title from '../Title/Title.svelte';
 
   export let title = 'Sign-In with Your Device';
   export let isMinimal = true;
+  export let getAuthorizeResponse: (...args) => Promise<AuthorizeResponse> = () => Promise.reject(undefined);
+  export let getTokenResponse: (...args) => Promise<TokenResponse> = () => Promise.reject(undefined);
 
   let isLoading = false;
   let authorizeResponse: AuthorizeResponse = undefined;
@@ -35,6 +37,7 @@
       />
       <hr />
       <DeviceCodeToken
+        {getTokenResponse}
         deviceCode={Promise.resolve(authorizeResponse.deviceCode)}
         expiresAt={Promise.resolve(Date.parse(authorizeResponse.expiresAt).valueOf())}
         interval={Promise.resolve(authorizeResponse.interval)}
@@ -46,6 +49,7 @@
   <div class="column is-12">
     <DeviceCodeNew
       text={isMinimal ? 'Get New QR Code' : 'Get New Code'}
+      {getAuthorizeResponse}
       on:newAuthorizeRequest={() => (isLoading = true)}
       on:newAuthorizeResponse={(e) => [(isLoading = false), (authorizeResponse = e.detail)]}
     />

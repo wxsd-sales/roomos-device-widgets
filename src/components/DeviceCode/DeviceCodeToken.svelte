@@ -1,14 +1,11 @@
 <script lang="ts">
   import type { TokenResponse } from './types';
-  import { jsonRequest } from '$lib/shared/json-request';
   import { createEventDispatcher, onMount } from 'svelte';
 
   export let deviceCode: Promise<string>;
   export let expiresAt: Promise<number>;
   export let interval: Promise<number>;
-  export let httpApiRequest = jsonRequest('/api', 'auth-webex');
-  export const getTokenResponse = (code: string) =>
-    httpApiRequest.post('device-code/token', { deviceCode: code }).then((r) => r.json() as TokenResponse);
+  export let getTokenResponse: (...args) => Promise<TokenResponse> = (...args) => Promise.reject(undefined);
 
   const dispatch = createEventDispatcher();
   const intervalId = setInterval(() => (now = Date.now()), 1000);

@@ -1,12 +1,9 @@
 <script lang="ts">
   import type { AuthorizeResponse } from './types';
   import { createEventDispatcher } from 'svelte';
-  import { jsonRequest } from '$lib/shared/json-request';
 
   export let text = 'Get New Code';
-  export let httpApiRequest = jsonRequest('/api', 'auth-webex');
-  export const getAuthorizeResponse: () => Promise<AuthorizeResponse> = () =>
-    httpApiRequest.post('device-code/authorize').then((r) => r.json() as AuthorizeResponse);
+  export let getAuthorizeResponse: (...args) => Promise<AuthorizeResponse> = () => Promise.reject(undefined);
 
   const dispatch = createEventDispatcher();
 

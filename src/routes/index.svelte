@@ -6,7 +6,7 @@
   import Clock from '$components/Clock/Clock.svelte';
   import Background from '$components/Background/Background.svelte';
   import Brand from '$components/Brand/Brand.svelte';
-  import DeviceCode from '$components/OAuth/DeviceCode/DeviceCode.svelte';
+  import DeviceCode from '$components/DeviceCode/DeviceCode.svelte';
   import RoomAnalytics from '$components/RoomAnalytics/RoomAnalytics.svelte';
   import GuestInvite from '$components/GuestInvite/GuestInvite.svelte';
   import Bookings from '$components/Bookings/Bookings.svelte';
@@ -43,14 +43,29 @@
       privacy: 'Private'
     }
   ];
+  export const httpApiRequest = jsonRequest('/api');
   export const devicesHttpApiRequest = jsonRequest('/api', `devices/${deviceId}`, 'Bearer', botToken);
 
+  export const getAuthorizeResponse = () =>
+    httpApiRequest.post('device-code/webex/authorize').then((r) => r.json() as Promise<TYPES.AuthorizeResponse>);
+
+  export const getTokenResponse = (deviceCode: string) =>
+    httpApiRequest
+      .post('device-code/webex/token', { deviceCode })
+      .then((r) => r.json() as Promise<TYPES.TokenResponse>);
+
+  export const getWeatherResponse = (id: number, units: string) =>
+    httpApiRequest.get('weather', { id, units }).then((r) => r.json() as Promise<TYPES.WeatherResponse>);
+
   export const getStatus = () => devicesHttpApiRequest.get('status').then((r) => r.json());
-  export const disconnect = (id) => devicesHttpApiRequest.post('call-disconnect', undefined, { callId: id });
+
+  export const disconnect = (id: number) => devicesHttpApiRequest.post('call-disconnect', undefined, { callId: id });
+
   export const connect = (id: string, destination: string, type?: 'MSTeams' | 'GoogleMeet' | '') =>
     type != null && type !== ''
       ? devicesHttpApiRequest.post('webrtc-join', undefined, { bookingId: id, url: destination, type })
       : devicesHttpApiRequest.post('dial', undefined, { bookingId: id, number: destination });
+
   export const getBookings = () =>
     devicesHttpApiRequest
       .get('bookings')
@@ -109,7 +124,7 @@
             <Brand title={demo.brandLogo} subtitle={demo.brandSubtitle} />
           </div>
           <div id="weather" class="column is-5 is-align-self-center">
-            <Weather cityId={demo.weatherCityId} units={demo.weatherUnits}>
+            <Weather cityId={demo.weatherCityId} units={demo.weatherUnits} {getWeatherResponse}>
               <Clock timeFormatOptions={{ hour: '2-digit', minute: '2-digit', hour12: false }} />
             </Weather>
           </div>
@@ -126,7 +141,12 @@
         <div class="tile is-7 is-vertical is-parent is-flex-widescreen is-flex-grow-1 is-justify-content-space-between">
           <div id="device-code" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
             {#if $tokenResponseStore?.accessToken == null}
-              <DeviceCode title="Favourite Contacts" on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)} />
+              <DeviceCode
+                title="Favourite Contacts"
+                {getAuthorizeResponse}
+                {getTokenResponse}
+                on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)}
+              />
             {:else}
               <Authorized {tokenResponseStore}>
                 <button

@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { WeatherResponse, Units, IconVariant } from './types';
-  import { jsonRequest } from '$lib/shared/json-request';
   import { onMount } from 'svelte';
   import { browser } from '$app/env';
   import WeatherIcon from './WeatherIcon.svelte';
@@ -10,7 +9,8 @@
   export let units: Units = 'imperial';
   export let iconVariant: IconVariant = 'line';
   export let updateInterval = 3600;
-  export let httpApiRequest = jsonRequest('/api');
+  export let iconPrefix = '/api';
+  export let getWeatherResponse: (...args) => Promise<WeatherResponse> = () => Promise.reject(undefined);
 
   export const tempSuffix = (units: Units) => {
     switch (units) {
@@ -22,9 +22,6 @@
         return '&deg;K';
     }
   };
-
-  export const getWeatherResponse = (id: number, units: string) =>
-    httpApiRequest.get('weather', { id: id, units: units }).then((r) => r.json() as Promise<WeatherResponse>);
 
   let weatherResponse = browser ? getWeatherResponse(cityId, units) : Promise.reject(undefined);
 
@@ -59,7 +56,7 @@
         {#if $$slots.icon}
           <slot name="icon" />
         {:else}
-          <WeatherIcon url="{httpApiRequest.resourceUrl}/weather/icons/{value.icon}?iconVariant={iconVariant}" />
+          <WeatherIcon url="{iconPrefix}/weather/icons/{value.icon}?iconVariant={iconVariant}" />
         {/if}
         <p class="level-item">{value.main}</p>
       </div>
