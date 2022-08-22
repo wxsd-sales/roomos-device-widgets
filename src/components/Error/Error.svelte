@@ -1,6 +1,6 @@
 <script lang="ts">
   export let status = 500;
-  export let error: Error | null = undefined;
+  export let error: Error = undefined;
   export let backLink = '/';
   export let backText = 'Home';
 </script>
