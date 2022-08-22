@@ -263,6 +263,10 @@
     background-color: hsl(0deg, 0%, 71%);
   }
 
+  #device-code :global(nav.navbar > div.navbar-menu) {
+    background-color: transparent;
+  }
+
   #device-code :global(div.navbar-item) {
     @extend .px-0;
   }
