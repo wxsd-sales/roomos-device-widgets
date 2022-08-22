@@ -26,14 +26,14 @@
   class:room-analytics-container={true}
 >
   <div
-    class="column is-4-mobile is-4-tablet is-align-items-flex-end is-justify-content-end"
+    class="column is-one-third is-align-items-flex-end is-justify-content-end"
     class:room-analytics-column={true}
     class:room-analytics-air-quality={true}
   >
     <RoomAnalyticsCard name="Air Quality" icon="smoke" value={$roomAnalyticsStore?.airQualityIndex} />
   </div>
   <div
-    class="column is-4-mobile is-4-tablet is-align-items-flex-end is-justify-content-end"
+    class="column is-one-third is-align-items-flex-end is-justify-content-end"
     class:room-analytics-column={true}
     class:room-analytics-temperature={true}
   >
@@ -47,21 +47,21 @@
     />
   </div>
   <div
-    class="column is-4-mobile is-4-tablet is-align-items-flex-end is-justify-content-end"
+    class="column is-one-third is-align-items-flex-end is-justify-content-end"
     class:room-analytics-column={true}
     class:room-analytics-humidity={true}
   >
     <RoomAnalyticsCard name="Humidity" icon="water-percent" value={$roomAnalyticsStore?.relativeHumidity} units="%" />
   </div>
   <div
-    class="column is-4-mobile is-4-tablet is-align-items-flex-end is-justify-content-end"
+    class="column is-one-third is-align-items-flex-end is-justify-content-end"
     class:room-analytics-column={true}
     class:room-analytics-noise={true}
   >
     <RoomAnalyticsCard name="Noise" icon="waveform" value={$roomAnalyticsStore?.ambientNoiseLevelA} units="dBA" />
   </div>
   <div
-    class="column is-8-mobile is-8-tablet is-align-items-flex-end is-justify-content-end"
+    class="column is-align-items-flex-end is-justify-content-end"
     class:room-analytics-column={true}
     class:room-analytics-occupancy={true}
   >
