@@ -87,3 +87,27 @@ export interface TokenResponse {
   refreshTokenExpiresIn: number;
   refreshTokenExpiresAt: number;
 }
+
+export interface AuthorizeResponse {
+  deviceCode: string;
+  expiresIn: number;
+  expiresAt: string;
+  userCode: string;
+  verificationUri: string;
+  verificationUriComplete: string;
+  interval: number;
+  qrImage: string;
+}
+
+export interface WeatherResponse {
+  units: 'imperial' | 'metric' | 'standard';
+  place: string;
+  timezone: number;
+  temp: number;
+  tempMin: number;
+  tempMax: number;
+  main: string;
+  description: string;
+  icon: string;
+  svg: string;
+}
