@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Status } from './type/status';
+  import type { Status } from './types/status';
   import Presence from '../Presence/Presence.svelte';
 
   export let initials = 'U';
