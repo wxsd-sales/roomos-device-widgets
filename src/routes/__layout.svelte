@@ -119,7 +119,7 @@
           <img src="/favicon.png" alt="RoomOS Device Widgets" />
         </a>
       {:else}
-        <a class="navbar-item" href="/login">
+        <a class="navbar-item" href="/auth">
           <img src="/favicon.png" alt="RoomOS Device Widgets" />
         </a>
       {/if}
@@ -149,7 +149,7 @@
         <div class="navbar-item">
           <div class="buttons">
             {#if isAuthenticated === false}
-              <a class="button is-fullwidth is-rounded is-primary is-light has-text-weight-bold" href="/login">
+              <a class="button is-fullwidth is-rounded is-primary is-light has-text-weight-bold" href="/auth">
                 <span class="icon">
                   <i class="mdi mdi-login" />
                 </span>

@@ -7,12 +7,12 @@ import config from '../mikro-orm.config';
 import env from '$lib/environment';
 import * as cookie from 'cookie';
 
-const loginRoute = '/login';
+const loginRoute = '/auth';
 
 function createLoginRedirect(uuid?: string, maxAge = 2147483648) {
   const response = new Response(undefined, { status: 302, headers: { Location: loginRoute } });
   if (uuid != null) {
-    const session = cookie.serialize('sessionId', uuid, { path: '/', maxAge: maxAge, sameSite: 'strict' });
+    const session = cookie.serialize('sessionId', uuid, { path: '/', maxAge: maxAge, sameSite: 'lax' });
     response.headers.set('Set-Cookie', session);
   }
 
@@ -39,6 +39,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       session?.uuid == null ||
       session?.isExpired === true ||
       (session.user?.uuid != null && session.lastActivityAt < d1.getTime() - 60 * 60 * 1000 * 2);
+
     if (isSessionInvalid) {
       const session = createSession(userAgent, ipAddress, d1.getTime());
       await db.persistAndFlush(session).then(() => (event.locals.session = session));

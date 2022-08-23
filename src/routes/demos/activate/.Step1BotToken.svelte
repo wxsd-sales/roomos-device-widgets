@@ -4,6 +4,7 @@
   import { VALID_ACCESS_TOKEN } from '$lib/constants';
   import { webexHttpPeopleResource } from '$lib/webex/http-wrapper';
 
+  export let orgId = undefined;
   export let bot: JSONObject = {};
 
   let isLoading = false;
@@ -19,6 +20,7 @@
     return webexHttpPeopleResource(botToken)
       .getMyOwnDetails()
       .then((r) => r.json())
+      .then((r) => (r.orgId === orgId ? r : Promise.reject({ status: "Bot doesn't belong to your Org." })))
       .then((r) => (bot = r) && botEmail.set(r?.emails[0] || undefined))
       .catch((e) => (bot = { error: e.status }) && botEmail.set(undefined))
       .finally(() => (isLoading = false));

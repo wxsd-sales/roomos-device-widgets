@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
+import type { RequestEvent } from '@sveltejs/kit';
 import type { JSONObject, JSONValue, ToJSON } from '@sveltejs/kit/types/private';
 import { urlEncodedRequest } from '$lib/shared/urlencoded-request';
 import { Expose, instanceToPlain, plainToInstance, Transform } from 'class-transformer';
@@ -87,11 +87,11 @@ export const POST = async (requestEvent: RequestEvent) => {
   }
 
   const addExpiresAts = (obj: JSONObject, date: number = Date.now()) => ({
+    ...obj,
     ...{
       expiresAt: date + (obj.expiresIn as number) * 1000,
       refreshTokenExpiresAt: date + (obj.refreshTokenExpiresIn as number) * 1000
-    },
-    ...obj
+    }
   });
 
   return urlEncodedRequest(env.WEBEX_OAUTH_HELP_SERVICE_URL, undefined, 'Basic', credentials)

@@ -6,6 +6,7 @@
   import Complete from '.Step4Complete.svelte';
   import { onMount } from 'svelte';
 
+  export let orgId = undefined;
   export let form = undefined;
 
   let formElement: HTMLFormElement;
@@ -16,7 +17,7 @@
 <form id="demo-activate" class="container px-4 mb-6" action="./activate" method="post" bind:this={formElement}>
   <Prerequisites />
   <hr />
-  <BotToken />
+  <BotToken {orgId} />
   <hr />
   <DeviceId />
   <hr />

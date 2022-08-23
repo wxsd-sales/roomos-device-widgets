@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import { IsNotEmpty, IsUUID, Matches, validateSync } from 'class-validator';
 import { VALID_ACCESS_TOKEN } from '$lib/constants';
@@ -9,6 +9,10 @@ import { classTransformOptions, classValidationOptions } from '../../.utils';
 import config from '../../../../mikro-orm.config';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
+
+export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
+  return { status: 200, body: { orgId: requestEvent.locals?.session?.payload?.webex?.orgId } };
+};
 
 export const POST = async (requestEvent: RequestEvent) => {
   class RequestFormDataDTO {
