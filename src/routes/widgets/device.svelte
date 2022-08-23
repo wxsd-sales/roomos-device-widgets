@@ -1,5 +1,5 @@
 <script lang="ts">
-  import DeviceCode from '../../components/OAuth/DeviceCode/DeviceCode.svelte';
+  import DeviceCode from '../../components/DeviceCode/DeviceCode.svelte';
 </script>
 
 <DeviceCode />
