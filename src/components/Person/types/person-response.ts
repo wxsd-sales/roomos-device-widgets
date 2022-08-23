@@ -1,5 +1,3 @@
-import type { Status } from './status';
-
 export type PersonResponse = {
   avatar?: string;
   created: string;
@@ -13,7 +11,16 @@ export type PersonResponse = {
   nickName?: string;
   orgId?: string;
   phoneNumbers?: { type: string; value: string }[];
-  status?: Status;
+  status?:
+    | 'active'
+    | 'call'
+    | 'DoNotDisturb'
+    | 'inactive'
+    | 'meeting'
+    | 'OutOfOffice'
+    | 'pending'
+    | 'presenting'
+    | 'unknown';
   type: 'person' | 'bot';
   userName?: string;
 };
