@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import type { JSONObject } from '@sveltejs/kit/types/private';
 import { Entity, ManyToOne, Property, types } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { User } from './user';
@@ -12,7 +13,7 @@ export class Session extends BaseEntity {
   ipAddress!: string;
 
   @Property({ type: types.json, nullable: true })
-  payload?: string;
+  payload?: JSONObject;
 
   @Property({ type: types.string, nullable: true })
   userAgent?: string;
@@ -26,7 +27,7 @@ export class Session extends BaseEntity {
   constructor(obj: {
     user?: User;
     ipAddress: string;
-    payload?: string;
+    payload?: JSONObject;
     userAgent?: string;
     isExpired?: boolean;
     lastActivityAt: number;
