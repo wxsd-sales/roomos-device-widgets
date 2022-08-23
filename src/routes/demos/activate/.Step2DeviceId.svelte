@@ -68,11 +68,13 @@
           required
         />
         <datalist id="compatible-devices">
-          {#each compatibleDevices as compatibleDevice}
-            <option value={compatibleDevice.id}>
-              {compatibleDevice.serial} &mdash; {compatibleDevice.product}, {compatibleDevice.displayName}
-            </option>
-          {/each}
+          {#if compatibleDevices?.length > 0}
+            {#each compatibleDevices as compatibleDevice}
+              <option value={compatibleDevice.id}>
+                {compatibleDevice.serial} &mdash; {compatibleDevice.product}, {compatibleDevice.displayName}
+              </option>
+            {/each}
+          {/if}
         </datalist>
         <span class="icon is-left">
           <i class="mdi mdi-identifier" />

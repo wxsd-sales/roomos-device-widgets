@@ -57,11 +57,13 @@
           required
         />
         <datalist id="demo-uuids">
-          {#each demos as demo (demo.uuid)}
-            <option value={demo.uuid}>
-              {demo.name} &mdash; updated {new Date(demo.updatedAt).toLocaleString()}
-            </option>
-          {/each}
+          {#if demos?.length > 0}
+            {#each demos as demo (demo.uuid)}
+              <option value={demo.uuid}>
+                {demo.name} &mdash; updated {new Date(demo.updatedAt).toLocaleString()}
+              </option>
+            {/each}
+          {/if}
         </datalist>
         <span class="icon is-left">
           <i class="mdi mdi-identifier" />
