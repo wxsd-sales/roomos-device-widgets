@@ -10,6 +10,7 @@
 
   const retrieveDemos = () => {
     isLoading = true;
+    demos = [];
 
     return jsonRequest('/demos')
       .get()

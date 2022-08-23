@@ -16,6 +16,8 @@
 
   const retrieveBotDetails = (botToken: string) => {
     isLoading = true;
+    bot = {};
+    botEmail.set(undefined);
 
     return webexHttpPeopleResource(botToken)
       .getMyOwnDetails()
@@ -76,7 +78,7 @@
     </div>
   </div>
   <div class="column is-full">
-    <details>
+    <details open={bot?.error}>
       <summary> Bot Details </summary>
       <pre>{JSON.stringify(bot, null, 2)}</pre>
     </details>

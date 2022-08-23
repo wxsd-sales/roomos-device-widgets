@@ -12,6 +12,7 @@
 
   const retrieveCompatibleDevices = (botToken) => {
     isLoading = true;
+    compatibleDevices = [];
 
     return webexHttp(botToken, 'devices')
       .get()
