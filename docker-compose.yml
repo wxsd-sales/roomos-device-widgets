@@ -9,4 +9,4 @@ services:
         logging:
             options:
                 max-size: 1g
-        image: 'node:18-alpine'
+        image: 'node:18-slim'
