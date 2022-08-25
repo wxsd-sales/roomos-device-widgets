@@ -21,7 +21,7 @@ export const GET = async (requestEvent: RequestEvent) => {
   const query = plainToInstance(RequestQueryDTO, searchParams, classTransformOptions);
   const queryValidationErrors = validateSync(query, classValidationOptions);
   if (queryValidationErrors.length > 0) {
-    return { status: 422 };
+    return { status: 302, headers: { Location: '/auth' } };
   }
 
   const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo, Activation] } });
