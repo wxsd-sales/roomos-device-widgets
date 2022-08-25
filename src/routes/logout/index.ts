@@ -14,7 +14,7 @@ export const POST = async (requestEvent: RequestEvent) => {
       .persistAndFlush(wrap(requestEvent.locals.session).assign({ isExpired: true }))
       .then(() => ({
         status: 302,
-        headers: { 'Location': '/login', 'Set-Cookie': session }
+        headers: { 'Location': '/auth', 'Set-Cookie': session }
       }))
       .catch(() => ({ status: 422 }));
   }
