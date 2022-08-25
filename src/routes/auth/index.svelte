@@ -6,7 +6,6 @@
   import { page } from '$app/stores';
 
   const href = $page.url.pathname + '/webex/redirect';
-  const src = 'https://cdn.jsdelivr.net/npm/simple-icons@v7/icons/cisco.svg';
 </script>
 
 <section class="container p-4 is-align-items-center" id="login">
@@ -15,8 +14,23 @@
       <input class="input is-rounded is-medium is-fullwidth" name="provider" value="webex" readonly disabled />
     </div>
     <div class="column is-12">
-      <a class="button is-rounded is-medium is-fullwidth is-primary" type="button" {href}>
-        <img class="image is-48x48" alt="Login with Webex" {src} />
+      <article class="message is-info is-medium">
+        <div class="message-header is-hidden" />
+        <div class="message-body content">
+          <p>
+            Generate web application links for compatible RoomOS 11 device in Kiosk or PWA mode; replacing the default
+            controls. To learn more, watch this
+            <a href="https://app.vidcast.io/share/bb910329-f398-4f04-baec-18ddaf46f493" target="_blank">Vidcast</a>.
+          </p>
+        </div>
+      </article>
+    </div>
+    <div class="column is-12">
+      <a class="button is-rounded is-medium is-fullwidth is-primary has-text-weight-bold" type="button" {href}>
+        <span class="icon">
+          <i class="mdi mdi-login" />
+        </span>
+        <span>Login with Webex</span>
       </a>
     </div>
   </div>
