@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: ashessin-roomos-device-widgets
+spec:
+  selector:
+    matchLabels:
+      app: ashessin-roomos-device-widgets
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ashessin-roomos-device-widgets
+    spec:
+      volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: roomos-device-widgets-claim
+      containers:
+        - name: ashessin-roomos-device-widgets
+          image: 191518685251.dkr.ecr.us-west-1.amazonaws.com/ashessin-roomos-device-widgets:latest
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: persistent-storage
+              mountPath: /app/.data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: default
+  name: ashessin-roomos-device-widgets-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: ashessin-roomos-device-widgets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: default
+  name: ashessin-roomos-device-widgets-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-1:191518685251:certificate/1b36669f-ca16-455b-b2b9-bf4c1bea2aa8
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ssl-redirect
+                port:
+                  name: use-annotation
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: ashessin-roomos-device-widgets-service
+                port:
+                  number: 80
