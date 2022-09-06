@@ -283,7 +283,7 @@
   }
 
   #bookings > :global(div.bookings-container) {
-    height: calc(3.7 * (var(--size-5) + 1.39 * var(--size-6)));
+    height: calc(3.7 * (var(--size-5) + 2 * var(--size-6)));
     overflow-y: auto;
     overflow-x: hidden;
   }
