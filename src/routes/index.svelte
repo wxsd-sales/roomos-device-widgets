@@ -19,6 +19,9 @@
   export let botToken = undefined;
   export let deviceId = undefined;
   export let demo = undefined;
+  export let statusErrorCountThreshold = 10;
+
+  let statusErrorCount = 0;
 
   const defaultBookings = [
     {
@@ -57,7 +60,11 @@
   export const getWeatherResponse = (id: number, units: string) =>
     httpApiRequest.get('weather', { id, units }).then((r) => r.json() as Promise<TYPES.WeatherResponse>);
 
-  export const getStatus = () => devicesHttpApiRequest.get('status').then((r) => r.json());
+  export const getStatus = () =>
+    devicesHttpApiRequest
+      .get('status')
+      .then((r) => !(statusErrorCount = 0) && (r.json() as Promise<TYPES.Status>))
+      .catch((e) => (statusErrorCount = statusErrorCount + 1) && Promise.reject(e));
 
   export const disconnect = (id: number) => devicesHttpApiRequest.post('call-disconnect', undefined, { callId: id });
 
@@ -73,7 +80,10 @@
       .then((r) => [...r, ...defaultBookings]);
 
   export const statusStore = readable<TYPES.Status>(undefined, (set) => {
-    const interval = setInterval(async () => set(await getStatus()), 1000);
+    const interval = setInterval(
+      async () => set(statusErrorCount < statusErrorCountThreshold ? await getStatus() : undefined),
+      1000
+    );
     return () => clearInterval(interval);
   });
 
