@@ -22,6 +22,8 @@
   export let statusErrorCountThreshold = 10;
 
   let statusErrorCount = 0;
+  let activeModalLink = undefined;
+  let isUserListEditable = false;
 
   const defaultBookings = [
     {
@@ -118,9 +120,6 @@
   const buttons = ['A', 'B', 'C']
     .filter((e) => demo?.[`button${e}Text`] && demo?.[`button${e}Link`])
     .map((e) => ({ text: demo?.[`button${e}Text`], link: demo?.[`button${e}Link`] }));
-
-  let activeModalLink = undefined;
-  let isUserListEditable = false;
 </script>
 
 <Background imageLink={demo.backgroundPoster} filter="brightness({demo.backgroundBrightness}%)" />
