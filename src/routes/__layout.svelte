@@ -124,8 +124,7 @@
         </a>
       {/if}
 
-      <a
-        role="button"
+      <button
         id="main-burger"
         class="navbar-burger"
         aria-label="menu"
@@ -135,7 +134,7 @@
         <span aria-hidden="true" />
         <span aria-hidden="true" />
         <span aria-hidden="true" />
-      </a>
+      </button>
     </div>
 
     <div id="navbarBasicExample" class="navbar-menu">
