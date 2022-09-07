@@ -4,7 +4,7 @@
   export const load: Load = ({ error, status, session }) => {
     return {
       status: 200,
-      props: { isAuthenticated: session.isAuthenticated, isError: error != null || status !== 200 }
+      props: { email: session.email, isError: error != null || status !== 200 }
     };
   };
 </script>
@@ -15,7 +15,7 @@
   import { base } from '$app/paths';
   import { page } from '$app/stores';
 
-  export let isAuthenticated = false;
+  export let email = undefined;
   export let isError = false;
 
   let isNavVisible = !(
@@ -114,7 +114,7 @@
 {#if isNavVisible}
   <nav class="navbar is-fixed-top has-shadow" aria-label="main navigation">
     <div class="navbar-brand">
-      {#if isAuthenticated}
+      {#if email}
         <a class="navbar-item" href="/demos">
           <img src="/favicon.png" alt="RoomOS Device Widgets" />
         </a>
@@ -140,34 +140,41 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        {#if isAuthenticated}
+        {#if email}
           <a class="navbar-item" href="/demos">Home</a>
         {/if}
       </div>
 
       <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            {#if isAuthenticated === false}
+        {#if email == null}
+          <div class="navbar-item">
+            <div class="buttons">
               <a class="button is-fullwidth is-rounded is-primary is-light has-text-weight-bold" href="/auth">
                 <span class="icon">
                   <i class="mdi mdi-login" />
                 </span>
                 <span>Log in</span>
               </a>
-            {:else}
-              <button
-                class="button is-fullwidth is-rounded is-danger is-light has-text-weight-bold"
-                on:click={() => form.submit()}
-              >
-                <span class="icon">
-                  <i class="mdi mdi-logout" />
-                </span>
-                <span>Log out</span>
-              </button>
-            {/if}
+            </div>
           </div>
-        </div>
+        {:else}
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link has-text-weight-bold">{email}</a>
+            <div class="navbar-dropdown is-right">
+              <div class="navbar-item">
+                <button
+                  class="button is-fullwidth is-rounded is-danger is-light has-text-weight-bold"
+                  on:click={() => form.submit()}
+                >
+                  <span class="icon">
+                    <i class="mdi mdi-logout" />
+                  </span>
+                  <span>Log out</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        {/if}
       </div>
     </div>
 

@@ -1,7 +1,7 @@
 import type { GetSession, Handle, HandleError } from '@sveltejs/kit';
 import { webexHttpMessagesResource } from '$lib/webex/http-wrapper';
 import { prerendering } from '$app/env';
-import { MikroORM } from '@mikro-orm/core';
+import { LoadStrategy, MikroORM } from '@mikro-orm/core';
 import { User, Session } from './database/entities';
 import config from '../mikro-orm.config';
 import env from '$lib/environment';
@@ -34,7 +34,16 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (isProtectedRoute) {
     const db = await MikroORM.init({ ...config, ...{ entities: [User, Session] } }).then((r) => r.em.fork());
     const cookies = cookie.parse(event.request.headers.get('Cookie') ?? '');
-    const session = cookies.sessionId ? await db.findOne(Session, { uuid: cookies.sessionId, isExpired: null }) : null;
+    const session = cookies.sessionId
+      ? await db.findOne(
+          Session,
+          { uuid: cookies.sessionId, isExpired: null },
+          {
+            fields: ['uuid', 'isExpired', 'lastActivityAt', 'user.uuid', 'user.email'],
+            strategy: LoadStrategy.JOINED
+          }
+        )
+      : null;
     const isSessionInvalid =
       session?.uuid == null ||
       session?.isExpired === true ||
@@ -107,7 +116,7 @@ export const handleError: HandleError = async ({ error, event }) => {
 };
 
 export const getSession: GetSession = async (event) => {
-  const isAuthenticated = event.locals.session?.user?.uuid != null;
+  const email = event.locals.session?.user?.email;
 
-  return { isAuthenticated };
+  return { email };
 };

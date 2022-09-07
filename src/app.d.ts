@@ -8,7 +8,7 @@ declare namespace App {
   }
   // interface Platform {}
   interface Session {
-    isAuthenticated: boolean;
+    email?: string;
   }
   // interface Stuff {}
 }
