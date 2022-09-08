@@ -64,7 +64,7 @@ These instructions assume that you have:
    - Your registration must have the following [Webex REST API scopes](https://developer.webex.com/docs/integrations#scopes):
       | Scope                   | Description                                   |
       |-------------------------|-----------------------------------------------|
-      | spark-admin:people_read | Access to read your user's company directory  |
+      | spark:people_read       | Access to read your user's company directory  |
       | spark:kms               | Permission to interact with encrypted content |
    - Use this Redirect URI: `https://oauth-helper-a.wbx2.com/helperservice/v1/actions/device/callback`
    - Take note of your Client ID and Client Secret. Assign these values to the `WEBEX_DEVICE_CODE_CLIENT_ID` 
