@@ -3,7 +3,7 @@ RoomOS Device Widgets
 **An app for demoing RoomOS device capabilities in Kiosk/PWA mode.**
 
 This is a proof-of-concept application that generates customized web application links for use on a compatible [RoomOS 11](https://help.webex.com/en-us/article/n01kjh1/New-user-experience-with-RoomOS-11) device in Kiosk/PAW mode.
-Kiosk and PWA (Persesitent Web App) are new modes that make use of the in-built Web Engine on moden RoomOS devices to display a webpage or custom-made web application on the device. As a result, developers can have full control on the integrations (using APIs and SDKs), branding, controls and UI/UX presented to the end users.
+Kiosk and PWA (Persistent Web App) are new modes that make use of the in-built Web Engine on modern RoomOS devices to display a webpage or custom-made web application on the device. As a result, developers can have full control on the integrations (using APIs and SDKs), branding, controls and UI/UX presented to the end users.
 
 <p align="center">
    <a href="https://app.vidcast.io/share/bb910329-f398-4f04-baec-18ddaf46f493" target="_blank">
@@ -26,7 +26,7 @@ Kiosk and PWA (Persesitent Web App) are new modes that make use of the in-built 
 
 ## Overview
 
-This application that generates customized web application links, or demos. In this context, a "demo" is a collection of widgets (brand logo, background, sensors etc.) that make up the UI/controls of a PWA/Kiosk device. You can create multiple demos and activate them on a compatible device of your choice after loggin-in. Once activated, the application uses [cloud xAPI requests](https://roomos.cisco.com/docs/Introduction.md#the-xapi) with a Webex Bot token to control the device (make calls, get room analytics data, etc.).
+This application generates customized web application links to demos that you create. In this context, a "demo" is a collection of widgets (brand logo, background, sensors etc.) that make up the UI/controls of a PWA/Kiosk device. You can create multiple demos and activate them on a compatible device of your choice after logging-in. Once activated, the application uses [cloud xAPI requests](https://roomos.cisco.com/docs/Introduction.md#the-xapi) with a Webex Bot token to control the device (make calls, get room analytics data, etc.).
 
 
 ## Setup
