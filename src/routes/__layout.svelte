@@ -158,7 +158,7 @@
           </div>
         {:else}
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link has-text-weight-bold">{email}</a>
+            <p class="navbar-link has-text-weight-bold">{email}</p>
             <div class="navbar-dropdown is-right">
               <div class="navbar-item">
                 <button
