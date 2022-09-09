@@ -12,12 +12,12 @@
     "sourceMap": true,
     "strict": true,
     "paths": {
-      "$lib": ["src/lib"],
-      "$lib/*": ["src/lib/*"],
-      "$components": ["src/components"],
-      "$components/*": ["src/components/*"],
-      "$entities": ["src/entities"],
-      "$entities/*": ["src/entities/*"]
+      "$lib": ["./src/lib"],
+      "$lib/*": ["./src/lib/*"],
+      "$components": ["./src/components"],
+      "$components/*": ["./src/components/*"],
+      "$entities": ["./src/entities"],
+      "$entities/*": ["./src/entities/*"]
     }
   }
 }
