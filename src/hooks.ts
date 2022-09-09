@@ -39,7 +39,7 @@ export const handle: Handle = async ({ event, resolve }) => {
           Session,
           { uuid: cookies.sessionId, isExpired: null },
           {
-            fields: ['uuid', 'isExpired', 'lastActivityAt', 'user.uuid', 'user.email'],
+            fields: ['uuid', 'isExpired', 'lastActivityAt', 'payload', 'user.uuid', 'user.email'],
             strategy: LoadStrategy.JOINED
           }
         )
