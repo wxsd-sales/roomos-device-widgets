@@ -1,2 +1,4 @@
 node_modules
+build
+.svelte-kit
 .data/*.sqlite3
