@@ -26,7 +26,7 @@
 </script>
 
 <div class="columns is-mobile">
-  <div class="column is-7 has-text-weight-medium">
+  <div class="column is-7 has-text-weight-medium" title={privacy}>
     {#if title == null}
       <p class="is-size-5">{@html localeTimeString}</p>
     {:else}
