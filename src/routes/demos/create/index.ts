@@ -15,11 +15,9 @@ import {
   ValidateIf,
   validateSync
 } from 'class-validator';
-import { MikroORM } from '@mikro-orm/core';
-import { Data, User, Demo, Session } from '../../../database/entities';
+import { Data, Demo } from '../../../database/entities';
 import { jsonRequest } from '$lib/shared/json-request';
 import { classTransformOptions, classValidationOptions } from '../../.utils';
-import config from '../../../../mikro-orm.config';
 import env from '$lib/environment';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
@@ -157,10 +155,9 @@ export const POST = async (requestEvent: RequestEvent) => {
     return { status: 422, body: { form: 'Invalid submission.' }, headers: { Location: '/demos/create' } };
   }
 
-  const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo, Session] } });
-  const em = orm.em.fork();
+  const db = requestEvent.locals.db;
   const session = requestEvent.locals.session;
-  if (session?.uuid && session?.user?.uuid) {
+  if (db && session?.uuid && session?.user?.uuid) {
     const demo = new Demo({
       user: session.user,
       name: formData.name,
@@ -191,7 +188,7 @@ export const POST = async (requestEvent: RequestEvent) => {
       weatherCityId: formData.cityId,
       weatherUnits: formData.units
     });
-    await em.persistAndFlush(demo);
+    await db.persistAndFlush(demo);
 
     return { status: 302, headers: { Location: '/demos' } };
   }

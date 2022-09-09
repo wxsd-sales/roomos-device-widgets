@@ -1,15 +1,13 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { LoadStrategy, MikroORM } from '@mikro-orm/core';
-import { User, Demo, Session } from '../../database/entities';
-import config from '../../../mikro-orm.config';
+import { LoadStrategy } from '@mikro-orm/core';
+import { User } from '../../database/entities';
 
 export const GET = async (requestEvent: RequestEvent) => {
-  const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo, Session] } });
-  const em = orm.em.fork();
+  const db = requestEvent.locals.db;
   const session = requestEvent.locals.session;
 
-  if (session?.uuid && session?.user?.uuid) {
-    const demos = await em
+  if (db && session?.uuid && session?.user?.uuid) {
+    const demos = await db
       .findOne(User, session.user.uuid, {
         fields: ['demos.uuid', 'demos.name', 'demos.createdAt', 'demos.updatedAt'],
         strategy: LoadStrategy.JOINED

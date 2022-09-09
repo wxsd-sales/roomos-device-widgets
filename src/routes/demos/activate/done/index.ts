@@ -2,9 +2,8 @@ import 'reflect-metadata';
 import type { RequestEvent } from '@sveltejs/kit';
 import { Expose, plainToInstance } from 'class-transformer';
 import { IsUUID, validateSync } from 'class-validator';
-import { LoadStrategy, MikroORM } from '@mikro-orm/core';
-import { User, Demo, Activation } from '../../../../database/entities';
-import config from '../../../../../mikro-orm.config';
+import { LoadStrategy } from '@mikro-orm/core';
+import { Activation } from '../../../../database/entities';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 
@@ -25,21 +24,22 @@ export const GET = async (requestEvent: RequestEvent) => {
     return { status: 422 };
   }
 
-  const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo, Activation] } });
-  const em = orm.em.fork();
+  const db = requestEvent.locals.db;
 
-  return await em
-    .findOne(Activation, query.activationId, {
-      fields: ['uuid', 'botToken', 'deviceId', 'demo.uuid', 'demo.name', 'demo.user.uuid'],
-      strategy: LoadStrategy.JOINED
-    })
-    .then((r) => {
-      if (r && r.demo.user.uuid === requestEvent.locals.session?.user?.uuid) {
-        const activation = { id: r.uuid, botToken: r.botToken, deviceId: r.deviceId, demoId: r.demo.uuid };
+  return db != null
+    ? await db
+        .findOne(Activation, query.activationId, {
+          fields: ['uuid', 'botToken', 'deviceId', 'demo.uuid', 'demo.name', 'demo.user.uuid'],
+          strategy: LoadStrategy.JOINED
+        })
+        .then((r) => {
+          if (r && r.demo.user.uuid === requestEvent.locals.session?.user?.uuid) {
+            const activation = { id: r.uuid, botToken: r.botToken, deviceId: r.deviceId, demoId: r.demo.uuid };
 
-        return { status: 200, body: { activation } };
-      }
+            return { status: 200, body: { activation } };
+          }
 
-      return { status: 404 };
-    });
+          return { status: 404 };
+        })
+    : { status: 404 };
 };

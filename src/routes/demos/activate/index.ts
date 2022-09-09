@@ -3,10 +3,8 @@ import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import { IsNotEmpty, IsUUID, Matches, validateSync } from 'class-validator';
 import { VALID_ACCESS_TOKEN } from '$lib/constants';
-import { MikroORM } from '@mikro-orm/core';
-import { Activation, Demo, Session, User } from '../../../database/entities';
+import { Activation, Demo } from '../../../database/entities';
 import { classTransformOptions, classValidationOptions } from '../../.utils';
-import config from '../../../../mikro-orm.config';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 
@@ -39,14 +37,13 @@ export const POST = async (requestEvent: RequestEvent) => {
     return { status: 422, body: { form: 'Invalid submission.' }, headers: { Location: '/demos/activate' } };
   }
 
-  const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo, Activation, Session] } });
-  const em = orm.em.fork();
+  const db = requestEvent.locals.db;
   const session = requestEvent.locals.session;
-  const demo = em.getReference(Demo, formData.demoUuid);
+  const demo = db?.getReference(Demo, formData.demoUuid);
 
-  if (session?.uuid && session?.user?.uuid && demo?.uuid) {
+  if (db && session?.uuid && session?.user?.uuid && demo?.uuid) {
     const activation = new Activation(formData.botToken, formData.deviceId, demo);
-    em.persistAndFlush(activation);
+    await db.persistAndFlush(activation);
 
     return { status: 302, headers: { Location: '/demos/activate/done?activationId=' + activation.uuid } };
   }

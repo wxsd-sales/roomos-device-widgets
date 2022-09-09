@@ -5,6 +5,7 @@
 declare namespace App {
   interface Locals {
     session?: import('./database/entities/session').Session;
+    db?: import('@mikro-orm/core').EntityManager;
   }
   // interface Platform {}
   interface Session {

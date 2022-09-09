@@ -3,10 +3,8 @@ import type { JSONObject } from '@sveltejs/kit/types/private';
 import type { PersonResponse, TokenResponse } from '$lib/types';
 import { urlEncodedRequest } from '$lib/shared/urlencoded-request';
 import { webexHttpPeopleResource } from '$lib/webex/http-wrapper';
-import { MikroORM } from '@mikro-orm/core';
 import { Session, User } from '../../../database/entities';
 import { prerendering } from '$app/env';
-import config from '../../../../mikro-orm.config';
 import humps from 'humps';
 import env from '$lib/environment';
 import * as cookie from 'cookie';
@@ -33,7 +31,7 @@ export const GET = async (requestEvent: RequestEvent) => {
     }
   });
 
-  const db = await MikroORM.init({ ...config, ...{ entities: [User, Session] } }).then((r) => r.em.fork());
+  const db = requestEvent.locals.db;
   const params = humps.decamelizeKeys({
     grantType,
     clientId: env.WEBEX_AUTHORIZATION_CODE_CLIENT_ID,
@@ -56,26 +54,28 @@ export const GET = async (requestEvent: RequestEvent) => {
         .getMyOwnDetails()
         .then((s: Response) => s.json() as Promise<PersonResponse>)
         .then((s: PersonResponse) =>
-          db.findOne(User, { email: s.emails[0] }).then(async (t) => {
-            const session = new Session({
-              user: t ?? new User(s.emails[0]),
-              ipAddress: prerendering ? 'unknown' : requestEvent.clientAddress,
-              userAgent: requestEvent.request.headers.get('User-Agent') ?? undefined,
-              lastActivityAt: Date.now(),
-              payload: { webex: { ...r, orgId: s.orgId } }
-            });
-            const sessionCookie = cookie.serialize('sessionId', session.uuid, {
-              path: '/',
-              maxAge: 60 * 60 * 24 * 7,
-              sameSite: 'lax'
-            });
-            await db.persistAndFlush(session);
+          db != null
+            ? db.findOne(User, { email: s.emails[0] }).then(async (t) => {
+                const session = new Session({
+                  user: t ?? new User(s.emails[0]),
+                  ipAddress: prerendering ? 'unknown' : requestEvent.clientAddress,
+                  userAgent: requestEvent.request.headers.get('User-Agent') ?? undefined,
+                  lastActivityAt: Date.now(),
+                  payload: { webex: { ...r, orgId: s.orgId } }
+                });
+                const sessionCookie = cookie.serialize('sessionId', session.uuid, {
+                  path: '/',
+                  maxAge: 60 * 60 * 24 * 7,
+                  sameSite: 'lax'
+                });
+                await db.persistAndFlush(session);
 
-            return {
-              status: 302,
-              headers: { 'Location': '/demos', 'Set-Cookie': sessionCookie }
-            };
-          })
+                return {
+                  status: 302,
+                  headers: { 'Location': '/demos', 'Set-Cookie': sessionCookie }
+                };
+              })
+            : { status: 403 }
         )
     )
     .catch(() => ({ status: 403 }));

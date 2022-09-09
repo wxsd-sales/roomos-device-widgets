@@ -2,9 +2,9 @@ import type { GetSession, Handle, HandleError } from '@sveltejs/kit';
 import { webexHttpMessagesResource } from '$lib/webex/http-wrapper';
 import { prerendering } from '$app/env';
 import { LoadStrategy, MikroORM } from '@mikro-orm/core';
-import { User, Session } from './database/entities';
 import config from '../mikro-orm.config';
 import env from '$lib/environment';
+import * as entity from './database/entities';
 import * as cookie from 'cookie';
 
 const loginRoute = '/auth';
@@ -20,7 +20,7 @@ function createLoginRedirect(uuid?: string, maxAge = 2147483648) {
 }
 
 function createSession(userAgent?: string, ipAddress = 'unknown', lastActivityAt = Date.now()) {
-  return new Session({ userAgent, ipAddress, lastActivityAt });
+  return new entity.Session({ userAgent, ipAddress, lastActivityAt });
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -32,11 +32,14 @@ export const handle: Handle = async ({ event, resolve }) => {
   let response: Response;
 
   if (isProtectedRoute) {
-    const db = await MikroORM.init({ ...config, ...{ entities: [User, Session] } }).then((r) => r.em.fork());
+    const db = await MikroORM.init({
+      ...config,
+      ...{ entities: [entity.Session, entity.User, entity.Data, entity.Demo, entity.Activation] }
+    }).then((r) => r.em.fork());
     const cookies = cookie.parse(event.request.headers.get('Cookie') ?? '');
     const session = cookies.sessionId
       ? await db.findOne(
-          Session,
+          entity.Session,
           { uuid: cookies.sessionId, isExpired: null },
           {
             fields: ['uuid', 'isExpired', 'lastActivityAt', 'payload', 'user.uuid', 'user.email'],
@@ -51,13 +54,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     if (isSessionInvalid) {
       const session = createSession(userAgent, ipAddress, d1.getTime());
-      await db.persistAndFlush(session).then(() => (event.locals.session = session));
+      await db.persistAndFlush(session).then(() => (event.locals.session = session) && (event.locals.db = db));
       response = createLoginRedirect(session.uuid);
     } else {
       session.ipAddress = ipAddress;
       session.userAgent = userAgent;
       session.lastActivityAt = d1.getTime();
-      await db.persistAndFlush(session).then(() => (event.locals.session = session));
+      await db.persistAndFlush(session).then(() => (event.locals.session = session) && (event.locals.db = db));
       response = await resolve(event);
     }
   } else {
