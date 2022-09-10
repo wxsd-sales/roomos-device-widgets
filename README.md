@@ -2,7 +2,7 @@ RoomOS Device Widgets
 =====================
 **An app for demoing RoomOS device capabilities in Kiosk/PWA mode.**
 
-This is a proof-of-concept application that generates customized web application links for use on a compatible [RoomOS 11](https://help.webex.com/en-us/article/n01kjh1/New-user-experience-with-RoomOS-11) device in Kiosk/PAW mode.
+This is a proof-of-concept application that generates customized web application links for use on a compatible [RoomOS 11](https://help.webex.com/en-us/article/n01kjh1/New-user-experience-with-RoomOS-11) device in Kiosk/PWA mode.
 Kiosk and PWA (Persistent Web App) are new modes that make use of the in-built Web Engine on modern RoomOS devices to display a webpage or custom-made web application on the device. As a result, developers can have full control on the integrations (using APIs and SDKs), branding, controls and UI/UX presented to the end users.
 
 <p align="center">
