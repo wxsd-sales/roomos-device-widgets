@@ -22,6 +22,22 @@
             controls. To learn more, watch this
             <a href="https://app.vidcast.io/share/bb910329-f398-4f04-baec-18ddaf46f493" target="_blank">Vidcast</a>.
           </p>
+          <p>
+            Before continuing, please note that you will need access to a <b>compatible RoomOS 11 device</b> registered
+            in <b>shared mode</b> and <b>administrator access to the corresponding Webex Control Hub</b> organization.
+          </p>
+          <ul>
+            <li>
+              If you don't have admin access to any sandboxed or demo Control Hub org, please follow the instructions on
+              the
+              <a href="https://collabtoolbox.cisco.com/tools/sandbox" target="_blank">Collab Toolbox Sandbox</a> page to
+              create one.
+            </li>
+            <li>
+              If your device is in personal mode, you will have to perform a factory reset and then register it as a
+              shared mode device on the Control Hub org.
+            </li>
+          </ul>
         </div>
       </article>
     </div>
