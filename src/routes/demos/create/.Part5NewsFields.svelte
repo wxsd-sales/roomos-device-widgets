@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let url = undefined;
+  export let url = 'https://news.google.com/rss/search?q=site:cisco.com+"webex"';
 </script>
 
 <div class="columns is-multiline">
