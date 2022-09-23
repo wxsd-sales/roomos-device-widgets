@@ -7,7 +7,28 @@
     <h2 class="title">News</h2>
   </div>
   <div class="column is-full content mb-0">
-    <p>Show news articles for a particular term using feed from Google News.</p>
+    <p>Show news articles from <a href="https://news.google.com/rss" target="_blank">Google News RSS</a> feed.</p>
+    <p>Some examples:</p>
+    <ul>
+      <li>
+        News items matching a keyword:
+        <a href={'https://news.google.com/rss/search?q="webex"'} target="_blank">
+          https://news.google.com/rss/search?q="webex"
+        </a>
+      </li>
+      <li>
+        News items from a particular source:
+        <a href={'https://news.google.com/rss/search?q=site:cisco.com'} target="_blank">
+          https://news.google.com/rss/search?q=site:cisco.com
+        </a>
+      </li>
+      <li>
+        News items matching a keyword from a particular source:
+        <a href={'https://news.google.com/rss/search?q=site:cisco.com+"webex"'} target="_blank">
+          https://news.google.com/rss/search?q=site:cisco.com+"webex"
+        </a>
+      </li>
+    </ul>
   </div>
   <div class="column is-full">
     <label class="label" for="url">Query</label>
