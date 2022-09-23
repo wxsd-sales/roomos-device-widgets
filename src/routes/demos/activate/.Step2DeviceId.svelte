@@ -8,7 +8,7 @@
   let isLoading = false;
 
   const isCompatibleDevice = (r: Record<string, unknown>) =>
-    r?.type.toLowerCase() === 'roomdesk' && r?.connectionStatus === 'connected' && (r?.errorCodes as []).length === 0;
+    r?.type.toLowerCase() === 'roomdesk' && r?.connectionStatus.toLowerCase().startsWith('connected');
 
   const retrieveCompatibleDevices = (botToken) => {
     isLoading = true;
