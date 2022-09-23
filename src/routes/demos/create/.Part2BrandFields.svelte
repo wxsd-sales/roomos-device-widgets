@@ -80,7 +80,7 @@
         <i class="mdi mdi-format-header-1" />
       </span>
     </div>
-    <p class="help">The organization's common name</p>
+    <p class="help">The organization's common name, max. 16 characters</p>
   </div>
   <div class="column is-one-fifths">
     <label class="label" for="subtitle">Subtitle <sup class="has-text-danger" title="required">*</sup></label>
@@ -99,7 +99,7 @@
         <i class="mdi mdi-format-header-2" />
       </span>
     </div>
-    <p class="help">The organization's slogan</p>
+    <p class="help">The organization's slogan, max. 64 characters</p>
   </div>
   <div id="logo-preview" class="column is-12">
     {#if logo?.[0]}

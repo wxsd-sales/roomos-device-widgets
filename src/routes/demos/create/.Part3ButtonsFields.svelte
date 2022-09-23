@@ -60,7 +60,7 @@
       </span>
     </div>
     <div class="help">
-      <p>The name for the link</p>
+      <p>The name for the link, max. 24 characters</p>
     </div>
   </div>
   <!-- B -->
@@ -91,7 +91,7 @@
       </span>
     </div>
     <div class="help">
-      <p>The name for the link</p>
+      <p>The name for the link, max. 24 characters</p>
     </div>
   </div>
   <!-- C -->
@@ -122,7 +122,7 @@
       </span>
     </div>
     <div class="help">
-      <p>The name for the link</p>
+      <p>The name for the link, max. 24 characters</p>
     </div>
   </div>
 </div>
