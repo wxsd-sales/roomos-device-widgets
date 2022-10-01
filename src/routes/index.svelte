@@ -12,9 +12,11 @@
   import Bookings from '$components/Bookings/Bookings.svelte';
   import News from '$components/News/News.svelte';
   import Authorized from '$components/Authorized/Authorized.svelte';
-  import FavouriteContacts from '../components/FavouriteContacts/FavouriteContacts.svelte';
+  import FavouriteContacts from '$components/FavouriteContacts/FavouriteContacts.svelte';
+  import FavouriteSpaces from '$components/FavouriteSpaces/FavouriteSpaces.svelte';
   import Modal from '$components/Modal/Modal.svelte';
   import * as TYPES from '$lib/types';
+  import { token } from '$lib/store';
 
   export let botToken = undefined;
   export let deviceId = undefined;
@@ -115,7 +117,8 @@
     return calls ?? [];
   });
 
-  export const tokenResponseStore = writable<TYPES.TokenResponse>();
+  // export const tokenResponseStore = writable<TYPES.TokenResponse>();
+  export const tokenResponseStore = token;
 
   const buttons = ['A', 'B', 'C']
     .filter((e) => demo?.[`button${e}Text`] && demo?.[`button${e}Link`])
@@ -167,14 +170,15 @@
                     <i class="mdi {isUserListEditable ? 'mdi-account-eye' : 'mdi-account-edit'}" />
                   </span>
                 </button>
-                <FavouriteContacts
+                <!-- <FavouriteContacts
                   id={$tokenResponseStore.id}
                   accessToken={$tokenResponseStore.accessToken}
                   edit={isUserListEditable}
                   {disconnect}
                   {connect}
                   {callsStore}
-                />
+                /> -->
+                <FavouriteSpaces accessToken={$tokenResponseStore.accessToken} />
               </Authorized>
             {/if}
           </div>

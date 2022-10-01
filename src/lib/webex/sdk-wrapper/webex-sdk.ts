@@ -11,7 +11,7 @@ export class WebexSdk {
    * @param {string} accessToken
    * @param {Record<string, unknown>} config
    */
-  constructor(accessToken, config = WEBEX_SDK_CONFIG) {
+  constructor(accessToken: string, config = WEBEX_SDK_CONFIG) {
     this.#accessToken = accessToken;
     this.#config = config;
   }
@@ -23,9 +23,7 @@ export class WebexSdk {
    */
   initialize() {
     return new Promise((resolve) => {
-      // eslint-disable-next-line no-undef
-      const webex = new Webex({ config: this.#config, credentials: { access_token: this.#accessToken } });
-      resolve(webex);
+      resolve(new Webex({ config: this.#config, credentials: { access_token: this.#accessToken } }));
     }).catch((e) => `${WebexSdkErrorPrefix.INITIALIZATION}: ${e}.`);
   }
 }

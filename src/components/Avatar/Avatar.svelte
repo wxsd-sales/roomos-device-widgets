@@ -3,8 +3,8 @@
   import Presence from '../Presence/Presence.svelte';
 
   export let initials = 'U';
-  export let image = undefined;
-  export let status: Status = undefined;
+  export let image: string | undefined = undefined;
+  export let status: Status | undefined = undefined;
   export let size = 64;
 </script>
 

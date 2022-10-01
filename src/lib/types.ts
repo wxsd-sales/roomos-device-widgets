@@ -138,3 +138,26 @@ export interface PersonResponse {
   type: 'person' | 'bot';
   userName?: string;
 }
+
+export enum RoomTags {
+  FAVORITE = 'FAVORITE',
+  ONE_ON_ONE = 'ONE_ON_ONE'
+}
+
+export interface RoomResponseAvatarFile {
+  files: {
+    items: Array<unknown>;
+  };
+}
+
+export interface RoomResponse {
+  id: string;
+  avatar: string | RoomResponseAvatarFile;
+  displayName: string;
+  sipAddress: string;
+  tags?: Array<RoomTags>;
+}
+
+export enum WebexSdkErrorPrefix {
+  INITIALIZATION = 'Initialization'
+}
