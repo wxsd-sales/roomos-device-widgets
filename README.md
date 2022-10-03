@@ -39,7 +39,7 @@ These instructions assume that you have:
 
 1. Clone this repository and change directory:
    ```
-   git clone https://github.com/wssd-sales/roomos-device-widgets && cd roomos-device-widgets
+   git clone https://github.com/wxsd-sales/roomos-device-widgets && cd roomos-device-widgets
    ```
 
 2. Copy `.env.example` file as `.env`:
