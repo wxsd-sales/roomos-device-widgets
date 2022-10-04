@@ -21,7 +21,6 @@ import { classTransformOptions, classValidationOptions } from '../../.utils';
 import env from '$lib/environment';
 import { FavoriteContactsTypes } from '$lib/types';
 
-
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 
 export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
@@ -195,12 +194,12 @@ export const POST = async (requestEvent: RequestEvent) => {
       guestInviteDestination: formData.destination,
       newsUrl: formData.url,
       weatherCityId: formData.cityId,
-      weatherUnits: formData.units,
+      weatherUnits: formData.units
     });
     await db.persistAndFlush(demo);
-    
+
     return { status: 302, headers: { Location: '/demos' } };
   }
-  
+
   return { status: 422 };
 };

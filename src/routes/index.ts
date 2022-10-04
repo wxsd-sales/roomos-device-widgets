@@ -57,7 +57,6 @@ export const GET = async (requestEvent: RequestEvent) => {
       strategy: LoadStrategy.JOINED
     })
     .then((r) => {
-      console.log(r)
       if (r) {
         const { backgroundPoster, brandLogo, ...demoJson }: { backgroundPoster: Data; brandLogo: Data } = r.demo;
         (demoJson as JSONObject)['brandLogo'] =
