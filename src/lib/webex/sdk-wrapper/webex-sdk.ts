@@ -1,5 +1,6 @@
 import { WEBEX_SDK_CONFIG } from '../../constants';
 import { WebexSdkErrorPrefix } from '../../types';
+import type {Webex} from '../../types';
 
 export class WebexSdk {
   #accessToken;
@@ -19,9 +20,9 @@ export class WebexSdk {
   /**
    * Initialize the core Webex instance from the SDK.
    *
-   * @returns {Promise<Webex | string>}
+   * @returns {Promise<Webex>}
    */
-  initialize() {
+  initialize(): Promise<Webex> {
     return new Promise((resolve) => {
       resolve(new Webex({ config: this.#config, credentials: { access_token: this.#accessToken } }));
     }).catch((e) => `${WebexSdkErrorPrefix.INITIALIZATION}: ${e}.`);
@@ -36,4 +37,4 @@ export class WebexSdk {
  *
  * @returns {WebexSdk}
  */
-export const webexSdk = (accessToken, config = WEBEX_SDK_CONFIG) => new WebexSdk(accessToken, config);
+export const webexSdk = (accessToken: string, config = WEBEX_SDK_CONFIG) => new WebexSdk(accessToken, config);

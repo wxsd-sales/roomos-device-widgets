@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { jsonRequest } from '../lib/shared/json-request';
   import { derived, readable, writable } from 'svelte/store';
+  import { onMount } from 'svelte';
+
   import { browser } from '$app/env';
+  import type * as TYPES from '$lib/types';
+  import { token } from '$lib/store';
+  import { jsonRequest } from '$lib/shared/json-request';
+  import { webexSdk } from '$lib/webex/sdk-wrapper';
+
   import Weather from '$components/Weather/Weather.svelte';
   import Clock from '$components/Clock/Clock.svelte';
   import Background from '$components/Background/Background.svelte';
@@ -15,8 +21,6 @@
   import FavouriteContacts from '$components/FavouriteContacts/FavouriteContacts.svelte';
   import FavouriteSpaces from '$components/FavouriteSpaces/FavouriteSpaces.svelte';
   import Modal from '$components/Modal/Modal.svelte';
-  import * as TYPES from '$lib/types';
-  import { token } from '$lib/store';
 
   export let botToken = undefined;
   export let deviceId = undefined;
@@ -26,6 +30,7 @@
   let statusErrorCount = 0;
   let activeModalLink = undefined;
   let isUserListEditable = false;
+  let webexSdkInstaceResponse: Promise<TYPES.Webex>;
 
   const defaultBookings = [
     {
@@ -117,8 +122,13 @@
     return calls ?? [];
   });
 
-  // export const tokenResponseStore = writable<TYPES.TokenResponse>();
-  export const tokenResponseStore = token;
+  export const tokenResponseStore = writable<TYPES.TokenResponse>();
+
+  tokenResponseStore.subscribe((token) => {
+    if (token?.accessToken) {
+      webexSdkInstaceResponse = webexSdk(token?.accessToken).initialize();
+    }
+  });
 
   const buttons = ['A', 'B', 'C']
     .filter((e) => demo?.[`button${e}Text`] && demo?.[`button${e}Link`])
@@ -178,7 +188,13 @@
                   {connect}
                   {callsStore}
                 /> -->
-                <FavouriteSpaces accessToken={$tokenResponseStore.accessToken} />
+                {#await webexSdkInstaceResponse}
+                  <div class="column is-12">
+                    <progress class="progress is-small is-link" max="100">0%</progress>
+                  </div>
+                {:then webexSdkInstance}
+                  <FavouriteSpaces {webexSdkInstance} accessToken={$tokenResponseStore.accessToken} />
+                {/await}
               </Authorized>
             {/if}
           </div>

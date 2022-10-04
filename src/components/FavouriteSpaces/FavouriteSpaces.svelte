@@ -1,64 +1,76 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import {
-    webexSdk,
-    webexSdkRoomsResource,
-    webexSdkMembershipsResource,
-    webexSdkPeopleResource
-  } from '../../lib/webex/sdk-wrapper';
+    webexSdkInternalConversationsPlugin,
+    webexSdkMembershipsPlugin,
+    webexSdkPeoplePlugin,
+    webexSdkInternalServicesPlugin
+  } from '$lib/webex/sdk-wrapper';
   import { webexHttpRoomsResource } from '../../lib/webex/http-wrapper';
-  import { RoomTags, type RoomResponse } from '../../lib/types';
+  import { RoomTags, type ConvoResponse } from '../../lib/types';
   import FavouriteSpace from './FavouriteSpace.svelte';
   import type { FaveSpace } from './types/faveSpace';
+  import type { Webex } from '../../lib/types';
 
-  let accessToken =
-    'ZDdkYWY4YjgtNWY3My00MWRjLWEwMjktMzQzM2ZlOTUxYmIzZTcwNzRhOTctZWM4_PF84_1eb65fdf-9643-417f-9974-ad72cae0e10f';
-  // export let accessToken: string;
+  export let webexSdkInstance: Webex;
+  export let accessToken: string;
 
   let FAVES: Array<FaveSpace> = [];
+  let displayEmptyMessage = false;
+
+  const webexSdkMembershipsPluginInstance = webexSdkMembershipsPlugin(webexSdkInstance);
+  const webexSdkInternalConversationsPluginInstance = webexSdkInternalConversationsPlugin(webexSdkInstance);
+  const webexSdkPeoplePluginInstance = webexSdkPeoplePlugin(webexSdkInstance);
+  const webexSdkInternalServicesPluginInstance = webexSdkInternalServicesPlugin(webexSdkInstance);
+
+  const webexHttpRoomsResourceInstace = webexHttpRoomsResource(accessToken);
+
+  export const directFavesResponse = (directFaves: Array<ConvoResponse>): Promise<Array<FaveSpace>> =>
+    Promise.all(
+      directFaves.map(async (directSpace: ConvoResponse) => {
+        const cluster = await webexSdkInternalServicesPluginInstance.getClusterId(directSpace.url);
+        const { id } = await webexSdkPeoplePluginInstance.getMyOwnDetails();
+        const { items } = await webexSdkMembershipsPluginInstance.list({
+          roomId: webexSdkInternalConversationsPluginInstance.buildHydraId(directSpace.id, cluster)
+        });
+        const [{ personId }] = items.filter(({ personId }: { personId: string }) => personId !== id);
+        const { avatar, displayName, emails } = await webexSdkPeoplePluginInstance.getPersonDetails(personId);
+
+        return { avatar, title: displayName, sipAddress: emails[0] };
+      })
+    );
+
+  export const groupFavesResponse = (groupFaves: Array<ConvoResponse>): Promise<Array<FaveSpace>> =>
+    Promise.all(
+      groupFaves.map(async (groupFave: ConvoResponse) => {
+        const cluster = await webexSdkInternalServicesPluginInstance.getClusterId(groupFave.url);
+        const { sipAddress } = await webexHttpRoomsResourceInstace.getRoomMeetingInfo(
+          webexSdkInternalConversationsPluginInstance.buildHydraId(groupFave.id, cluster)
+        );
+        const file = groupFave?.avatar?.files?.items[0];
+        const buffer = file ? await webexSdkInternalConversationsPluginInstance.decryptSpaceAvatar(file) : undefined;
+
+        return {
+          avatar: file ? `data:${file.mimeType};base64,${Buffer.from(buffer).toString('base64')}` : undefined,
+          title: groupFave.displayName,
+          sipAddress
+        };
+      })
+    );
 
   onMount(async () => {
-    const webexSdkInstance = await webexSdk(accessToken).initialize();
-    const webexSdkMembershipsResourceInstance = webexSdkMembershipsResource(webexSdkInstance);
-    const webexSdkRoomsResourceInstace = webexSdkRoomsResource(webexSdkInstance);
-    const webexSdkPeopleResourceInstance = webexSdkPeopleResource(webexSdkInstance);
-    const webexHttpRoomsResourceInstace = webexHttpRoomsResource(accessToken);
+    try {
+      const spaces = await webexSdkInternalConversationsPluginInstance.list();
+      const faves = spaces.filter((space: ConvoResponse) => space.tags.includes(RoomTags.FAVORITE));
+      const directFaves = faves.filter((fave: ConvoResponse) => fave.tags.includes(RoomTags.ONE_ON_ONE));
+      const groupFaves = faves.filter((fave: ConvoResponse) => !fave.tags.includes(RoomTags.ONE_ON_ONE));
 
-    const spaces = await webexSdkRoomsResourceInstace.list();
-    const faves = spaces.filter((space: RoomResponse) => space.tags.includes(RoomTags.FAVORITE));
-    const directFaves = faves.filter((fave: RoomResponse) => fave.tags.includes(RoomTags.ONE_ON_ONE));
-    const groupFaves = faves.filter((fave: RoomResponse) => !fave.tags.includes(RoomTags.ONE_ON_ONE));
+      FAVES = [...(await directFavesResponse(directFaves)), ...(await groupFavesResponse(groupFaves))];
 
-    directFaves.forEach(async (directSpace: RoomResponse) => {
-      const { items } = await webexSdkMembershipsResourceInstance.list({
-        roomId: webexSdkRoomsResourceInstace.buildHydraId(directSpace.id)
-      });
-
-      const { id } = await webexSdkPeopleResourceInstance.getMyOwnDetails();
-      items.map(async ({ personId }) => {
-        if (personId !== id) {
-          const { avatar, displayName, emails } = await webexSdkPeopleResourceInstance.getPersonDetails(personId);
-          FAVES = [{ avatar, title: displayName, sipAddress: emails[0] }, ...FAVES];
-        }
-      });
-    });
-
-    groupFaves.forEach(async (groupSpace: RoomResponse) => {
-      const { sipAddress } = await webexHttpRoomsResourceInstace.getRoomMeetingInfo(
-        webexSdkRoomsResourceInstace.buildHydraId(groupSpace.id)
-      );
-      const file = groupSpace?.avatar?.files?.items[0];
-      const buffer = file ? await webexSdkRoomsResourceInstace.decryptSpaceAvatar(file) : undefined;
-
-      FAVES = [
-        {
-          avatar: file ? `data:${file.mimeType};base64,${Buffer.from(buffer).toString('base64')}` : undefined,
-          title: groupSpace.displayName,
-          sipAddress
-        },
-        ...FAVES
-      ];
-    });
+      if (!FAVES.length) displayEmptyMessage = true;
+    } catch (e) {
+      console.log(e);
+    }
   });
 </script>
 
@@ -67,4 +79,9 @@
   {#each FAVES as { title, avatar, sipAddress }}
     <FavouriteSpace {title} {avatar} {sipAddress} />
   {/each}
+  {#if displayEmptyMessage}
+    <div class="column is-12 favourite-contacts-error">
+      <p class="subtitle has-text-danger">Could not get favourite contacts.</p>
+    </div>
+  {/if}
 </div>

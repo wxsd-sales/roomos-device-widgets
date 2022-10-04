@@ -1,5 +1,5 @@
 export type FaveSpace = {
-  title: string;
+  title: string | undefined;
   avatar: string | undefined;
   sipAddress: string;
 };

@@ -49,3 +49,5 @@ export const VALID_DESTINATION = new RegExp(
   `(${VALID_MEETING_LINK.source})|(${VALID_PMR_LINK.source})|(${VALID_PMR_ADDRESS.source})|(${VALID_SIP.source})|(${VALID_EMAIL.source})`,
   'i'
 );
+
+export const INTERNAL_US_CLUSTER_NAME = 'urn:TEAM:us-east-2_a';

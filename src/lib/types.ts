@@ -150,14 +150,33 @@ export interface RoomResponseAvatarFile {
   };
 }
 
-export interface RoomResponse {
+export interface ConvoResponse {
   id: string;
   avatar: string | RoomResponseAvatarFile;
   displayName: string;
   sipAddress: string;
-  tags?: Array<RoomTags>;
+  tags: Array<RoomTags>;
+  url: string;
 }
 
 export enum WebexSdkErrorPrefix {
   INITIALIZATION = 'Initialization'
+}
+
+export interface Webex {
+  internal: {
+    conversation: {
+      list: () => Array<ConvoResponse>,
+      download: (file: unknown, options: unknown) => unknown,
+    },
+    services: {
+      getClusterId: (convoUrl: string) => string
+    }
+  },
+  memberships: {
+    list: (options: unknown) => {items: Array<{personId: string}>}
+  },
+  people: {
+    get: (id: string) => PersonResponse
+  }
 }
