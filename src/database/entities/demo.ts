@@ -3,6 +3,7 @@ import { Entity, ManyToOne, Property, types } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { User } from './user';
 import { Data } from './data';
+import type { FavoriteContactsTypes } from '$lib/types';
 
 @Entity()
 export class Demo extends BaseEntity {
@@ -48,6 +49,9 @@ export class Demo extends BaseEntity {
   @Property({ type: types.string, nullable: true })
   buttonCLink?: string;
 
+  @Property({ type: types.enum, nullable: true })
+  favoriteContactsType!: 'custom' | 'fixed';
+
   @Property({ type: types.string, nullable: true })
   guestInviteDestination?: string;
 
@@ -75,6 +79,7 @@ export class Demo extends BaseEntity {
     buttonBLink?: string;
     buttonCText?: string;
     buttonCLink?: string;
+    favoriteContactsType: 'fixed' | 'custom';
     guestInviteDestination?: string;
     newsUrl?: string;
     weatherUnits: 'imperial' | 'metric' | 'standard';
@@ -95,6 +100,7 @@ export class Demo extends BaseEntity {
     this.buttonBLink = obj.buttonBLink;
     this.buttonCText = obj.buttonCText;
     this.buttonCLink = obj.buttonCLink;
+    this.favoriteContactsType = obj.favoriteContactsType;
     this.guestInviteDestination = obj.guestInviteDestination;
     this.newsUrl = obj.newsUrl;
     this.weatherUnits = obj.weatherUnits;

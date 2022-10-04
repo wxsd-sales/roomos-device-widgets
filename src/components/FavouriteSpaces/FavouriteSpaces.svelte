@@ -6,6 +6,7 @@
     webexSdkPeoplePlugin,
     webexSdkInternalServicesPlugin
   } from '$lib/webex/sdk-wrapper';
+  import { readable } from 'svelte/store';
   import { webexHttpRoomsResource } from '../../lib/webex/http-wrapper';
   import { RoomTags, type ConvoResponse } from '../../lib/types';
   import FavouriteSpace from './FavouriteSpace.svelte';
@@ -14,6 +15,10 @@
 
   export let webexSdkInstance: Webex;
   export let accessToken: string;
+  export let callsStore = readable([]);
+  export let disconnect: (...args) => Promise<Response> = () => Promise.reject(undefined);
+  export let connect: (...args) => Promise<Response> = () => Promise.reject(undefined);
+  export let removeContact: (...args) => Promise<Response> = () => Promise.reject(undefined);
 
   let FAVES: Array<FaveSpace> = [];
   let displayEmptyMessage = false;
@@ -29,14 +34,13 @@
     Promise.all(
       directFaves.map(async (directSpace: ConvoResponse) => {
         const cluster = await webexSdkInternalServicesPluginInstance.getClusterId(directSpace.url);
+        const hydraId = webexSdkInternalConversationsPluginInstance.buildHydraId(directSpace.id, cluster);
         const { id } = await webexSdkPeoplePluginInstance.getMyOwnDetails();
-        const { items } = await webexSdkMembershipsPluginInstance.list({
-          roomId: webexSdkInternalConversationsPluginInstance.buildHydraId(directSpace.id, cluster)
-        });
+        const { items } = await webexSdkMembershipsPluginInstance.list({ roomId: hydraId });
         const [{ personId }] = items.filter(({ personId }: { personId: string }) => personId !== id);
         const { avatar, displayName, emails } = await webexSdkPeoplePluginInstance.getPersonDetails(personId);
 
-        return { avatar, title: displayName, sipAddress: emails[0] };
+        return { id: hydraId, avatar, title: displayName, sipAddress: emails[0] };
       })
     );
 
@@ -44,13 +48,13 @@
     Promise.all(
       groupFaves.map(async (groupFave: ConvoResponse) => {
         const cluster = await webexSdkInternalServicesPluginInstance.getClusterId(groupFave.url);
-        const { sipAddress } = await webexHttpRoomsResourceInstace.getRoomMeetingInfo(
-          webexSdkInternalConversationsPluginInstance.buildHydraId(groupFave.id, cluster)
-        );
+        const hydraId = webexSdkInternalConversationsPluginInstance.buildHydraId(groupFave.id, cluster);
+        const { sipAddress } = await webexHttpRoomsResourceInstace.getRoomMeetingInfo(hydraId);
         const file = groupFave?.avatar?.files?.items[0];
         const buffer = file ? await webexSdkInternalConversationsPluginInstance.decryptSpaceAvatar(file) : undefined;
 
         return {
+          id: hydraId,
           avatar: file ? `data:${file.mimeType};base64,${Buffer.from(buffer).toString('base64')}` : undefined,
           title: groupFave.displayName,
           sipAddress
@@ -76,8 +80,8 @@
 
 <div class="columns is-multiline is-vcentered is-centered favourite-contacts-container">
   <div class:loader-on={!FAVES.length} />
-  {#each FAVES as { title, avatar, sipAddress }}
-    <FavouriteSpace {title} {avatar} {sipAddress} />
+  {#each FAVES as { id, title, avatar, sipAddress }}
+    <FavouriteSpace {id} {title} {avatar} {sipAddress} {callsStore} {disconnect} {connect} />
   {/each}
   {#if displayEmptyMessage}
     <div class="column is-12 favourite-contacts-error">

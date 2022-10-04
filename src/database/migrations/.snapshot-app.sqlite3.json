@@ -77,7 +77,9 @@
       "indexes": [
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -134,7 +136,9 @@
       "indexes": [
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -200,7 +204,9 @@
       "name": "favorite_space",
       "indexes": [
         {
-          "columnNames": ["person_uuid"],
+          "columnNames": [
+            "person_uuid"
+          ],
           "composite": false,
           "keyName": "favorite_space_person_uuid_index",
           "primary": false,
@@ -208,7 +214,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -218,9 +226,13 @@
       "foreignKeys": {
         "favorite_space_person_uuid_foreign": {
           "constraintName": "favorite_space_person_uuid_foreign",
-          "columnNames": ["person_uuid"],
+          "columnNames": [
+            "person_uuid"
+          ],
           "localTableName": "favorite_space",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "person",
           "deleteRule": "cascade",
           "updateRule": "cascade"
@@ -284,7 +296,9 @@
       "name": "favorite_contact",
       "indexes": [
         {
-          "columnNames": ["person_uuid"],
+          "columnNames": [
+            "person_uuid"
+          ],
           "composite": false,
           "keyName": "favorite_contact_person_uuid_index",
           "primary": false,
@@ -292,7 +306,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -302,9 +318,13 @@
       "foreignKeys": {
         "favorite_contact_person_uuid_foreign": {
           "constraintName": "favorite_contact_person_uuid_foreign",
-          "columnNames": ["person_uuid"],
+          "columnNames": [
+            "person_uuid"
+          ],
           "localTableName": "favorite_contact",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "person",
           "deleteRule": "cascade",
           "updateRule": "cascade"
@@ -358,7 +378,9 @@
       "name": "user",
       "indexes": [
         {
-          "columnNames": ["email"],
+          "columnNames": [
+            "email"
+          ],
           "composite": false,
           "keyName": "user_email_unique",
           "primary": false,
@@ -366,7 +388,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -469,7 +493,9 @@
       "name": "session",
       "indexes": [
         {
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "composite": false,
           "keyName": "session_user_uuid_index",
           "primary": false,
@@ -477,7 +503,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -487,9 +515,13 @@
       "foreignKeys": {
         "session_user_uuid_foreign": {
           "constraintName": "session_user_uuid_foreign",
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "localTableName": "session",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "user",
           "deleteRule": "no action",
           "updateRule": "cascade"
@@ -659,6 +691,15 @@
           "nullable": true,
           "mappedType": "text"
         },
+        "favorite_contacts_type": {
+          "name": "favorite_contacts_type",
+          "type": "integer",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
+        },
         "guest_invite_destination": {
           "name": "guest_invite_destination",
           "type": "text",
@@ -699,21 +740,27 @@
       "name": "demo",
       "indexes": [
         {
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "composite": false,
           "keyName": "demo_user_uuid_index",
           "primary": false,
           "unique": false
         },
         {
-          "columnNames": ["background_poster_uuid"],
+          "columnNames": [
+            "background_poster_uuid"
+          ],
           "composite": false,
           "keyName": "demo_background_poster_uuid_index",
           "primary": false,
           "unique": false
         },
         {
-          "columnNames": ["brand_logo_uuid"],
+          "columnNames": [
+            "brand_logo_uuid"
+          ],
           "composite": false,
           "keyName": "demo_brand_logo_uuid_index",
           "primary": false,
@@ -721,7 +768,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -731,27 +780,39 @@
       "foreignKeys": {
         "demo_user_uuid_foreign": {
           "constraintName": "demo_user_uuid_foreign",
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "localTableName": "demo",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "user",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "demo_background_poster_uuid_foreign": {
           "constraintName": "demo_background_poster_uuid_foreign",
-          "columnNames": ["background_poster_uuid"],
+          "columnNames": [
+            "background_poster_uuid"
+          ],
           "localTableName": "demo",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "data",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "demo_brand_logo_uuid_foreign": {
           "constraintName": "demo_brand_logo_uuid_foreign",
-          "columnNames": ["brand_logo_uuid"],
+          "columnNames": [
+            "brand_logo_uuid"
+          ],
           "localTableName": "demo",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "data",
           "deleteRule": "cascade",
           "updateRule": "cascade"
@@ -824,7 +885,9 @@
       "name": "activation",
       "indexes": [
         {
-          "columnNames": ["demo_uuid"],
+          "columnNames": [
+            "demo_uuid"
+          ],
           "composite": false,
           "keyName": "activation_demo_uuid_index",
           "primary": false,
@@ -832,7 +895,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -842,9 +907,13 @@
       "foreignKeys": {
         "activation_demo_uuid_foreign": {
           "constraintName": "activation_demo_uuid_foreign",
-          "columnNames": ["demo_uuid"],
+          "columnNames": [
+            "demo_uuid"
+          ],
           "localTableName": "activation",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "demo",
           "deleteRule": "cascade",
           "updateRule": "cascade"

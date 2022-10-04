@@ -6,6 +6,8 @@
   import GuestInviteFields from '.Part4GuestInviteFields.svelte';
   import NewsFields from '.Part5NewsFields.svelte';
   import WeatherFields from '.Part6WeatherFields.svelte';
+  import FavoriteContactsFields from '.Part7FavoriteContactsFields.svelte';
+  import { FavoriteContactsTypes } from '$lib/types';
   import { onMount } from 'svelte';
 
   export let form = undefined;
@@ -20,6 +22,7 @@
   export let query = undefined;
   export let cityId = undefined;
   export let units = undefined;
+  export let favoriteContactsType = FavoriteContactsTypes.CUSTOM;
 
   let formElement: HTMLFormElement;
 
@@ -41,6 +44,8 @@
   <BrandFields {logo} {title} {subtitle} />
   <hr />
   <ButtonsFields />
+  <hr />
+  <FavoriteContactsFields {favoriteContactsType} />
   <hr />
   <GuestInviteFields {destination} />
   <hr />

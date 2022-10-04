@@ -164,12 +164,12 @@
           <div id="device-code" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
             {#if $tokenResponseStore?.accessToken == null}
               <DeviceCode
-                title="Favourite Contacts"
+                title={demo.favoriteContactsType == 'custom' ? 'Favorite Contacts' : 'Favorite Spaces'}
                 {getAuthorizeResponse}
                 {getTokenResponse}
                 on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)}
               />
-            {:else}
+            {:else if demo.favoriteContactsType === 'custom'}
               <Authorized {tokenResponseStore}>
                 <button
                   slot="navbar-button"
@@ -180,20 +180,29 @@
                     <i class="mdi {isUserListEditable ? 'mdi-account-eye' : 'mdi-account-edit'}" />
                   </span>
                 </button>
-                <!-- <FavouriteContacts
+                <FavouriteContacts
                   id={$tokenResponseStore.id}
                   accessToken={$tokenResponseStore.accessToken}
                   edit={isUserListEditable}
                   {disconnect}
                   {connect}
                   {callsStore}
-                /> -->
+                />
+              </Authorized>
+            {:else}
+              <Authorized {tokenResponseStore}>
                 {#await webexSdkInstaceResponse}
                   <div class="column is-12">
                     <progress class="progress is-small is-link" max="100">0%</progress>
                   </div>
                 {:then webexSdkInstance}
-                  <FavouriteSpaces {webexSdkInstance} accessToken={$tokenResponseStore.accessToken} />
+                  <FavouriteSpaces
+                    {webexSdkInstance}
+                    accessToken={$tokenResponseStore.accessToken}
+                    {disconnect}
+                    {connect}
+                    {callsStore}
+                  />
                 {/await}
               </Authorized>
             {/if}

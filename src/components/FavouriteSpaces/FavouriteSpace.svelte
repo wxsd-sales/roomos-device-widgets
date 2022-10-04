@@ -1,10 +1,16 @@
 <script lang="ts">
+  import { readable } from 'svelte/store';
   import Avatar from '../Avatar/Avatar.svelte';
   import Meet from '../Meet/Meet.svelte';
 
+  export let id: string;
   export let sipAddress: string | undefined = undefined;
   export let avatar: string | undefined;
   export let title: string | undefined;
+  export let callsStore = readable([]);
+  export let disconnect: (...args) => Promise<Response> = () => Promise.reject(undefined);
+  export let connect: (...args) => Promise<Response> = () => Promise.reject(undefined);
+  export let removeContact: (...args) => Promise<Response> = () => Promise.reject(undefined);
 </script>
 
 <div class="column is-12">
@@ -18,7 +24,7 @@
           </h2>
         </div>
         <div class="column is-3">
-          <Meet destination={sipAddress} />
+          <Meet {id} destination={sipAddress} {disconnect} {connect} {callsStore} />
         </div>
       </div>
     </div>

@@ -163,6 +163,10 @@ export enum WebexSdkErrorPrefix {
   INITIALIZATION = 'Initialization'
 }
 
+export enum FavoriteContactsTypes {
+  FIXED = 'fixed',
+  CUSTOM = 'custom'
+}
 export interface Webex {
   internal: {
     conversation: {
