@@ -1,5 +1,5 @@
 import { encode } from 'js-base64';
-import type {Webex} from '../../types';
+import type { Webex } from '../../types';
 
 export class WebexSdkInternalConversationsPlugin {
   #webex;
@@ -7,7 +7,7 @@ export class WebexSdkInternalConversationsPlugin {
   /**
    * Creates a Webex Request wrapper instance for the internal `conversation` sdk plugin.
    *
-   * @param {Webex} webex sdk instance
+   * @param {Webex} webex Sdk instance
    */
   constructor(webex: Webex) {
     this.#webex = webex;
@@ -23,10 +23,10 @@ export class WebexSdkInternalConversationsPlugin {
   }
 
   /**
-   * download an encrypted file into buffers.
+   * Download an encrypted file into buffers.
    *
-   * @param file encrypted file
-   * @param options options to download the file
+   * @param file Encrypted file
+   * @param options Options to download the file
    */
   decryptSpaceAvatar(file: unknown, options = { shouldNotAddExifData: true }) {
     try {
@@ -36,12 +36,12 @@ export class WebexSdkInternalConversationsPlugin {
     }
   }
 
-/**
- * 
- * @param {string} uuid conversation uuid
- * @param {string} cluster conversation cluster name
- * @returns 
- */
+  /**
+   * @param {string} uuid Conversation uuid
+   * @param {string} cluster Conversation cluster name
+   *
+   * @returns
+   */
   buildHydraId(uuid: string, cluster = 'us') {
     return encode(`ciscospark://${cluster}/ROOM/${uuid}`);
   }
@@ -52,4 +52,5 @@ export class WebexSdkInternalConversationsPlugin {
  *
  * @returns {WebexSdkInternalConversationsPlugin}
  */
-export const webexSdkInternalConversationsPlugin = (webexSdkInstance: Webex) => new WebexSdkInternalConversationsPlugin(webexSdkInstance);
+export const webexSdkInternalConversationsPlugin = (webexSdkInstance: Webex) =>
+  new WebexSdkInternalConversationsPlugin(webexSdkInstance);

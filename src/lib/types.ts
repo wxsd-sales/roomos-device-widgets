@@ -166,17 +166,17 @@ export enum WebexSdkErrorPrefix {
 export interface Webex {
   internal: {
     conversation: {
-      list: () => Array<ConvoResponse>,
-      download: (file: unknown, options: unknown) => unknown,
-    },
+      list: () => Array<ConvoResponse>;
+      download: (file: unknown, options: unknown) => unknown;
+    };
     services: {
-      getClusterId: (convoUrl: string) => string
-    }
-  },
+      getClusterId: (convoUrl: string) => string;
+    };
+  };
   memberships: {
-    list: (options: unknown) => {items: Array<{personId: string}>}
-  },
+    list: (options: unknown) => { items: Array<{ personId: string }> };
+  };
   people: {
-    get: (id: string) => PersonResponse
-  }
+    get: (id: string) => PersonResponse;
+  };
 }

@@ -1,6 +1,6 @@
 import { WEBEX_SDK_CONFIG } from '../../constants';
 import { WebexSdkErrorPrefix } from '../../types';
-import type {Webex} from '../../types';
+import type { Webex } from '../../types';
 
 export class WebexSdk {
   #accessToken;

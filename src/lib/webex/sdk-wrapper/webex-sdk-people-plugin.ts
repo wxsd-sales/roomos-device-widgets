@@ -1,4 +1,4 @@
-import type {Webex} from '../../types';
+import type { Webex } from '../../types';
 
 export class WebexSdkPeoplePlugin {
   #webex;
@@ -6,24 +6,21 @@ export class WebexSdkPeoplePlugin {
   /**
    * Creates a Webex Request wrapper instance for the `people` sdk plugin.
    *
-   * @param {webex} webex sdk instance
+   * @param {webex} webex Sdk instance
    */
   constructor(webex: Webex) {
     this.#webex = webex;
   }
 
-  /**
-   * pull current user information
-   *
-   */
+  /** Pull current user information */
   getMyOwnDetails() {
     return this.#webex.people.get('me');
   }
 
   /**
-   * pull any webex user details from a given hydra id
+   * Pull any webex user details from a given hydra id
    *
-   * @param {string} person id
+   * @param {string} person Id
    */
   getPersonDetails(id: string) {
     return this.#webex.people.get(id);
