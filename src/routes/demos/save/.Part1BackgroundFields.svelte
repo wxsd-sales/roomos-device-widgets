@@ -1,11 +1,13 @@
 <script lang="ts">
   import Background from '$components/Background/Background.svelte';
+  import { onMount } from 'svelte';
 
   export let poster: FileList = undefined;
   export let brightness: number = undefined;
   export let acceptedFileTypes: string = '.jpg, .jpeg, .png, .svg, .gif, .webp, .avif, .apng';
   export let maxFileSize: number = 700000;
 
+  let poserInput: HTMLInputElement;
   let clientHeight: number;
   let clientWidth: number;
   let naturalHeight: number;
@@ -24,6 +26,8 @@
     const image = ev.target as HTMLImageElement;
     ({ clientHeight, clientWidth, naturalHeight, naturalWidth } = image);
   };
+
+  onMount(() => (poster?.[0] != null ? (poserInput.files = poster) : null));
 </script>
 
 <div class="columns is-multiline">
@@ -43,6 +47,7 @@
           class="file-input"
           type="file"
           accept={acceptedFileTypes}
+          bind:this={poserInput}
           bind:files={poster}
           on:input={handlePosterUpload}
           required

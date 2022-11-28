@@ -16,7 +16,7 @@
       </a>
     </div>
     <div class="column is-3">
-      <a class="button is-fullwidth is-rounded is-light is-justify-content-space-between" href="/demos/create">
+      <a class="button is-fullwidth is-rounded is-light is-justify-content-space-between" href="/demos/save">
         <span class="icon">
           <i class="mdi mdi-plus-box" />
         </span>
@@ -34,8 +34,19 @@
   {#each demos as demo (demo.uuid)}
     <hr />
     <div class="columns is-vcentered is-mobile">
-      <div class="column is-9">
+      <div class="column is-6">
         <p class="title is-size-5 has-text-weight-bold">{demo.name}</p>
+      </div>
+      <div class="column is-3">
+        <a
+          class="button is-fullwidth is-rounded is-warning is-light is-justify-content-space-between"
+          href="/demos/save?id={demo.uuid}"
+        >
+          <span class="icon">
+            <i class="mdi mdi-pencil" />
+          </span>
+          <span>Edit</span>
+        </a>
       </div>
       <form action="/demos/{demo.uuid}?_method=DELETE" method="post" class="column is-3">
         <button class="button is-fullwidth is-rounded is-danger is-light is-justify-content-space-between">
