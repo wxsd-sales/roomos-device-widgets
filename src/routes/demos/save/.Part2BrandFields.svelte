@@ -1,5 +1,6 @@
 <script lang="ts">
   import Brand from '$components/Brand/Brand.svelte';
+  import { onMount } from 'svelte';
 
   export let logo: FileList = undefined;
   export let title: string = undefined;
@@ -7,6 +8,7 @@
   export let acceptedFileTypes: string = '.png, .svg, .gif, .webp, .avif, .apng';
   export let maxFileSize: number = 200000;
 
+  let logoInput: HTMLInputElement;
   let clientHeight: number;
   let clientWidth: number;
   let naturalHeight: number;
@@ -25,6 +27,8 @@
     const image = ev.target as HTMLImageElement;
     ({ clientHeight, clientWidth, naturalHeight, naturalWidth } = image);
   };
+
+  onMount(() => (logo?.[0] != null ? (logoInput.files = logo) : null));
 </script>
 
 <div class="columns is-multiline">
@@ -47,6 +51,7 @@
           class="file-input"
           type="file"
           accept={acceptedFileTypes}
+          bind:this={logoInput}
           bind:files={logo}
           on:input={handleLogoUpload}
           required

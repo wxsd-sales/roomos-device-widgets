@@ -6,7 +6,9 @@
   import GuestInviteFields from '.Part4GuestInviteFields.svelte';
   import NewsFields from '.Part5NewsFields.svelte';
   import WeatherFields from '.Part6WeatherFields.svelte';
+  import { page } from '$app/stores';
   import { onMount } from 'svelte';
+  import { urlEncodedRequest } from '../../../lib/shared/urlencoded-request';
 
   export let form = undefined;
   export let name = undefined;
@@ -16,12 +18,32 @@
   export let logo = undefined;
   export let title = undefined;
   export let subtitle = undefined;
+  export let aText = undefined;
+  export let aLink = undefined;
+  export let bText = undefined;
+  export let bLink = undefined;
+  export let cText = undefined;
+  export let cLink = undefined;
   export let destination = undefined;
-  export let query = undefined;
+  export let url = undefined;
   export let cityId = undefined;
   export let units = undefined;
 
+  const id = $page.url.searchParams.get('id');
   let formElement: HTMLFormElement;
+
+  const toFileList = (file?: { bits: string; name: string; lastModified: number; type: string }) =>
+    file != null
+      ? urlEncodedRequest(file.bits)
+          .get()
+          .then((r) => r.blob())
+          .then((r) => new File([r], file.name, { lastModified: file.lastModified, type: file.type }))
+          .then((r) => {
+            const container = new DataTransfer();
+            container.items.add(r);
+            return container.files;
+          })
+      : Promise.reject();
 
   onMount(() => form && scrollTo(null, formElement.scrollHeight));
 </script>
@@ -29,26 +51,40 @@
 <form
   id="demo-create"
   class="container px-4 mb-6"
-  action="./create"
+  action={'./save' + (id == null ? '' : '?_method=PATCH')}
   method="post"
   enctype="multipart/form-data"
   bind:this={formElement}
 >
   <DemoFields {name} {description} />
   <hr />
-  <BackgroundFields {poster} {brightness} />
+  {#await toFileList(poster) then poster}
+    <BackgroundFields {poster} {brightness} />
+  {:catch e}
+    <BackgroundFields {brightness} />
+  {/await}
   <hr />
-  <BrandFields {logo} {title} {subtitle} />
+  {#await toFileList(logo) then logo}
+    <BrandFields {logo} {title} {subtitle} />
+  {:catch e}
+    <BrandFields {title} {subtitle} />
+  {/await}
   <hr />
-  <ButtonsFields />
+  <ButtonsFields {aText} {aLink} {bText} {bLink} {cText} {cLink} />
   <hr />
   <GuestInviteFields {destination} />
   <hr />
-  <NewsFields {query} />
+  <NewsFields {url} />
   <hr />
   <WeatherFields {units} {cityId} />
   <hr />
+
   <div class="columns is-multiline">
+    {#if id != null}
+      <div class="column is-12 is-hidden">
+        <input class="input" name="id" value={id} readonly />
+      </div>
+    {/if}
     <div class="column is-12">
       <button class="button is-medium is-rounded is-success is-fullwidth" type="submit">
         <span class="icon">
