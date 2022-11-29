@@ -7,7 +7,7 @@
   export let acceptedFileTypes: string = '.jpg, .jpeg, .png, .svg, .gif, .webp, .avif, .apng';
   export let maxFileSize: number = 700000;
 
-  let poserInput: HTMLInputElement;
+  let posterInput: HTMLInputElement;
   let clientHeight: number;
   let clientWidth: number;
   let naturalHeight: number;
@@ -27,7 +27,7 @@
     ({ clientHeight, clientWidth, naturalHeight, naturalWidth } = image);
   };
 
-  onMount(() => (poster?.[0] != null ? (poserInput.files = poster) : null));
+  onMount(() => (poster?.[0] != null ? (posterInput.files = poster) : null));
 </script>
 
 <div class="columns is-multiline">
@@ -47,7 +47,7 @@
           class="file-input"
           type="file"
           accept={acceptedFileTypes}
-          bind:this={poserInput}
+          bind:this={posterInput}
           bind:files={poster}
           on:input={handlePosterUpload}
           required
