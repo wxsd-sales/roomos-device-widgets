@@ -37,13 +37,14 @@
               corresponding Control Hub org.
             </li>
             <li>
-              If you don't have an existing sandboxed or demo Control Hub org, please follow the instructions on the
+              If you don't have an existing sandboxed or demo Control Hub org with admin access, please follow the
+              instructions on the
               <a href="https://collabtoolbox.cisco.com/tools/sandbox" target="_blank">Collab Toolbox Sandbox</a> page to
-              create one as an admin.
+              create one.
             </li>
             <li>
               If your device is in personal mode, you will have to perform a factory reset and then register it as a
-              shared mode device on the Control Hub org.
+              shared mode device on the sandboxed or demo Control Hub org.
             </li>
           </ul>
         </div>
