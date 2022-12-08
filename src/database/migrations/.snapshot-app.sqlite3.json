@@ -659,15 +659,6 @@
           "nullable": true,
           "mappedType": "text"
         },
-        "favorite_contacts_type": {
-          "name": "favorite_contacts_type",
-          "type": "integer",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "integer"
-        },
         "guest_invite_destination": {
           "name": "guest_invite_destination",
           "type": "text",

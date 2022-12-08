@@ -48,7 +48,6 @@ export const GET = async (requestEvent: RequestEvent) => {
         'demo.buttonBLink',
         'demo.buttonCText',
         'demo.buttonCLink',
-        'demo.favoriteContactsType',
         'demo.guestInviteDestination',
         'demo.newsUrl',
         'demo.weatherUnits',

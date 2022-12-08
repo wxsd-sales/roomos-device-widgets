@@ -19,7 +19,6 @@ import { Data, Demo } from '../../../database/entities';
 import { jsonRequest } from '$lib/shared/json-request';
 import { classTransformOptions, classValidationOptions } from '../../.utils';
 import env from '$lib/environment';
-import { FavoriteContactsTypes } from '$lib/types';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 
@@ -31,8 +30,7 @@ export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
       title: 'Cisco',
       subtitle: 'Bridge to Possible',
       units: 'imperial',
-      cityId: 4887398,
-      favoriteContactsType: FavoriteContactsTypes.CUSTOM
+      cityId: 4887398
     }
   };
 };
@@ -141,11 +139,6 @@ export const POST = async (requestEvent: RequestEvent) => {
     @IsInt()
     @Transform(({ obj }: { obj: FormData }) => Number(obj.get('cityId')), { toClassOnly: true })
     public readonly cityId!: number;
-
-    @Expose()
-    @IsIn([FavoriteContactsTypes.FIXED, FavoriteContactsTypes.CUSTOM])
-    @Transform(({ obj }: { obj: FormData }) => obj.get('favoriteContactsType'), { toClassOnly: true })
-    public readonly favoriteContactsType!: FavoriteContactsTypes;
   }
 
   const formData = plainToInstance(RequestFormDataDTO, await requestEvent.request.formData(), classTransformOptions);
@@ -190,7 +183,6 @@ export const POST = async (requestEvent: RequestEvent) => {
       buttonBLink: formData.bLink,
       buttonCText: formData.cText,
       buttonCLink: formData.cLink,
-      favoriteContactsType: formData.favoriteContactsType,
       guestInviteDestination: formData.destination,
       newsUrl: formData.url,
       weatherCityId: formData.cityId,

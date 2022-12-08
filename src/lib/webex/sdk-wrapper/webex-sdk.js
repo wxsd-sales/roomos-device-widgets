@@ -1,6 +1,4 @@
 import { WEBEX_SDK_CONFIG } from '../../constants';
-import { WebexSdkErrorPrefix } from '../../types';
-import type { Webex } from '../../types';
 
 export class WebexSdk {
   #accessToken;
@@ -12,7 +10,7 @@ export class WebexSdk {
    * @param {string} accessToken
    * @param {Record<string, unknown>} config
    */
-  constructor(accessToken: string, config = WEBEX_SDK_CONFIG) {
+  constructor(accessToken, config = WEBEX_SDK_CONFIG) {
     this.#accessToken = accessToken;
     this.#config = config;
   }
@@ -22,10 +20,12 @@ export class WebexSdk {
    *
    * @returns {Promise<Webex>}
    */
-  initialize(): Promise<Webex> {
+  initialize() {
     return new Promise((resolve) => {
-      resolve(new Webex({ config: this.#config, credentials: { access_token: this.#accessToken } }));
-    }).catch((e) => `${WebexSdkErrorPrefix.INITIALIZATION}: ${e}.`);
+      // eslint-disable-next-line no-undef
+      const webex = Webex.init({ config: this.#config, credentials: { access_token: this.#accessToken } });
+      resolve(webex);
+    });
   }
 }
 
@@ -37,4 +37,4 @@ export class WebexSdk {
  *
  * @returns {WebexSdk}
  */
-export const webexSdk = (accessToken: string, config = WEBEX_SDK_CONFIG) => new WebexSdk(accessToken, config);
+export const webexSdk = (accessToken, config = WEBEX_SDK_CONFIG) => new WebexSdk(accessToken, config);

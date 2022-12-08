@@ -1,5 +1,6 @@
-export { webexSdk } from './webex-sdk';
-export { webexSdkInternalConversationsPlugin } from './webex-sdk-internal-conversations-plugin';
-export { webexSdkMembershipsPlugin } from './webex-sdk-memberships-plugin';
-export { webexSdkPeoplePlugin } from './webex-sdk-people-plugin';
-export { webexSdkInternalServicesPlugin } from './webex-sdk-internal-services-plugin';
+export { webexSdk } from './webex-sdk.js';
+export { webexSdkInternalConversationPlugin } from './webex-sdk-internal-conversation-plugin.js';
+export { webexSdkMeetingsPlugin } from './webex-sdk-meetings-plugin.js';
+export { webexSdkMessagesPlugin } from './webex-sdk-messages-plugin.js';
+export { webexSdkPeoplePlugin } from './webex-sdk-people-plugin.js';
+export { webexSdkRoomsPlugin } from './webex-sdk-rooms-plugin.js';
