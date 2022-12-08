@@ -1,5 +1,3 @@
-import { WebexSdkErrorPrefix } from '../../types';
-
 export class WebexSdkMessagesPlugin {
   /**
    * Starts listening for message events by establishing a websocket connection.
@@ -10,13 +8,10 @@ export class WebexSdkMessagesPlugin {
    * @param {function(event): void} onDelete
    */
   startListening(webex, filter, onCreate, onDelete) {
-    webex.messages
-      .listen()
-      .then(() => {
-        webex.messages.on('created', (event) => onCreate(event));
-        webex.messages.on('deleted', (event) => onDelete(event));
-      })
-      .catch((e) => `${WebexSdkErrorPrefix.LISTEN_MESSAGES}: ${e}.`);
+    webex.messages.listen().then(() => {
+      webex.messages.on('created', (event) => onCreate(event));
+      webex.messages.on('deleted', (event) => onDelete(event));
+    });
   }
 
   /**

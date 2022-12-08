@@ -1,5 +1,3 @@
-import { WebexSdkErrorPrefix } from '../../types';
-
 export class WebexSdkMeetingsPlugin {
   /**
    * Registers the meetings' plugin if not already registered.
@@ -15,7 +13,7 @@ export class WebexSdkMeetingsPlugin {
       } else {
         resolve(webex);
       }
-    }).catch((e) => `${WebexSdkErrorPrefix.INITIALIZE_MEETINGS}: ${e}.`);
+    });
   }
 
   /**
@@ -59,16 +57,13 @@ export class WebexSdkMeetingsPlugin {
     handleMediaReady /* eslint-disable @typescript-eslint/no-unused-vars */
   ) {
     return new Promise((resolve, reject) => {
-      webex.meetings
-        .create(destination)
-        .then((meeting) => {
-          // Call our helper function for binding events to meetings
-          const [, , ...bindings] = arguments;
-          this.#bindMeetingEvents(meeting, ...bindings);
-          this.#joinMeeting(meeting);
-          resolve(meeting);
-        })
-        .catch((e) => `${WebexSdkErrorPrefix.START_MEETING}: ${e}.`);
+      webex.meetings.create(destination).then((meeting) => {
+        // Call our helper function for binding events to meetings
+        const [, , ...bindings] = arguments;
+        this.#bindMeetingEvents(meeting, ...bindings);
+        this.#joinMeeting(meeting);
+        resolve(meeting);
+      });
     });
   }
 

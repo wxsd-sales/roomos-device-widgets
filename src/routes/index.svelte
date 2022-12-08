@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { jsonRequest } from '../lib/shared/json-request';
   import { derived, readable, writable } from 'svelte/store';
   import { browser } from '$app/env';
+  import { page } from '$app/stores';
+  import { jsonRequest } from '$lib/shared/json-request';
+  import { webexSdk, webexSdkPeoplePlugin, webexSdkInternalConversationPlugin } from '$lib/webex/sdk-wrapper';
+  import { webexHttpRoomsResource } from '$lib/webex/http-wrapper';
+  import type { JSONObject } from '@sveltejs/kit/types/private';
+  import type * as TYPES from '$lib/types';
+
   import Weather from '$components/Weather/Weather.svelte';
   import Clock from '$components/Clock/Clock.svelte';
   import Background from '$components/Background/Background.svelte';
@@ -12,14 +18,15 @@
   import Bookings from '$components/Bookings/Bookings.svelte';
   import News from '$components/News/News.svelte';
   import Authorized from '$components/Authorized/Authorized.svelte';
-  import FavouriteContacts from '../components/FavouriteContacts/FavouriteContacts.svelte';
+  import FavouriteContacts from '$components/FavouriteContacts/FavouriteContacts.svelte';
+  import FavouriteSpaces from '$components/FavouriteSpaces/FavouriteSpaces.svelte';
   import Modal from '$components/Modal/Modal.svelte';
-  import * as TYPES from '$lib/types';
 
   export let botToken = undefined;
   export let deviceId = undefined;
   export let demo = undefined;
   export let statusErrorCountThreshold = 10;
+  export let authWidget = $page.url.searchParams.get('authWidget') ?? 'contacts';
 
   let statusErrorCount = 0;
   let activeModalLink = undefined;
@@ -81,6 +88,82 @@
       .then((r) => r.json())
       .then((r) => [...r, ...defaultBookings]);
 
+  export const getFavouriteSpaces = (id, accessToken) => {
+    const webex: Promise<unknown> = webexSdk(accessToken).initialize();
+    const webexInternalConversationPlugin = webexSdkInternalConversationPlugin();
+    const webexPeoplePlugin = webexSdkPeoplePlugin();
+    const webexHttpRoomsRequest = webexHttpRoomsResource(accessToken);
+
+    return webex.then((r) =>
+      (
+        webexInternalConversationPlugin.list(r, {
+          globalId: true,
+          isFavorite: true,
+          participantsLimit: 2
+        } as unknown) as Promise<unknown>
+      ).then(async (s) => {
+        const [directConversations, groupConversations] = (s as []).reduce(
+          (r, e) => {
+            r[((e as JSONObject).tags as string[]).includes('ONE_ON_ONE') ? 0 : 1].push(e);
+            return r;
+          },
+          [[], []]
+        );
+
+        const direct = await Promise.all(
+          directConversations.map(async (s) =>
+            (
+              await Promise.all(
+                s?.participants?.items.map(async (s) => {
+                  if (s.type.toUpperCase() === 'PERSON') {
+                    const id = Buffer.from(`ciscospark://us/PEOPLE/${s.id}`).toString('base64').slice(0, -1);
+                    return { id, type: 'person' };
+                  } else {
+                    const { id, avatar, displayName, nickName, userName, emails, type } = await webexPeoplePlugin.get(
+                      r,
+                      s.id
+                    );
+                    return {
+                      id,
+                      avatar,
+                      title: displayName ?? nickName ?? userName,
+                      sipAddress: emails[0],
+                      type
+                    };
+                  }
+                })
+              )
+            ).filter((r) => r.id !== id)
+          )
+        ).then((r) => r.flat());
+
+        const group = await Promise.all(
+          groupConversations.map(async (s) => {
+            const id = s.globalId;
+            const isLocked = s.tags.includes('LOCKED');
+            const isAnnouncementOnly = s.tags.includes('ANNOUNCEMENT');
+            const title = s.displayName ?? s.computedTitle;
+            const avatarFileItem = s?.avatar?.files?.items[0];
+            const avatarBufferItem = avatarFileItem
+              ? await webexInternalConversationPlugin.download(r, avatarFileItem)
+              : undefined;
+            const avatarBase64 = avatarBufferItem
+              ? `data:${avatarFileItem.mimeType};base64,${Buffer.from(avatarBufferItem as never).toString('base64')}`
+              : undefined;
+            const sipAddress = await webexHttpRoomsRequest
+              .getRoomMeetingDetails(id)
+              .then((s) => s.json())
+              .then((s) => s.sipAddress)
+              .catch((e) => (e.status === 403 && isAnnouncementOnly ? undefined : Promise.reject(e)));
+            return { id, title, avatar: avatarBase64, sipAddress, isLocked, isAnnouncementOnly };
+          })
+        );
+
+        return { direct, group };
+      })
+    );
+  };
+
   export const statusStore = readable<TYPES.Status>(undefined, (set) => {
     const interval = setInterval(
       async () => set(statusErrorCount < statusErrorCountThreshold ? await getStatus() : undefined),
@@ -122,6 +205,10 @@
     .map((e) => ({ text: demo?.[`button${e}Text`], link: demo?.[`button${e}Link`] }));
 </script>
 
+<svelte:head>
+  <script crossorigin src="https://unpkg.com/webex@^2/umd/webex.min.js"></script>
+</svelte:head>
+
 <Background imageLink={demo.backgroundPoster} filter="brightness({demo.backgroundBrightness}%)" />
 <section id="hero" class="hero is-fullheight has-text-white is-dark">
   <!-- hero-head start -->
@@ -151,11 +238,23 @@
           <div id="device-code" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
             {#if $tokenResponseStore?.accessToken == null}
               <DeviceCode
-                title="Favourite Contacts"
+                title="Favorites"
+                isMinimal={false}
                 {getAuthorizeResponse}
                 {getTokenResponse}
                 on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)}
               />
+            {:else if authWidget === 'spaces'}
+              <Authorized {tokenResponseStore}>
+                <FavouriteSpaces
+                  id={$tokenResponseStore.id}
+                  accessToken={$tokenResponseStore.accessToken}
+                  {getFavouriteSpaces}
+                  {disconnect}
+                  {connect}
+                  {callsStore}
+                />
+              </Authorized>
             {:else}
               <Authorized {tokenResponseStore}>
                 <button
@@ -279,6 +378,7 @@
   #device-code :global(div.navbar-item) {
     @extend .px-0;
   }
+
   #device-code > :global(div.favourite-contacts-container) {
     height: calc(3.7 * (30px + 8px + 24px + 24px) - 25.2px);
     overflow-y: auto;
@@ -321,6 +421,7 @@
       width: 100%;
     }
   }
+
   @media screen and (max-width: 1215px) {
     .tile.is-5 {
       display: block;

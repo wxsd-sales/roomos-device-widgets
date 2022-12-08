@@ -1,5 +1,4 @@
 import { WEBEX_SDK_CONFIG } from '../../constants';
-import { WebexSdkErrorPrefix } from '../../types';
 
 export class WebexSdk {
   #accessToken;
@@ -19,14 +18,14 @@ export class WebexSdk {
   /**
    * Initialize the core Webex instance from the SDK.
    *
-   * @returns {Promise<Webex | string>}
+   * @returns {Promise<Webex>}
    */
   initialize() {
     return new Promise((resolve) => {
       // eslint-disable-next-line no-undef
-      const webex = new Webex({ config: this.#config, credentials: { access_token: this.#accessToken } });
+      const webex = Webex.init({ config: this.#config, credentials: { access_token: this.#accessToken } });
       resolve(webex);
-    }).catch((e) => `${WebexSdkErrorPrefix.INITIALIZATION}: ${e}.`);
+    });
   }
 }
 
