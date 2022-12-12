@@ -25,11 +25,11 @@ spec:
               protocol: TCP
           resources:
             requests:
-              memory: '1Gi'
-              cpu: '0.5'
+              cpu: '2'
+              memory: '4Gi'
             limits:
-              memory: '2Gi'
-              cpu: '1'
+              cpu: '2'
+              memory: '4Gi'
           volumeMounts:
             - name: persistent-storage
               mountPath: /app/.data
