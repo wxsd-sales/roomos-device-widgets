@@ -25,7 +25,7 @@ export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
   }
 
   class RoomAnalyticsDTO implements ToJSON {
-    private static exp = /^\s*(true|on)\s*$/i;
+    private static exp = /^\s*(true|on|yes)\s*$/i;
 
     @Expose()
     @Transform(({ obj }) => (obj?.ambientNoise?.level?.a != null ? Number(obj.ambientNoise.level.a) : undefined), {
