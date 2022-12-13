@@ -60,11 +60,29 @@
   >
     <RoomAnalyticsCard name="Noise" icon="waveform" value={$roomAnalyticsStore?.ambientNoiseLevelA} units="dBA" />
   </div>
-  <div
-    class="column is-align-items-flex-end is-justify-content-end"
-    class:room-analytics-column={true}
-    class:room-analytics-occupancy={true}
-  >
-    <RoomAnalyticsCard name="Occupancy" icon="account-group" value={$roomAnalyticsStore?.peopleCountCurrent} />
-  </div>
+  {#if $roomAnalyticsStore?.peoplePresence === false}
+    <div
+      class="column is-align-items-flex-end is-justify-content-end"
+      class:room-analytics-column={true}
+      class:room-analytics-occupancy={true}
+    >
+      <RoomAnalyticsCard name="Occupied" icon="account-group" value={'No'} />
+    </div>
+  {:else if $roomAnalyticsStore?.peoplePresence === true && $roomAnalyticsStore?.peopleCountCurrent === -1}
+    <div
+      class="column is-align-items-flex-end is-justify-content-end"
+      class:room-analytics-column={true}
+      class:room-analytics-occupancy={true}
+    >
+      <RoomAnalyticsCard name="Occupied" icon="account-group" value={'Yes'} />
+    </div>
+  {:else}
+    <div
+      class="column is-align-items-flex-end is-justify-content-end"
+      class:room-analytics-column={true}
+      class:room-analytics-occupancy={true}
+    >
+      <RoomAnalyticsCard name="Occupancy" icon="account-group" value={$roomAnalyticsStore?.peopleCountCurrent} />
+    </div>
+  {/if}
 </div>

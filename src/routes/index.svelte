@@ -187,7 +187,8 @@
       relativeHumidity:
         roomAnalytics?.relativeHumidity ??
         peripheralsRoomAnalytics?.find((e) => e?.relativeHumidity ?? false)?.relativeHumidity,
-      peopleCountCurrent: roomAnalytics?.peoplePresence ? roomAnalytics?.peopleCountCurrent : 0,
+      peoplePresence: roomAnalytics?.peoplePresence,
+      peopleCountCurrent: roomAnalytics?.peopleCountCurrent,
       peopleCountCapacity: roomAnalytics?.peopleCountCapacity,
       ambientNoiseLevelA: roomAnalytics?.ambientNoiseLevelA
     } as TYPES.RoomAnalytics;
