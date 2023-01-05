@@ -10,11 +10,14 @@
 
 <nav class="navbar is-transparent is-spaced px-0 pt-0 authorized-nav" aria-label="navigation">
   <div class="navbar-brand is-align-items-center avatar-navbar-brand">
-    <div class="navbar-item avatar-navbar-brand-item">
-      <div class="is-hoverable title">
+    <div class="navbar-item dropdown is-hoverable avatar-navbar-brand-item">
+      <div class="dropdown-trigger title mb-0">
         {#if $tokenResponseStore?.accessToken}
           <Person accessToken={$tokenResponseStore.accessToken} bind:id={$tokenResponseStore.id} />
         {/if}
+      </div>
+      <div class="dropdown-menu" role="menu">
+        <slot name="dropdown-content" />
       </div>
     </div>
     <a

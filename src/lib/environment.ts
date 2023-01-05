@@ -26,6 +26,21 @@ export class Environment {
   public readonly APP_PREVIEW_PASSWORD: string;
 
   @IsUrl()
+  public readonly GOOGLE_API_URL: string;
+
+  @IsUrl()
+  public readonly GOOGLE_OAUTH_URL: string;
+
+  @IsNotEmpty()
+  public readonly GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT: string;
+
+  @IsNotEmpty()
+  public readonly GOOGLE_CLIENT_CREDENTIALS_SCOPE: string;
+
+  @IsNotEmpty()
+  public readonly GOOGLE_CLIENT_CREDENTIALS_TYPE: string;
+
+  @IsUrl()
   public readonly GOOGLE_NEWS_RSS_URL: string;
 
   @IsUrl()
@@ -113,6 +128,11 @@ export class Environment {
     this.APP_URL = process.env.APP_URL || dev ? 'https://localhost:5173' : 'https://localhost:4173';
     this.APP_PREVIEW_EMAIL = process.env.APP_PREVIEW_EMAIL as string;
     this.APP_PREVIEW_PASSWORD = process.env.APP_PREVIEW_PASSWORD as string;
+    this.GOOGLE_API_URL = process.env.GOOGLE_API_URL as string;
+    this.GOOGLE_OAUTH_URL = process.env.GOOGLE_OAUTH_URL as string;
+    this.GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT = process.env.GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT as string;
+    this.GOOGLE_CLIENT_CREDENTIALS_SCOPE = process.env.GOOGLE_CLIENT_CREDENTIALS_SCOPE as string;
+    this.GOOGLE_CLIENT_CREDENTIALS_TYPE = process.env.GOOGLE_CLIENT_CREDENTIALS_TYPE as string;
     this.GOOGLE_NEWS_RSS_URL = process.env.GOOGLE_NEWS_RSS_URL as string;
     this.GUEST_DEMO_API_URL = process.env.GUEST_DEMO_API_URL as string;
     this.GUEST_DEMO_CREATE_ENDPOINT = process.env.GUEST_DEMO_CREATE_ENDPOINT as string;
