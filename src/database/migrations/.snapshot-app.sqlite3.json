@@ -819,6 +819,33 @@
           "nullable": false,
           "length": 36,
           "mappedType": "text"
+        },
+        "google_client_email": {
+          "name": "google_client_email",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "google_private_key": {
+          "name": "google_private_key",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "google_client_certificate": {
+          "name": "google_client_certificate",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
         }
       },
       "name": "activation",

@@ -14,10 +14,29 @@ export class Activation extends BaseEntity {
   @ManyToOne({ entity: () => Demo, onDelete: 'cascade' })
   demo!: Demo;
 
-  constructor(botToken: string, deviceId: string, demo: Demo) {
+  @Property({ type: types.string, nullable: true })
+  googleClientEmail?: string;
+
+  @Property({ type: types.string, nullable: true })
+  googlePrivateKey?: string;
+
+  @Property({ type: types.string, nullable: true })
+  googleClientCertificate?: string;
+
+  constructor(obj: {
+    botToken: string;
+    deviceId: string;
+    demo: Demo;
+    googleClientEmail?: string;
+    googlePrivateKey?: string;
+    googleClientCertificate?: string;
+  }) {
     super();
-    this.botToken = botToken;
-    this.deviceId = deviceId;
-    this.demo = demo;
+    this.botToken = obj.botToken;
+    this.deviceId = obj.deviceId;
+    this.demo = obj.demo;
+    this.googleClientEmail = obj.googleClientEmail;
+    this.googlePrivateKey = obj.googlePrivateKey;
+    this.googleClientCertificate = obj.googleClientCertificate;
   }
 }

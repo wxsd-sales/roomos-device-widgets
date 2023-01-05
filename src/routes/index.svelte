@@ -21,12 +21,16 @@
   import FavouriteContacts from '$components/FavouriteContacts/FavouriteContacts.svelte';
   import FavouriteSpaces from '$components/FavouriteSpaces/FavouriteSpaces.svelte';
   import Modal from '$components/Modal/Modal.svelte';
+  import Events from '$components/Events/Events.svelte';
+  import EventSend from '$components/Events/EventSend.svelte';
 
   export let botToken = undefined;
   export let deviceId = undefined;
   export let demo = undefined;
   export let statusErrorCountThreshold = 10;
+  export let activationId = $page.url.searchParams.get('activationId');
   export let authWidget = $page.url.searchParams.get('authWidget') ?? 'contacts';
+  export let title = authWidget === 'googleCalendar' ? 'Google Calendar' : ' Favourites';
 
   let statusErrorCount = 0;
   let activeModalLink = undefined;
@@ -164,6 +168,96 @@
     );
   };
 
+  let eventSendModel = false;
+  let date = new Date().toISOString().split('T')[0];
+
+  const getGoogleCalendarApiRequest = (accessToken: string, activationId: string) =>
+    jsonRequest('/api', 'client-credentials/google', 'Bearer', accessToken)
+      .post('token', { activationId })
+      .then((r) => r.json())
+      .then((r) => jsonRequest('https://www.googleapis.com/calendar/v3/calendars', 'primary', 'Bearer', r.accessToken));
+
+  $: googleCalendarApi =
+    browser && $tokenResponseStore?.accessToken != null
+      ? getGoogleCalendarApiRequest($tokenResponseStore.accessToken, activationId)
+      : undefined;
+  $: start = new Date(new Date(date).setHours(0, 0, 0, 0));
+  $: end = new Date(new Date(date).setHours(23, 60, 60, 60));
+
+  export const listGoogleWorkspaceEvents = (start: Date, end: Date) =>
+    googleCalendarApi?.then((r) =>
+      r
+        .get('events', { timeMin: start.toISOString(), timeMax: end.toISOString(), timeZone: 'UTC' })
+        .then((r) => r.json())
+        .then((r) => r.items as JSONObject[])
+        .then((r) =>
+          r.map((r) => {
+            const event = {
+              id: r.id,
+              organizer: { name: r.organizer?.displayName, email: r.organizer.email, prefix: 'Organized by ' },
+              title: r.summary,
+              time: { start: new Date(r.start.dateTime), end: new Date(r.end.dateTime) }
+            };
+
+            if (r?.hangoutLink != null) {
+              return { ...event, ...{ number: r.hangoutLink, protocol: 'WebRTC', platform: 'GoogleMeet' } };
+            } else if ((r?.description as string)?.match(/https:\/\/teams\.microsoft\.com\/.*%7d/gm)) {
+              return {
+                ...event,
+                ...{
+                  number: (r?.description as string)?.match(/https:\/\/teams\.microsoft\.com\/.*%7d/gm)[0],
+                  protocol: 'WebRTC',
+                  platform: 'MicrosoftTeams'
+                }
+              };
+            } else if ((r?.description as string)?.match(/\d+@zoomcrc\.com/gm)) {
+              return {
+                ...event,
+                ...{
+                  number: (r?.description as string)?.match(/\d+@zoomcrc\.com/gm)[0],
+                  protocol: 'SIP'
+                }
+              };
+            } else if ((r?.description as string)?.match(/\d+@webex\.com/gm)) {
+              return {
+                ...event,
+                ...{
+                  number: (r.description as string)?.match(/\d+@webex\.com/gm)[0],
+                  protocol: 'SIP'
+                }
+              };
+            } else {
+              return event;
+            }
+          })
+        )
+    );
+
+  export const insertGoogleWorkspaceEvent = (
+    start: Date,
+    end: Date,
+    attendees: Set<string>,
+    summary: string,
+    description: string
+  ) =>
+    googleCalendarApi?.then((r) =>
+      r.post(
+        'events',
+        { conferenceDataVersion: 1, sendUpdates: 'all' },
+        {
+          start: { dateTime: start.toISOString() },
+          end: { dateTime: end.toISOString() },
+          attendees: Array.from(attendees).map((e) => ({ email: e })),
+          conferenceData: { createRequest: { requestId: Date.now() } },
+          summary,
+          description
+        }
+      )
+    );
+
+  export const deleteGoogleWorkspaceEvent = (id: string) =>
+    googleCalendarApi?.then((r) => r.delete(`events/${id}`, { conferenceDataVersion: 1, sendUpdates: 'all' }));
+
   export const statusStore = readable<TYPES.Status>(undefined, (set) => {
     const interval = setInterval(
       async () => set(statusErrorCount < statusErrorCountThreshold ? await getStatus() : undefined),
@@ -239,12 +333,73 @@
           <div id="device-code" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
             {#if $tokenResponseStore?.accessToken == null}
               <DeviceCode
-                title="Favorites"
+                {title}
                 isMinimal={false}
                 {getAuthorizeResponse}
                 {getTokenResponse}
                 on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)}
               />
+            {:else if authWidget === 'googleCalendar'}
+              <Authorized {tokenResponseStore}>
+                {#key date}
+                  <Events
+                    listEvents={() => listGoogleWorkspaceEvents(start, end)}
+                    deleteEvent={deleteGoogleWorkspaceEvent}
+                    {disconnect}
+                    {connect}
+                    {callsStore}
+                  >
+                    <div class="column is-12 is-flex-align-items-flex-end mt-auto events-footer" slot="footer">
+                      <div class="columns">
+                        <div class="column is-7">
+                          <div class="field has-addons">
+                            <div class="control">
+                              <button
+                                class="button is-medium is-rounded is-primary"
+                                on:click={() =>
+                                  (date = new Date(new Date(date).setDate(new Date(date).getDate() - 1))
+                                    .toISOString()
+                                    .split('T')[0])}
+                              >
+                                <span class="icon">
+                                  <i class="mdi mdi-chevron-left" />
+                                </span>
+                              </button>
+                            </div>
+                            <div class="control is-expanded">
+                              <input class="input is-medium" type="date" bind:value={date} />
+                            </div>
+                            <div class="control">
+                              <button
+                                class="button is-medium is-rounded is-primary"
+                                on:click={() =>
+                                  (date = new Date(new Date(date).setDate(new Date(date).getDate() + 1))
+                                    .toISOString()
+                                    .split('T')[0])}
+                              >
+                                <span class="icon">
+                                  <i class="mdi mdi-chevron-right" />
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="column is-5">
+                          <button
+                            class="button is-medium is-rounded is-primary is-fullwidth has-icons-left"
+                            on:click={() => (eventSendModel = true)}
+                          >
+                            <span>New Invite</span>
+                            <span class="icon is-left">
+                              <i class="mdi mdi-plus-box" />
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </Events>
+                {/key}
+              </Authorized>
             {:else if authWidget === 'spaces'}
               <Authorized {tokenResponseStore}>
                 <FavouriteSpaces
@@ -348,8 +503,16 @@
   <!-- hero-foot end -->
 </section>
 
-{#if activeModalLink}
+{#if activeModalLink || eventSendModel}
   <div id="app-model">
+    <Modal isActive={eventSendModel} on:click={() => (eventSendModel = false)}>
+      <div class="container is-fluid box is-translucent-black has-text-white event-send">
+        <EventSend
+          insertEvent={insertGoogleWorkspaceEvent}
+          onSuccess={() => (date = new Date().toISOString().split('T')[0]) && (eventSendModel = false)}
+        />
+      </div>
+    </Modal>
     <Modal isActive={activeModalLink != null} on:click={() => (activeModalLink = undefined)}>
       <figure class="image is-16by9">
         <iframe src={activeModalLink} class="has-ratio" />
@@ -382,6 +545,18 @@
 
   #device-code > :global(div.favourite-contacts-container) {
     height: calc(3.7 * (30px + 8px + 24px + 24px) - 25.2px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #device-code > :global(div.bookings-container) {
+    height: calc(3.7 * (30px + 8px + 24px + 24px) - 25.2px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  #device-code :global(div.bookings-container-column) {
+    height: calc(3.7 * (30px + 8px + 24px + 24px) - 25.2px - 74px);
     overflow-y: auto;
     overflow-x: hidden;
   }

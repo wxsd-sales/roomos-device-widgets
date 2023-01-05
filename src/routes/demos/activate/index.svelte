@@ -3,7 +3,8 @@
   import BotToken from '.Step1BotToken.svelte';
   import DeviceId from '.Step2DeviceId.svelte';
   import DemoUuid from '.Step3DemoUuid.svelte';
-  import Complete from '.Step4Complete.svelte';
+  import GoogleIntegration from '.Step4GoogleIntegration.svelte';
+  import Complete from '.Step5Complete.svelte';
   import { onMount } from 'svelte';
 
   export let orgId = undefined;
@@ -22,6 +23,8 @@
   <DeviceId />
   <hr />
   <DemoUuid />
+  <hr />
+  <GoogleIntegration />
   <hr />
   <Complete />
   <hr />
