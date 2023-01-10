@@ -1,10 +1,11 @@
 export type TokenResponse = {
+  id?: string;
   scope: string;
   expiresIn: number;
   expiresAt: string;
   tokenType: string;
   refreshToken: string;
   accessToken: string;
-  refreshTokenExpiresIn: string;
+  refreshTokenExpiresIn: number;
   refreshTokenExpiresAt: string;
 };

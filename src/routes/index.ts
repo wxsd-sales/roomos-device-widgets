@@ -24,14 +24,12 @@ export const GET = async (requestEvent: RequestEvent) => {
     return { status: 302, headers: { Location: '/auth' } };
   }
 
-  const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo, Activation] } });
+  const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo] } });
   const em = orm.em.fork();
 
   return await em
     .findOne(Activation, query.activationId, {
       fields: [
-        'botToken',
-        'deviceId',
         'demo.uuid',
         'demo.backgroundBrightness',
         'demo.backgroundPoster.bits',
@@ -42,14 +40,6 @@ export const GET = async (requestEvent: RequestEvent) => {
         'demo.brandLogo.bits',
         'demo.brandLogo.name',
         'demo.brandLogo.type',
-        'demo.buttonAText',
-        'demo.buttonALink',
-        'demo.buttonBText',
-        'demo.buttonBLink',
-        'demo.buttonCText',
-        'demo.buttonCLink',
-        'demo.guestInviteDestination',
-        'demo.newsUrl',
         'demo.weatherUnits',
         'demo.weatherCityId'
       ],
@@ -62,9 +52,8 @@ export const GET = async (requestEvent: RequestEvent) => {
           'data:' + brandLogo.type + ';base64,' + brandLogo.bits.toString('base64');
         (demoJson as JSONObject)['backgroundPoster'] =
           'data:' + backgroundPoster.type + ';base64,' + backgroundPoster.bits.toString('base64');
-        const activation = { botToken: r.botToken, deviceId: r.deviceId, demo: demoJson };
 
-        return { status: 200, body: activation };
+        return { status: 200 };
       }
 
       return { status: 404 };

@@ -21,6 +21,7 @@ import { jsonRequest } from '$lib/shared/json-request';
 import { classTransformOptions, classValidationOptions } from '../../.utils';
 import env from '$lib/environment';
 import { LoadStrategy } from '@mikro-orm/core';
+import { MEETING_TYPE_OPTIONS } from '$lib/constants';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 
@@ -50,16 +51,10 @@ export const GET = async (requestEvent: RequestEvent) => {
               'brandLogo.name',
               'brandLogo.type',
               'brandLogo.lastModified',
-              'buttonAText',
-              'buttonALink',
-              'buttonBText',
-              'buttonBLink',
-              'buttonCText',
-              'buttonCLink',
-              'guestInviteDestination',
-              'newsUrl',
               'weatherUnits',
-              'weatherCityId'
+              'weatherCityId',
+              'responderAuthIsRequired',
+              'meetingTypeOptions'
             ],
             strategy: LoadStrategy.JOINED
           }
@@ -84,16 +79,10 @@ export const GET = async (requestEvent: RequestEvent) => {
             },
             title: r.brandTitle,
             subtitle: r.brandSubtitle,
-            aText: r.buttonAText,
-            aLink: r.buttonALink,
-            bText: r.buttonBText,
-            bLink: r.buttonBLink,
-            cText: r.buttonCText,
-            cLink: r.buttonCLink,
-            destination: r.guestInviteDestination,
-            url: r.newsUrl,
             cityId: r.weatherCityId,
-            units: r.weatherUnits
+            units: r.weatherUnits,
+            responderAuthIsRequired: r.responderAuthIsRequired,
+            meetingTypeOptions: r.meetingTypeOptions
           }
         }))
         .catch(() => ({
@@ -149,57 +138,14 @@ export const POST = async (requestEvent: RequestEvent) => {
     public readonly subtitle!: string;
 
     @Expose()
-    @MaxLength(24)
-    @ValidateIf(({ obj }) => obj?.aText || obj?.aLink)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('aText') || undefined, { toClassOnly: true })
-    public readonly aText?: string;
+    @Transform(({ obj }: { obj: FormData }) => 
+       [...(obj.get(MEETING_TYPE_OPTIONS.BROWSER_SDK) ? [MEETING_TYPE_OPTIONS.BROWSER_SDK] : []), ...(obj.get(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) ? [MEETING_TYPE_OPTIONS.INSTANT_CONNECT] : []), ...(obj.get(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) ? [MEETING_TYPE_OPTIONS.SIP_URI_DIALING] : [])]
+    , { toClassOnly: true })
+    public readonly meetingTypes!: Array<MEETING_TYPE_OPTIONS>;
 
     @Expose()
-    @IsUrl()
-    @MaxLength(1024)
-    @ValidateIf(({ obj }) => obj?.aLink || obj?.aText)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('aLink') || undefined, { toClassOnly: true })
-    public readonly aLink?: string;
-
-    @Expose()
-    @MaxLength(24)
-    @ValidateIf(({ obj }) => obj?.bText || obj?.bLink)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('bText') || undefined, { toClassOnly: true })
-    public readonly bText?: string;
-
-    @Expose()
-    @IsUrl()
-    @MaxLength(1024)
-    @ValidateIf(({ obj }) => obj?.bLink || obj?.bText)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('bLink') || undefined, { toClassOnly: true })
-    public readonly bLink?: string;
-
-    @Expose()
-    @MaxLength(24)
-    @ValidateIf(({ obj }) => obj?.cText || obj?.cLink)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('cText') || undefined, { toClassOnly: true })
-    public readonly cText?: string;
-
-    @Expose()
-    @IsUrl()
-    @MaxLength(1024)
-    @ValidateIf(({ obj }) => obj?.cLink || obj?.cText)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('cLink') || undefined, { toClassOnly: true })
-    public readonly cLink?: string;
-
-    @Expose()
-    @IsEmail()
-    @ValidateIf(({ obj }) => obj?.destination)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('destination') || undefined, { toClassOnly: true })
-    public readonly destination?: string;
-
-    @Expose()
-    @IsUrl()
-    @Matches(/^https:\/\/news\.google\.com\/rss\/search\?q=.+$/)
-    @MaxLength(256)
-    @ValidateIf(({ obj }) => obj?.url)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('url') || undefined, { toClassOnly: true })
-    public readonly url?: string;
+    @Transform(({ obj }: { obj: FormData }) => Boolean(obj.get('authIsReq')), { toClassOnly: true })
+    public readonly authIsRequired!: boolean;
 
     @Expose()
     @IsIn(['imperial', 'metric', 'standard'])
@@ -226,45 +172,43 @@ export const POST = async (requestEvent: RequestEvent) => {
     return { status: 422, body: { form: 'Invalid submission.' }, headers: { Location: '/demos/create' } };
   }
 
-  const db = requestEvent.locals.db;
-  const session = requestEvent.locals.session;
-  if (db && session?.uuid && session?.user?.uuid) {
-    const demo = new Demo({
-      user: session.user,
-      name: formData.name,
-      description: formData?.description,
-      backgroundBrightness: formData.brightness,
-      backgroundPoster: new Data({
-        bits: Buffer.from(await formData.poster.arrayBuffer()),
-        type: formData.poster.type,
-        name: formData.poster.name,
-        lastModified: formData.poster.lastModified
-      }),
-      brandLogo: new Data({
-        bits: Buffer.from(await formData.logo.arrayBuffer()),
-        type: formData.logo.type,
-        name: formData.logo.name,
-        lastModified: formData.logo.lastModified
-      }),
-      brandSubtitle: formData.subtitle,
-      brandTitle: formData.title,
-      buttonAText: formData.aText,
-      buttonALink: formData.aLink,
-      buttonBText: formData.bText,
-      buttonBLink: formData.bLink,
-      buttonCText: formData.cText,
-      buttonCLink: formData.cLink,
-      guestInviteDestination: formData.destination,
-      newsUrl: formData.url,
-      weatherCityId: formData.cityId,
-      weatherUnits: formData.units
-    });
-    await db.persistAndFlush(demo);
-
-    return { status: 302, headers: { Location: '/demos' } };
+  try {
+    const db = requestEvent.locals.db;
+    const session = requestEvent.locals.session;
+    if (db && session?.uuid && session?.user?.uuid) {
+      const demo = new Demo({
+        user: session.user,
+        name: formData.name,
+        description: formData?.description,
+        backgroundPoster: new Data({
+          bits: Buffer.from(await formData.poster.arrayBuffer()),
+          type: formData.poster.type,
+          name: formData.poster.name,
+          lastModified: formData.poster.lastModified
+        }),
+        backgroundBrightness: formData.brightness,
+        brandLogo: new Data({
+          bits: Buffer.from(await formData.logo.arrayBuffer()),
+          type: formData.logo.type,
+          name: formData.logo.name,
+          lastModified: formData.logo.lastModified
+        }),
+        brandTitle: formData.title,
+        brandSubtitle: formData.subtitle,
+        weatherUnits: formData.units,
+        weatherCityId: formData.cityId,
+        responderAuthIsRequired: formData.authIsRequired,
+        meetingTypeOptions: formData.meetingTypes
+      });
+      await db.persistAndFlush(demo);
+  
+      return { status: 302, headers: { Location: '/demos' } };
+    }
+    return { status: 422 };
   }
-
-  return { status: 422 };
+  catch(e) {
+    console.log(e);
+  }
 };
 
 export const PATCH = async (requestEvent: RequestEvent) => {
@@ -316,57 +260,15 @@ export const PATCH = async (requestEvent: RequestEvent) => {
     public readonly subtitle!: string;
 
     @Expose()
-    @MaxLength(24)
-    @ValidateIf(({ obj }) => obj?.aText || obj?.aLink)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('aText') || undefined, { toClassOnly: true })
-    public readonly aText?: string;
+    @Transform(({ obj }: { obj: FormData }) =>
+      [...(obj.get(MEETING_TYPE_OPTIONS.BROWSER_SDK) ? [MEETING_TYPE_OPTIONS.BROWSER_SDK] : []), ...(obj.get(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) ? [MEETING_TYPE_OPTIONS.INSTANT_CONNECT] : []), ...(obj.get(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) ? [MEETING_TYPE_OPTIONS.SIP_URI_DIALING] : [])]
+      , { toClassOnly: true })
+    public readonly meetingTypes!: Array<MEETING_TYPE_OPTIONS>;
 
     @Expose()
-    @IsUrl()
-    @MaxLength(1024)
-    @ValidateIf(({ obj }) => obj?.aLink || obj?.aText)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('aLink') || undefined, { toClassOnly: true })
-    public readonly aLink?: string;
+    @Transform(({ obj }: { obj: FormData }) => Boolean(obj.get('authIsReq')), { toClassOnly: true })
+    public readonly authIsRequired!: boolean;
 
-    @Expose()
-    @MaxLength(24)
-    @ValidateIf(({ obj }) => obj?.bText || obj?.bLink)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('bText') || undefined, { toClassOnly: true })
-    public readonly bText?: string;
-
-    @Expose()
-    @IsUrl()
-    @MaxLength(1024)
-    @ValidateIf(({ obj }) => obj?.bLink || obj?.bText)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('bLink') || undefined, { toClassOnly: true })
-    public readonly bLink?: string;
-
-    @Expose()
-    @MaxLength(24)
-    @ValidateIf(({ obj }) => obj?.cText || obj?.cLink)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('cText') || undefined, { toClassOnly: true })
-    public readonly cText?: string;
-
-    @Expose()
-    @IsUrl()
-    @MaxLength(1024)
-    @ValidateIf(({ obj }) => obj?.cLink || obj?.cText)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('cLink') || undefined, { toClassOnly: true })
-    public readonly cLink?: string;
-
-    @Expose()
-    @IsEmail()
-    @ValidateIf(({ obj }) => obj?.destination)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('destination') || undefined, { toClassOnly: true })
-    public readonly destination?: string;
-
-    @Expose()
-    @IsUrl()
-    @Matches(/^https:\/\/news\.google\.com\/rss\/search\?q=.+$/)
-    @MaxLength(256)
-    @ValidateIf(({ obj }) => obj?.url)
-    @Transform(({ obj }: { obj: FormData }) => obj.get('url') || undefined, { toClassOnly: true })
-    public readonly url?: string;
 
     @Expose()
     @IsIn(['imperial', 'metric', 'standard'])
@@ -382,7 +284,6 @@ export const PATCH = async (requestEvent: RequestEvent) => {
   const formData = plainToInstance(RequestFormDataDTO, await requestEvent.request.formData(), classTransformOptions);
   const formDataValidationErrors = validateSync(formData, classValidationOptions);
   if (formDataValidationErrors.length > 0) {
-    console.log(formDataValidationErrors);
     return { status: 422, body: { form: 'Invalid submission.' }, headers: { Location: '/demos/create' } };
   }
 
@@ -397,6 +298,7 @@ export const PATCH = async (requestEvent: RequestEvent) => {
   const db = requestEvent.locals.db;
   const session = requestEvent.locals.session;
 
+  console.log(formData)
   const demoId = formData.id;
   return demoId != null
     ? await db
@@ -419,16 +321,10 @@ export const PATCH = async (requestEvent: RequestEvent) => {
               'brandLogo.name',
               'brandLogo.type',
               'brandLogo.lastModified',
-              'buttonAText',
-              'buttonALink',
-              'buttonBText',
-              'buttonBLink',
-              'buttonCText',
-              'buttonCLink',
-              'guestInviteDestination',
-              'newsUrl',
               'weatherUnits',
-              'weatherCityId'
+              'weatherCityId',
+              'responderAuthIsRequired',
+              'meetingTypeOptions'
             ],
             strategy: LoadStrategy.JOINED
           }
@@ -447,16 +343,9 @@ export const PATCH = async (requestEvent: RequestEvent) => {
           r.brandLogo.type = formData.logo.type;
           r.brandLogo.name = formData.logo.name;
           r.brandLogo.lastModified = formData.logo.lastModified;
-          r.buttonAText = formData.aText;
-          r.buttonALink = formData.aLink;
-          r.buttonBText = formData.bText;
-          r.buttonBLink = formData.bLink;
-          r.buttonCText = formData.cText;
-          r.buttonCLink = formData.cLink;
-          r.guestInviteDestination = formData.destination;
-          r.newsUrl = formData.url;
-          r.weatherCityId = formData.cityId;
-          r.weatherUnits = formData.units;
+          r.responderAuthIsRequired = formData.authIsRequired;
+          r.meetingTypeOptions = formData.meetingTypes;
+
           await db.persistAndFlush(r);
 
           return { status: 302, headers: { Location: '/demos' } };

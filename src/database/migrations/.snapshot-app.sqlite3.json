@@ -77,7 +77,9 @@
       "indexes": [
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -120,230 +122,14 @@
           "default": "current_timestamp",
           "mappedType": "datetime"
         },
-        "email": {
-          "name": "email",
+        "webex_uuid": {
+          "name": "webex_uuid",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
           "mappedType": "text"
-        }
-      },
-      "name": "person",
-      "indexes": [
-        {
-          "keyName": "primary",
-          "columnNames": ["uuid"],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {}
-    },
-    {
-      "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 36,
-          "mappedType": "text"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
-        },
-        "person_uuid": {
-          "name": "person_uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 36,
-          "mappedType": "text"
-        },
-        "space_id": {
-          "name": "space_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        }
-      },
-      "name": "favorite_space",
-      "indexes": [
-        {
-          "columnNames": ["person_uuid"],
-          "composite": false,
-          "keyName": "favorite_space_person_uuid_index",
-          "primary": false,
-          "unique": false
-        },
-        {
-          "keyName": "primary",
-          "columnNames": ["uuid"],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "favorite_space_person_uuid_foreign": {
-          "constraintName": "favorite_space_person_uuid_foreign",
-          "columnNames": ["person_uuid"],
-          "localTableName": "favorite_space",
-          "referencedColumnNames": ["uuid"],
-          "referencedTableName": "person",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 36,
-          "mappedType": "text"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
-        },
-        "person_uuid": {
-          "name": "person_uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 36,
-          "mappedType": "text"
-        },
-        "contact_id": {
-          "name": "contact_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        }
-      },
-      "name": "favorite_contact",
-      "indexes": [
-        {
-          "columnNames": ["person_uuid"],
-          "composite": false,
-          "keyName": "favorite_contact_person_uuid_index",
-          "primary": false,
-          "unique": false
-        },
-        {
-          "keyName": "primary",
-          "columnNames": ["uuid"],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "favorite_contact_person_uuid_foreign": {
-          "constraintName": "favorite_contact_person_uuid_foreign",
-          "columnNames": ["person_uuid"],
-          "localTableName": "favorite_contact",
-          "referencedColumnNames": ["uuid"],
-          "referencedTableName": "person",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 36,
-          "mappedType": "text"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
         },
         "email": {
           "name": "email",
@@ -358,15 +144,19 @@
       "name": "user",
       "indexes": [
         {
-          "columnNames": ["email"],
+          "columnNames": [
+            "webex_uuid"
+          ],
           "composite": false,
-          "keyName": "user_email_unique",
+          "keyName": "user_webex_uuid_unique",
           "primary": false,
           "unique": true
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -469,7 +259,9 @@
       "name": "session",
       "indexes": [
         {
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "composite": false,
           "keyName": "session_user_uuid_index",
           "primary": false,
@@ -477,7 +269,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -487,9 +281,13 @@
       "foreignKeys": {
         "session_user_uuid_foreign": {
           "constraintName": "session_user_uuid_foreign",
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "localTableName": "session",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "user",
           "deleteRule": "no action",
           "updateRule": "cascade"
@@ -605,78 +403,6 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "button_atext": {
-          "name": "button_atext",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "button_alink": {
-          "name": "button_alink",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "button_btext": {
-          "name": "button_btext",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "button_blink": {
-          "name": "button_blink",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "button_ctext": {
-          "name": "button_ctext",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "button_clink": {
-          "name": "button_clink",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "guest_invite_destination": {
-          "name": "guest_invite_destination",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "news_url": {
-          "name": "news_url",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
         "weather_units": {
           "name": "weather_units",
           "type": "integer",
@@ -694,26 +420,50 @@
           "primary": false,
           "nullable": false,
           "mappedType": "integer"
+        },
+        "responder_auth_is_required": {
+          "name": "responder_auth_is_required",
+          "type": "integer",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "meeting_type_options": {
+          "name": "meeting_type_options",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
         }
       },
       "name": "demo",
       "indexes": [
         {
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "composite": false,
           "keyName": "demo_user_uuid_index",
           "primary": false,
           "unique": false
         },
         {
-          "columnNames": ["background_poster_uuid"],
+          "columnNames": [
+            "background_poster_uuid"
+          ],
           "composite": false,
           "keyName": "demo_background_poster_uuid_index",
           "primary": false,
           "unique": false
         },
         {
-          "columnNames": ["brand_logo_uuid"],
+          "columnNames": [
+            "brand_logo_uuid"
+          ],
           "composite": false,
           "keyName": "demo_brand_logo_uuid_index",
           "primary": false,
@@ -721,7 +471,9 @@
         },
         {
           "keyName": "primary",
-          "columnNames": ["uuid"],
+          "columnNames": [
+            "uuid"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -731,121 +483,40 @@
       "foreignKeys": {
         "demo_user_uuid_foreign": {
           "constraintName": "demo_user_uuid_foreign",
-          "columnNames": ["user_uuid"],
+          "columnNames": [
+            "user_uuid"
+          ],
           "localTableName": "demo",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "user",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "demo_background_poster_uuid_foreign": {
           "constraintName": "demo_background_poster_uuid_foreign",
-          "columnNames": ["background_poster_uuid"],
+          "columnNames": [
+            "background_poster_uuid"
+          ],
           "localTableName": "demo",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "data",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "demo_brand_logo_uuid_foreign": {
           "constraintName": "demo_brand_logo_uuid_foreign",
-          "columnNames": ["brand_logo_uuid"],
+          "columnNames": [
+            "brand_logo_uuid"
+          ],
           "localTableName": "demo",
-          "referencedColumnNames": ["uuid"],
+          "referencedColumnNames": [
+            "uuid"
+          ],
           "referencedTableName": "data",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      }
-    },
-    {
-      "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 36,
-          "mappedType": "text"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "datetime",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 0,
-          "default": "current_timestamp",
-          "mappedType": "datetime"
-        },
-        "bot_token": {
-          "name": "bot_token",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "device_id": {
-          "name": "device_id",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "demo_uuid": {
-          "name": "demo_uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 36,
-          "mappedType": "text"
-        }
-      },
-      "name": "activation",
-      "indexes": [
-        {
-          "columnNames": ["demo_uuid"],
-          "composite": false,
-          "keyName": "activation_demo_uuid_index",
-          "primary": false,
-          "unique": false
-        },
-        {
-          "keyName": "primary",
-          "columnNames": ["uuid"],
-          "composite": false,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "activation_demo_uuid_foreign": {
-          "constraintName": "activation_demo_uuid_foreign",
-          "columnNames": ["demo_uuid"],
-          "localTableName": "activation",
-          "referencedColumnNames": ["uuid"],
-          "referencedTableName": "demo",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }

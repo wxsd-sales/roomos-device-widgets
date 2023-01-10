@@ -8,6 +8,12 @@ export const WEBEX_SDK_CONFIG = {
   meetings: { reconnection: { enabled: true } }
 };
 
+export enum MEETING_TYPE_OPTIONS  {
+  BROWSER_SDK = 'SDK',
+  INSTANT_CONNECT = 'IC',
+  SIP_URI_DIALING = 'SIP'
+};
+
 export const AUDIO_OUTPUT = 'audiooutput';
 export const AUDIO_SOURCE = 'audioinput';
 export const VIDEO_SOURCE = 'videoinput';
@@ -24,6 +30,10 @@ export const UNMUTE_VIDEO = 'Start Video';
 
 export const MUTE_SHARE = 'Stop Share';
 export const UNMUTE_SHARE = 'Start Share';
+
+export const SDK_MEETING_TYPE = 'SDK';
+export const IC_MEETING_TYPE = 'IC';
+export const SIP_MEETING_TYPE = 'SIP';
 
 export const VALID_UUID = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/;
 export const VALID_ACCESS_TOKEN =

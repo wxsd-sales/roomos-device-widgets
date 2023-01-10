@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import type { MEETING_TYPE_OPTIONS } from '$lib/constants';
 import { Entity, ManyToOne, Property, types } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { User } from './user';
@@ -30,35 +31,17 @@ export class Demo extends BaseEntity {
   @Property({ type: types.string })
   brandSubtitle!: string;
 
-  @Property({ type: types.string, nullable: true })
-  buttonAText?: string;
-
-  @Property({ type: types.string, nullable: true })
-  buttonALink?: string;
-
-  @Property({ type: types.string, nullable: true })
-  buttonBText?: string;
-
-  @Property({ type: types.string, nullable: true })
-  buttonBLink?: string;
-
-  @Property({ type: types.string, nullable: true })
-  buttonCText?: string;
-
-  @Property({ type: types.string, nullable: true })
-  buttonCLink?: string;
-
-  @Property({ type: types.string, nullable: true })
-  guestInviteDestination?: string;
-
-  @Property({ type: types.string, nullable: true })
-  newsUrl?: string;
-
   @Property({ type: types.enum })
   weatherUnits!: 'imperial' | 'metric' | 'standard';
 
   @Property({ type: types.integer })
   weatherCityId!: number;
+
+  @Property({ type: types.boolean })
+  responderAuthIsRequired!: boolean;
+
+  @Property({ type: types.array})
+  meetingTypeOptions!: Array<MEETING_TYPE_OPTIONS>;
 
   constructor(obj: {
     user: User;
@@ -69,16 +52,11 @@ export class Demo extends BaseEntity {
     brandLogo: Data;
     brandTitle: string;
     brandSubtitle: string;
-    buttonAText?: string;
-    buttonALink?: string;
-    buttonBText?: string;
-    buttonBLink?: string;
-    buttonCText?: string;
-    buttonCLink?: string;
-    guestInviteDestination?: string;
-    newsUrl?: string;
     weatherUnits: 'imperial' | 'metric' | 'standard';
     weatherCityId: number;
+    responderAuthIsRequired: boolean;
+    meetingTypeOptions: Array<MEETING_TYPE_OPTIONS>
+
   }) {
     super();
     this.user = obj.user;
@@ -89,15 +67,9 @@ export class Demo extends BaseEntity {
     this.brandLogo = obj.brandLogo;
     this.brandTitle = obj.brandTitle;
     this.brandSubtitle = obj.brandSubtitle;
-    this.buttonAText = obj.buttonAText;
-    this.buttonALink = obj.buttonALink;
-    this.buttonBText = obj.buttonBText;
-    this.buttonBLink = obj.buttonBLink;
-    this.buttonCText = obj.buttonCText;
-    this.buttonCLink = obj.buttonCLink;
-    this.guestInviteDestination = obj.guestInviteDestination;
-    this.newsUrl = obj.newsUrl;
     this.weatherUnits = obj.weatherUnits;
     this.weatherCityId = obj.weatherCityId;
+    this.responderAuthIsRequired = obj.responderAuthIsRequired;
+    this.meetingTypeOptions = obj.meetingTypeOptions;
   }
 }

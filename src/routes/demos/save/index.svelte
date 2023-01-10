@@ -2,13 +2,13 @@
   import DemoFields from '.Part0DemoFields.svelte';
   import BackgroundFields from '.Part1BackgroundFields.svelte';
   import BrandFields from '.Part2BrandFields.svelte';
-  import ButtonsFields from '.Part3ButtonsFields.svelte';
-  import GuestInviteFields from '.Part4GuestInviteFields.svelte';
-  import NewsFields from '.Part5NewsFields.svelte';
-  import WeatherFields from '.Part6WeatherFields.svelte';
+  import MeetingTypesOptionsFields from '.Part3MeetingTypesOptionsFields.svelte';
+  import AuthenticationRequirement from '.Part4AuthenticationRequirementFields.svelte';
+  import WeatherFields from '.Part5WeatherFields.svelte';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import { urlEncodedRequest } from '../../../lib/shared/urlencoded-request';
+  import { MEETING_TYPE_OPTIONS } from '$lib/constants';
 
   export let form = undefined;
   export let name = undefined;
@@ -18,15 +18,13 @@
   export let logo = undefined;
   export let title = undefined;
   export let subtitle = undefined;
-  export let aText = undefined;
-  export let aLink = undefined;
-  export let bText = undefined;
-  export let bLink = undefined;
-  export let cText = undefined;
-  export let cLink = undefined;
-  export let destination = undefined;
   export let url = undefined;
   export let cityId = undefined;
+  export let meetingTypeOptions = undefined;
+  export let isSDK = meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.BROWSER_SDK);
+  export let isIC = meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.INSTANT_CONNECT);
+  export let isSIP = meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.SIP_URI_DIALING);
+  export let responderAuthIsRequired = undefined;
   export let units = undefined;
 
   const id = $page.url.searchParams.get('id');
@@ -70,11 +68,9 @@
     <BrandFields {title} {subtitle} />
   {/await}
   <hr />
-  <ButtonsFields {aText} {aLink} {bText} {bLink} {cText} {cLink} />
+  <MeetingTypesOptionsFields {isSDK} {isIC} {isSIP} />
   <hr />
-  <GuestInviteFields {destination} />
-  <hr />
-  <NewsFields {url} />
+  <AuthenticationRequirement {responderAuthIsRequired} />
   <hr />
   <WeatherFields {units} {cityId} />
   <hr />

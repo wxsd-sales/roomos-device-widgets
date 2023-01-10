@@ -15,6 +15,7 @@ export const GET = async (requestEvent: RequestEvent) => {
       .then((r) => r?.demos.toJSON())
       .then((r) => r?.map(({ user, ...demo }) => demo));
 
+      console.log(demos)
     return { status: 200, body: { demos } };
   }
 

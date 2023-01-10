@@ -4,8 +4,13 @@
 
 <script lang="ts">
   import { page } from '$app/stores';
+  import { browser } from '$app/env';
 
-  const href = $page.url.pathname + '/webex/redirect';
+  const href = browser
+    ? window.navigator.userAgent.includes('RoomOS')
+      ? '/auth/device'
+      : $page.url.pathname + '/webex/redirect'
+    : '';
 </script>
 
 <section class="container p-4 is-align-items-center" id="login">

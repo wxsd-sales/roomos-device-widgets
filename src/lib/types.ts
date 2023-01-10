@@ -71,21 +71,19 @@ export interface Status {
 }
 
 export enum StateKey {
-  EXAMPLE_LOCAL_WRITABLE = 'exampleLocalWritable',
-  EXAMPLE_SESSION_WRITABLE = 'exampleSessionWritable',
-  EXAMPLE_WRITABLE = 'exampleWritable'
+  WEBEX_TOKEN = 'WEBEX_TOKEN'
 }
 
 export interface TokenResponse {
   id?: string;
   scope: string;
   expiresIn: number;
-  expiresAt: number;
+  expiresAt: string;
   accessToken: string;
   tokenType: string;
   refreshToken: string;
   refreshTokenExpiresIn: number;
-  refreshTokenExpiresAt: number;
+  refreshTokenExpiresAt: string;
 }
 
 export interface AuthorizeResponse {

@@ -7,8 +7,8 @@
   <div class="column is-full">
     <h2 class="title">Create a New Demo</h2>
     <h3 class="subtitle">
-      A "Demo" is a collection of widgets (brand logo, background, sensors etc.) that make up the UI/controls of a
-      PWA/Kiosk device.
+      A "Demo" is a collection of sessions along with brand logo, background, sensors etc. that creates a customizable
+      UX for a responder to manage the requests.
     </h3>
   </div>
   <div class="column is-full">
@@ -21,7 +21,7 @@
         type="text"
         minlength="6"
         maxlength="64"
-        placeholder="WXSD RoomOS Device Widgets"
+        placeholder="WXSD Support Demo"
         required
         bind:value={name}
       />

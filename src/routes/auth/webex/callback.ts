@@ -20,6 +20,7 @@ export const GET = async (requestEvent: RequestEvent) => {
   const state = requestEvent.url.searchParams.get('state');
 
   if (state !== requestEvent.locals.session?.uuid) {
+    console.log('here')
     return { status: 403 };
   }
 
@@ -55,9 +56,9 @@ export const GET = async (requestEvent: RequestEvent) => {
         .then((s: Response) => s.json() as Promise<PersonResponse>)
         .then((s: PersonResponse) =>
           db != null
-            ? db.findOne(User, { email: s.emails[0] }).then(async (t) => {
+            ? db.findOne(User, { webex_uuid: s.id }).then(async (t) => {
                 const session = new Session({
-                  user: t ?? new User(s.emails[0]),
+                  user: t ?? new User(s.id, s.emails[0]),
                   ipAddress: prerendering ? 'unknown' : requestEvent.clientAddress,
                   userAgent: requestEvent.request.headers.get('User-Agent') ?? undefined,
                   lastActivityAt: Date.now(),
@@ -78,5 +79,5 @@ export const GET = async (requestEvent: RequestEvent) => {
             : { status: 403 }
         )
     )
-    .catch(() => ({ status: 403 }));
+    .catch((e) => {console.log(e);  return { status: 403 }});
 };
