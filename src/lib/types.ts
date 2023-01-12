@@ -110,6 +110,19 @@ export interface WeatherResponse {
   svg: string;
 }
 
+export interface MindyResponse {
+  redirect: string;
+}
+
+export interface ICResponse {
+  guest: [guestData: string];
+  host: [hostData: string];
+}
+
+export interface ICTOken {
+  token: string;
+}
+
 export interface PersonResponse {
   avatar?: string;
   created: string;

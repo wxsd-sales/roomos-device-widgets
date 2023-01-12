@@ -51,11 +51,11 @@ export const handle: Handle = async ({ event, resolve }) => {
       session?.uuid == null ||
       session?.isExpired === true ||
       (session.user?.uuid != null && session.lastActivityAt < d1.getTime() - 60 * 60 * 1000 * 2);
-      
-      if (isSessionInvalid) {
-        const session = createSession(userAgent, ipAddress, d1.getTime());
-        await db.persistAndFlush(session).then(() => (event.locals.session = session) && (event.locals.db = db));
-        response = createLoginRedirect(session.uuid);
+
+    if (isSessionInvalid) {
+      const session = createSession(userAgent, ipAddress, d1.getTime());
+      await db.persistAndFlush(session).then(() => (event.locals.session = session) && (event.locals.db = db));
+      response = createLoginRedirect(session.uuid);
     } else {
       session.ipAddress = ipAddress;
       session.userAgent = userAgent;

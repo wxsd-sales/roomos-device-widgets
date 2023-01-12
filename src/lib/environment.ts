@@ -108,6 +108,21 @@ export class Environment {
   @IsNotEmpty()
   public readonly UPSTASH_REDIS_REST_TOKEN: string;
 
+  @IsUrl()
+  public readonly MINDY_REST_URL: string;
+
+  @IsUrl()
+  public readonly INSTANT_CONNECT_REST_URL: string;
+
+  @IsNotEmpty()
+  public readonly INSTANT_CONNECT_USER_TOKEN: string;
+
+  @IsNotEmpty()
+  public readonly INSTANT_CONNECT_AUD: string;
+
+  @IsNotEmpty()
+  public readonly INSTANT_CONNECT_ORG_ID: string;
+
   constructor() {
     dotenvExpand.expand(dotenv.config());
     this.APP_URL = process.env.APP_URL || dev ? 'https://localhost:5173' : 'https://localhost:4173';
@@ -140,6 +155,11 @@ export class Environment {
     this.WEBEX_NOTIFICATION_CHANNEL_TOKEN = process.env.WEBEX_NOTIFICATION_CHANNEL_TOKEN as string;
     this.UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL as string;
     this.UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN as string;
+    this.MINDY_REST_URL = process.env.MINDY_REST_URL as string;
+    this.INSTANT_CONNECT_REST_URL = process.env.INSTANT_CONNECT_REST_URL as string;
+    this.INSTANT_CONNECT_USER_TOKEN = process.env.INSTANT_CONNECT_USER_TOKEN as string;
+    this.INSTANT_CONNECT_AUD = process.env.INSTANT_CONNECT_AUD as string;
+    this.INSTANT_CONNECT_ORG_ID = process.env.INSTANT_CONNECT_ORG_ID as string;
   }
 }
 

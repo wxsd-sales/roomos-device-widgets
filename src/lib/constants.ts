@@ -8,11 +8,11 @@ export const WEBEX_SDK_CONFIG = {
   meetings: { reconnection: { enabled: true } }
 };
 
-export enum MEETING_TYPE_OPTIONS  {
+export enum MEETING_TYPE_OPTIONS {
   BROWSER_SDK = 'SDK',
   INSTANT_CONNECT = 'IC',
   SIP_URI_DIALING = 'SIP'
-};
+}
 
 export const AUDIO_OUTPUT = 'audiooutput';
 export const AUDIO_SOURCE = 'audioinput';
@@ -59,3 +59,9 @@ export const VALID_DESTINATION = new RegExp(
   `(${VALID_MEETING_LINK.source})|(${VALID_PMR_LINK.source})|(${VALID_PMR_ADDRESS.source})|(${VALID_SIP.source})|(${VALID_EMAIL.source})`,
   'i'
 );
+
+export const SOAP_BOX_URL = 'https://soapbox.wbx.ninja';
+export const NODE_SERVER_URL_SIP_DEMO = 'https://mindy.wbx.ninja/virtual-nurse-sip-address-request';
+// export const DUMMY_USER_WEBEX_ID = 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS84M2Q1MGZmYi00NjVmLTRiYjctOTQzNy1hNWViMDZlZjNhZGQ';
+
+export const INSTANT_CONNECT_TALK_URL = 'https://instant.webex.com/hc/v1/talk';

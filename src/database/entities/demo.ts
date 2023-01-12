@@ -40,7 +40,7 @@ export class Demo extends BaseEntity {
   @Property({ type: types.boolean })
   responderAuthIsRequired!: boolean;
 
-  @Property({ type: types.array})
+  @Property({ type: types.array })
   meetingTypeOptions!: Array<MEETING_TYPE_OPTIONS>;
 
   constructor(obj: {
@@ -55,8 +55,7 @@ export class Demo extends BaseEntity {
     weatherUnits: 'imperial' | 'metric' | 'standard';
     weatherCityId: number;
     responderAuthIsRequired: boolean;
-    meetingTypeOptions: Array<MEETING_TYPE_OPTIONS>
-
+    meetingTypeOptions: Array<MEETING_TYPE_OPTIONS>;
   }) {
     super();
     this.user = obj.user;

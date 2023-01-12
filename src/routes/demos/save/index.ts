@@ -138,9 +138,14 @@ export const POST = async (requestEvent: RequestEvent) => {
     public readonly subtitle!: string;
 
     @Expose()
-    @Transform(({ obj }: { obj: FormData }) => 
-       [...(obj.get(MEETING_TYPE_OPTIONS.BROWSER_SDK) ? [MEETING_TYPE_OPTIONS.BROWSER_SDK] : []), ...(obj.get(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) ? [MEETING_TYPE_OPTIONS.INSTANT_CONNECT] : []), ...(obj.get(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) ? [MEETING_TYPE_OPTIONS.SIP_URI_DIALING] : [])]
-    , { toClassOnly: true })
+    @Transform(
+      ({ obj }: { obj: FormData }) => [
+        ...(obj.get(MEETING_TYPE_OPTIONS.BROWSER_SDK) ? [MEETING_TYPE_OPTIONS.BROWSER_SDK] : []),
+        ...(obj.get(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) ? [MEETING_TYPE_OPTIONS.INSTANT_CONNECT] : []),
+        ...(obj.get(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) ? [MEETING_TYPE_OPTIONS.SIP_URI_DIALING] : [])
+      ],
+      { toClassOnly: true }
+    )
     public readonly meetingTypes!: Array<MEETING_TYPE_OPTIONS>;
 
     @Expose()
@@ -201,12 +206,11 @@ export const POST = async (requestEvent: RequestEvent) => {
         meetingTypeOptions: formData.meetingTypes
       });
       await db.persistAndFlush(demo);
-  
+
       return { status: 302, headers: { Location: '/demos' } };
     }
     return { status: 422 };
-  }
-  catch(e) {
+  } catch (e) {
     console.log(e);
   }
 };
@@ -260,15 +264,19 @@ export const PATCH = async (requestEvent: RequestEvent) => {
     public readonly subtitle!: string;
 
     @Expose()
-    @Transform(({ obj }: { obj: FormData }) =>
-      [...(obj.get(MEETING_TYPE_OPTIONS.BROWSER_SDK) ? [MEETING_TYPE_OPTIONS.BROWSER_SDK] : []), ...(obj.get(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) ? [MEETING_TYPE_OPTIONS.INSTANT_CONNECT] : []), ...(obj.get(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) ? [MEETING_TYPE_OPTIONS.SIP_URI_DIALING] : [])]
-      , { toClassOnly: true })
+    @Transform(
+      ({ obj }: { obj: FormData }) => [
+        ...(obj.get(MEETING_TYPE_OPTIONS.BROWSER_SDK) ? [MEETING_TYPE_OPTIONS.BROWSER_SDK] : []),
+        ...(obj.get(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) ? [MEETING_TYPE_OPTIONS.INSTANT_CONNECT] : []),
+        ...(obj.get(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) ? [MEETING_TYPE_OPTIONS.SIP_URI_DIALING] : [])
+      ],
+      { toClassOnly: true }
+    )
     public readonly meetingTypes!: Array<MEETING_TYPE_OPTIONS>;
 
     @Expose()
     @Transform(({ obj }: { obj: FormData }) => Boolean(obj.get('authIsReq')), { toClassOnly: true })
     public readonly authIsRequired!: boolean;
-
 
     @Expose()
     @IsIn(['imperial', 'metric', 'standard'])
@@ -298,7 +306,7 @@ export const PATCH = async (requestEvent: RequestEvent) => {
   const db = requestEvent.locals.db;
   const session = requestEvent.locals.session;
 
-  console.log(formData)
+  console.log(formData);
   const demoId = formData.id;
   return demoId != null
     ? await db

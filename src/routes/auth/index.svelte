@@ -5,12 +5,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { browser } from '$app/env';
-
-  const href = browser
-    ? window.navigator.userAgent.includes('RoomOS')
-      ? '/auth/device'
-      : $page.url.pathname + '/webex/redirect'
-    : '';
 </script>
 
 <section class="container p-4 is-align-items-center" id="login">
@@ -56,7 +50,11 @@
       </article>
     </div>
     <div class="column is-12">
-      <a class="button is-rounded is-medium is-fullwidth is-primary has-text-weight-bold" type="button" {href}>
+      <a
+        class="button is-rounded is-medium is-fullwidth is-primary has-text-weight-bold"
+        type="button"
+        href={'/webex/redirect'}
+      >
         <span class="icon">
           <i class="mdi mdi-login" />
         </span>

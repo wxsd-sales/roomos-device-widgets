@@ -44,6 +44,11 @@ body {
   height: 100%;
 }
 
+.is-translucent-black {
+  background-color: hsl(0, 0%, 0%, 0.8) !important;
+  box-shadow: none !important;
+}
+
 //* {
 //  outline: lightgrey dashed 1px;
 //}

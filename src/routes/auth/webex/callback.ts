@@ -20,7 +20,6 @@ export const GET = async (requestEvent: RequestEvent) => {
   const state = requestEvent.url.searchParams.get('state');
 
   if (state !== requestEvent.locals.session?.uuid) {
-    console.log('here')
     return { status: 403 };
   }
 
@@ -79,5 +78,8 @@ export const GET = async (requestEvent: RequestEvent) => {
             : { status: 403 }
         )
     )
-    .catch((e) => {console.log(e);  return { status: 403 }});
+    .catch((e) => {
+      console.log(e);
+      return { status: 403 };
+    });
 };
