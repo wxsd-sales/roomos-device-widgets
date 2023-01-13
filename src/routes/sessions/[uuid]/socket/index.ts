@@ -5,9 +5,9 @@ import { MEMBERS_UPDATE, APPEND, REMOVE, HSET, CONNECT, INIT_LIST } from '../con
 
 interface SOCKET_PAYLOAD_DATA {
   event: string;
-  status ?: string;
-  sessionStatus ?: string;
-  meetingType ?: string;
+  status?: string;
+  sessionStatus?: string;
+  meetingType?: string;
   payload: any;
   gradNurseID?: string;
   link?: string;
@@ -18,7 +18,7 @@ interface SOCKET_PAYLOAD {
   set?: string;
   id: string;
   key: string;
-  index: number,
+  index: number;
   data: SOCKET_PAYLOAD_DATA;
   command: string;
   room: string;

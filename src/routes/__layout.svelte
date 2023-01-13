@@ -149,7 +149,10 @@
         {#if email == null}
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-fullwidth is-rounded is-primary is-light has-text-weight-bold" href="/auth">
+              <a
+                class="button is-fullwidth is-rounded is-primary is-light has-text-weight-bold"
+                href="/auth/webex/redirect"
+              >
                 <span class="icon">
                   <i class="mdi mdi-login" />
                 </span>

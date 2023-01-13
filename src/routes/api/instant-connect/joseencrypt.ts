@@ -45,7 +45,7 @@ export const POST: RequestHandler = async (requestEvent: RequestEvent) => {
   }
 
   return jsonRequest(env.INSTANT_CONNECT_REST_URL, undefined, 'Bearer', env.INSTANT_CONNECT_USER_TOKEN)
-    .post('joseencrypt', undefined, { aud: env.INSTANT_CONNECT_AUD, jwt: {sub: query.sub }})
+    .post('joseencrypt', undefined, { aud: env.INSTANT_CONNECT_AUD, jwt: { sub: query.sub } })
     .then((r: Response) => r.json())
     .then((r: JSONObject) => ({
       status: 200,

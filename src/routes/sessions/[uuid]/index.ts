@@ -15,11 +15,11 @@ export const GET = async (requestEvent: RequestEvent) => {
 
     @Expose()
     @IsNotEmpty()
-    public readonly role!: 'responder' | 'requester'
+    public readonly role!: 'responder' | 'requester';
   }
 
   const searchParams = Object.fromEntries(requestEvent.url.searchParams);
-  const query = plainToInstance(RequestQueryDTO, {...requestEvent.params, ...searchParams}, classTransformOptions);
+  const query = plainToInstance(RequestQueryDTO, { ...requestEvent.params, ...searchParams }, classTransformOptions);
   const queryValidationErrors = validateSync(query, classValidationOptions);
   if (queryValidationErrors.length > 0) {
     return { status: 302, headers: { Location: `/auth` } };

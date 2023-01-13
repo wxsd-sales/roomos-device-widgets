@@ -31,10 +31,6 @@ export const UNMUTE_VIDEO = 'Start Video';
 export const MUTE_SHARE = 'Stop Share';
 export const UNMUTE_SHARE = 'Start Share';
 
-export const SDK_MEETING_TYPE = 'SDK';
-export const IC_MEETING_TYPE = 'IC';
-export const SIP_MEETING_TYPE = 'SIP';
-
 export const VALID_UUID = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/;
 export const VALID_ACCESS_TOKEN =
   /^([a-zA-Z0-9]{64})_(.*)_([0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12})$/;

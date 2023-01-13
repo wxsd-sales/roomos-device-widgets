@@ -69,7 +69,7 @@
         {#if role === 'responder'}
           <Responder socketID={demo.uuid} />
         {:else}
-          <Requester socketID={demo.uuid} />
+          <Requester socketID={demo.uuid} meetingTypeOptions={demo.meetingTypeOptions} />
         {/if}
         <!-- {#if $tokenResponseStore?.accessToken == null} -->
         <!-- <DeviceCode

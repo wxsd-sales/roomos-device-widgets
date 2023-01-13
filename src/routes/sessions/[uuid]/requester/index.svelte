@@ -21,11 +21,14 @@
     SET
   } from '../constants';
 
+  import { MEETING_TYPE_OPTIONS } from '$lib/constants';
+
   import { SocketIO } from '../socket';
 
   import Modal from '$components/Modal/Modal.svelte';
 
-  export let socketID;
+  export let socketID: string;
+  export let meetingTypeOptions: MEETING_TYPE_OPTIONS;
 
   let assistanceHasBeenRequested = false;
   let assistanceIsReady = false;
@@ -37,7 +40,6 @@
   let meetingInSession = false;
   let isSip = false;
   let tempID: string;
-  let orderMsg = `You are next!`;
   let meetingType = 'SDK';
   let selectedNurse = {};
   let isOnDevice = browser ? (window.navigator.userAgent.includes('RoomOS') ? true : false) : false;
@@ -259,48 +261,42 @@
           class="control is-justify-content-space-around is-flex has-text-white is-size-6"
           style="margin: 1rem 0 0.25rem 0;"
         >
-          <label class="radio">
-            <input
-              type="radio"
-              name="meeting"
-              value="SDK"
-              checked={meetingType === 'SDK'}
-              on:change={(e) => (meetingType = e.currentTarget.value)}
-            />
-            {#if isOnMobile}
-              SDK
-            {:else}
-              Meeting SDK
-            {/if}
-          </label>
-          <label id="ic-checkbox" class="radio">
-            <input
-              type="radio"
-              name="meeting"
-              checked={meetingType === 'IC'}
-              value="IC"
-              on:change={(e) => (meetingType = e.currentTarget.value)}
-            />
-            {#if isOnMobile}
-              IC
-            {:else}
-              Instant Connect
-            {/if}
-          </label>
-          <label id="sip-checkbox" class="radio">
-            <input
-              type="radio"
-              name="meeting"
-              checked={meetingType === 'SIP'}
-              value="SIP"
-              on:change={(e) => (meetingType = e.currentTarget.value)}
-            />
-            {#if isOnMobile}
-              SIP
-            {:else}
-              SIP URI Dialing
-            {/if}
-          </label>
+          {#if meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.BROWSER_SDK)}
+            <label class="radio">
+              <input
+                type="radio"
+                name="meeting"
+                value="SDK"
+                checked={meetingType === 'SDK'}
+                on:change={(e) => (meetingType = e.currentTarget.value)}
+              />
+              {isOnMobile ? 'SDK' : 'Meeting SDK'}
+            </label>
+          {/if}
+          {#if meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.INSTANT_CONNECT)}
+            <label id="ic-checkbox" class="radio ml-4">
+              <input
+                type="radio"
+                name="meeting"
+                checked={meetingType === 'IC'}
+                value="IC"
+                on:change={(e) => (meetingType = e.currentTarget.value)}
+              />
+              {isOnMobile ? 'IC' : 'Instant Connect'}
+            </label>
+          {/if}
+          {#if meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.SIP_URI_DIALING)}
+            <label id="sip-checkbox" class="radio ml-4">
+              <input
+                type="radio"
+                name="meeting"
+                checked={meetingType === 'SIP'}
+                value="SIP"
+                on:change={(e) => (meetingType = e.currentTarget.value)}
+              />
+              {isOnMobile ? 'SIP' : 'SIP URI Dialing'}
+            </label>
+          {/if}
         </div>
         <div class="has-text-white has-text-centered mt-5" style="font-size: 0.65rem ">
           * Unanswered request will auto-expire in 30 minutes
@@ -326,13 +322,3 @@
     </div>
   </div>
 </Modal>
-
-<style lang="scss">
-  .radio {
-    content: SDK;
-
-    @media screen and (min-width: 480px) {
-      content: SDK;
-    }
-  }
-</style>
