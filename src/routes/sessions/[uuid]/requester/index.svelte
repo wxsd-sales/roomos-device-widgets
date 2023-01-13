@@ -28,7 +28,7 @@
   import Modal from '$components/Modal/Modal.svelte';
 
   export let socketID: string;
-  export let meetingTypeOptions: MEETING_TYPE_OPTIONS;
+  export let meetingTypeOptions: Array<MEETING_TYPE_OPTIONS>;
 
   let assistanceHasBeenRequested = false;
   let assistanceIsReady = false;

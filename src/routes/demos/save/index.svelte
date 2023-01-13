@@ -5,8 +5,9 @@
   import MeetingTypesOptionsFields from '.Part3MeetingTypesOptionsFields.svelte';
   import AuthenticationRequirement from '.Part4AuthenticationRequirementFields.svelte';
   import WeatherFields from '.Part5WeatherFields.svelte';
+
   import { page } from '$app/stores';
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import { urlEncodedRequest } from '../../../lib/shared/urlencoded-request';
   import { MEETING_TYPE_OPTIONS } from '$lib/constants';
 
@@ -21,13 +22,18 @@
   export let url = undefined;
   export let cityId = undefined;
   export let meetingTypeOptions = undefined;
-  export let isSDK = meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.BROWSER_SDK);
-  export let isIC = meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.INSTANT_CONNECT);
-  export let isSIP = meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.SIP_URI_DIALING);
+  export let isSDK = meetingTypeOptions ? meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.BROWSER_SDK) : false;
+  export let isIC = meetingTypeOptions ? meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) : false;
+  export let isSIP = meetingTypeOptions ? meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) : false;
   export let responderAuthIsRequired = undefined;
   export let units = undefined;
 
+  let showAuthWarningModal = false;
+  let showSIPWarningModal = false;
+
   const id = $page.url.searchParams.get('id');
+  const dispatch = createEventDispatcher();
+
   let formElement: HTMLFormElement;
 
   const toFileList = (file?: { bits: string; name: string; lastModified: number; type: string }) =>
@@ -68,9 +74,25 @@
     <BrandFields {title} {subtitle} />
   {/await}
   <hr />
-  <MeetingTypesOptionsFields {isSDK} {isIC} {isSIP} />
+  <MeetingTypesOptionsFields
+    {isSDK}
+    {isIC}
+    {isSIP}
+    {showSIPWarningModal}
+    on:showAuthWarningModal={(event) => {
+      showAuthWarningModal = event.detail.checkSIPBox;
+      if (showAuthWarningModal) showSIPWarningModal = false;
+    }}
+  />
   <hr />
-  <AuthenticationRequirement {responderAuthIsRequired} />
+  <AuthenticationRequirement
+    {responderAuthIsRequired}
+    {showAuthWarningModal}
+    on:showSIPWarningModal={(event) => {
+      showSIPWarningModal = event.detail.authCheckBox;
+      if (showSIPWarningModal) showAuthWarningModal = false;
+    }}
+  />
   <hr />
   <WeatherFields {units} {cityId} />
   <hr />

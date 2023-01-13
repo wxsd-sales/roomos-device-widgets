@@ -1,16 +1,12 @@
 <script lang="ts">
-  import { io } from 'socket.io-client';
   import moment from 'moment';
   import { onMount } from 'svelte';
   import { browser } from '$app/env';
-  import {
-    SOAP_BOX_URL,
-    INSTANT_CONNECT_TALK_URL,
-    NODE_SERVER_URL_SIP_DEMO,
-    MEETING_TYPE_OPTIONS
-  } from '$lib/constants';
+  import { INSTANT_CONNECT_TALK_URL, NODE_SERVER_URL_SIP_DEMO, MEETING_TYPE_OPTIONS } from '$lib/constants';
   import QueueItem from '$components/QueueItem/QueueItem.svelte';
   import { jsonRequest } from '$lib/shared/json-request';
+  import { tokenResponseStore } from '$lib/store';
+
   import type * as TYPES from '$lib/types';
   import {
     MESSAGE,
@@ -24,8 +20,6 @@
     LIST,
     MESSAGE_RESPONSE,
     INIT_LIST,
-    JOIN,
-    SDK_SESSION,
     IC_SESSION,
     SDK_MEMBERS_UPDATE,
     SDK_MEETING_REMOVED
@@ -346,7 +340,7 @@
 </script>
 
 <div class="columns">
-  <div class="column is-3">
+  <div class="column is-6">
     <h1 class="is-size-3 has-text-white">Request Queue</h1>
   </div>
 </div>

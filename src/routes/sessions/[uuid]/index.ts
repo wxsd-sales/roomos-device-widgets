@@ -59,6 +59,7 @@ export const GET = async (requestEvent: RequestEvent) => {
         (demo as JSONObject)['backgroundPoster'] =
           'data:' + backgroundPoster.type + ';base64,' + backgroundPoster.bits.toString('base64');
 
+        (demo as JSONObject)['responderAuthIsRequired'] = demo.responderAuthIsRequired === 1;
         return { status: 200, body: { demo, role: query.role } };
       }
 

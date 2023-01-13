@@ -14,11 +14,11 @@
   import Requester from './requester/index.svelte';
 
   import type { Demo } from 'src/database/entities';
+  import { tokenResponseStore } from '$lib/store';
 
   export let demo: Demo;
   export let role: string;
 
-  let isAuthorized = false;
   const httpApiRequest = jsonRequest('/api');
 
   const getAuthorizeResponse = () =>
@@ -28,8 +28,6 @@
     httpApiRequest
       .post('device-code/webex/token', { deviceCode })
       .then((r) => r.json() as Promise<TYPES.TokenResponse>);
-
-  const tokenResponseStore = writable<TYPES.TokenResponse>();
 
   const getWeatherResponse = (id: number, units: string) =>
     httpApiRequest.get('weather', { id, units }).then((r) => r.json() as Promise<TYPES.WeatherResponse>);
@@ -65,21 +63,28 @@
   <div id="body-widgets" class="hero-body p-1">
     <div class="container">
       <!--lhs start-->
-      <div id="sessions" class="box is-flex is-flex-direction-column is-translucent-black">
+      <div id="sessions" class="box is-flex is-flex-direction-column  is-translucent-black">
         {#if role === 'responder'}
-          <Responder socketID={demo.uuid} />
+          {#if demo.responderAuthIsRequired}
+            {#if !$tokenResponseStore}
+              <div style="margin-top: 20%">
+                <DeviceCode
+                  title="Favorites"
+                  isMinimal={false}
+                  {getAuthorizeResponse}
+                  {getTokenResponse}
+                  on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)}
+                />
+              </div>
+            {:else}
+              <Responder socketID={demo.uuid} />
+            {/if}
+          {:else}
+            <Responder socketID={demo.uuid} />
+          {/if}
         {:else}
           <Requester socketID={demo.uuid} meetingTypeOptions={demo.meetingTypeOptions} />
         {/if}
-        <!-- {#if $tokenResponseStore?.accessToken == null} -->
-        <!-- <DeviceCode
-                title="Favorites"
-                isMinimal={false}
-                {getAuthorizeResponse}
-                {getTokenResponse}
-                on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)}
-              /> -->
-        <!-- {/if} -->
       </div>
     </div>
   </div>

@@ -53,12 +53,12 @@
           <p class="level-right">{demo.uuid}</p>
         </div>
         <div class="level is-mobile mb-0">
-          <p class="level-left">Responder URL</p>
-          <a class="level-right" target="_blank" href={`/sessions/${demo.uuid}?role=responder`}>Link</a>
-        </div>
-        <div class="level is-mobile mb-0">
           <p class="level-left">Requester URL</p>
           <a class="level-right" target="_blank" href={`/sessions/${demo.uuid}?role=requester`}>Link</a>
+        </div>
+        <div class="level is-mobile mb-0">
+          <p class="level-left">Responder URL</p>
+          <a class="level-right" target="_blank" href={`/sessions/${demo.uuid}?role=responder`}>Link</a>
         </div>
       </div>
     </div>
