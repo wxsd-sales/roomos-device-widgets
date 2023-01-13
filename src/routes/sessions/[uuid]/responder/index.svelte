@@ -24,9 +24,13 @@
     LIST,
     MESSAGE_RESPONSE,
     INIT_LIST,
-    JOIN
-  } from './socket/constants';
-  import { SocketIO } from './socket';
+    JOIN,
+    SDK_SESSION,
+    IC_SESSION,
+    SDK_MEMBERS_UPDATE,
+    SDK_MEETING_REMOVED
+  } from '../constants';
+  import { SocketIO } from '../socket';
   import Modal from '$components/Modal/Modal.svelte';
 
   export let socketID;
@@ -50,8 +54,8 @@
   const postMindyResponse = (guid: string) =>
     httpApiRequest.post('mindy', { guid }).then((r) => r.json() as Promise<TYPES.MindyResponse>);
 
-  const getInstantConnectJEResponse = (sub: string) =>
-    httpApiRequest.get('instant-connect/joseencrypts', { sub }).then((r) => r.json() as Promise<TYPES.ICResponse>);
+  const postInstantConnectJEResponse = (sub: string) =>
+    httpApiRequest.post('instant-connect/joseencrypt', { sub }).then((r) => r.json() as Promise<TYPES.ICResponse>);
 
   const getInstantConnectTokenResponse = (data: string) =>
     httpApiRequest.get('instant-connect/space', { data }).then((r) => r.json() as Promise<TYPES.ICToken>);
@@ -88,13 +92,11 @@
           displayQueue = true;
         }
 
-        if (joinSession) {
-          meetingURL = '';
-          displayQueue = true;
-          joinButtonIsLoading = false;
-          iframeIsLoading = false;
-          joinSession = false;
-        }
+        meetingURL = '';
+        displayQueue = true;
+        joinButtonIsLoading = false;
+        iframeIsLoading = false;
+        joinSession = false;
         break;
       case HSET:
         queue = queue.map((item) => {
@@ -143,7 +145,7 @@
     const {
       guest: [guestData],
       host: [hostData]
-    } = await getInstantConnectJEResponse('calling-queue-demo');
+    } = await postInstantConnectJEResponse('calling-queue-demo');
     const { token: guestToken } = await getInstantConnectTokenResponse(guestData);
     const { token: hostToken } = await getInstantConnectTokenResponse(hostData);
 
@@ -153,12 +155,13 @@
 
     socketIO.emit(MESSAGE, {
       command: SET,
-      set: 'IC_GUEST_URL',
+      set: IC_SESSION,
       data: {
         link: `${INSTANT_CONNECT_TALK_URL}?int=jose&v=1&data=${guestData}`,
         guestToken,
         gradNurseID: selectedGradNurse.ID
-      }
+      },
+      id: SET
     });
 
     await monitorMeeting(hostToken);
@@ -176,7 +179,7 @@
     if (sip !== '') {
       const meeting = await webexSDK.meetings.create(sip);
       await meeting.join();
-      meeting.members.on('members:update', async ({ delta, full }) => {
+      meeting.members.on(SDK_MEMBERS_UPDATE, async ({ delta, full }) => {
         const newMembers = Object.values({ ...full, ...delta.updated, ...delta.added });
         newMembers.forEach((nm) => {
           if (nm.isInLobby) {
@@ -194,8 +197,8 @@
           joinButtonIsLoading = false;
           joinSession = false;
 
-          HCA_MAIN_SOCKET.emit('message', {
-            command: 'set',
+          socketIO.emit(MESSAGE, {
+            command: SET,
             set: 'REMOVE_SIP_ADDRESS',
             data: {
               gradNurseID: selectedGradNurse.ID
@@ -205,18 +208,19 @@
       });
     }
 
-    webexSDK.meetings.on('meeting:removed', (addedMeetingEvent) => {
+    webexSDK.meetings.on(SDK_MEETING_REMOVED, () => {
       meetingURL = '';
       displayQueue = true;
       joinButtonIsLoading = false;
       joinSession = false;
 
-      HCA_MAIN_SOCKET.emit('message', {
-        command: 'set',
-        set: 'REMOVE_IC_GUEST_URL',
+      socketIO.emit(MESSAGE, {
+        command: SET,
+        set: IC_SESSION,
         data: {
           gradNurseID: selectedGradNurse.ID
-        }
+        },
+        id: REMOVE
       });
     });
   };

@@ -1,23 +1,28 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import type { JSONObject } from '@sveltejs/kit/types/private';
 import { Expose, plainToInstance } from 'class-transformer';
-import { IsUUID, validateSync } from 'class-validator';
+import { IsNotEmpty, IsUUID, validateSync } from 'class-validator';
 import { LoadStrategy, MikroORM } from '@mikro-orm/core';
-import { classTransformOptions, classValidationOptions } from '../../../.utils';
-import { User, Demo, Data } from '../../../../database/entities';
-import config from '../../../../../mikro-orm.config';
+import { classTransformOptions, classValidationOptions } from '../../.utils';
+import { User, Demo, Data } from '../../../database/entities';
+import config from '../../../../mikro-orm.config';
 
 export const GET = async (requestEvent: RequestEvent) => {
   class RequestQueryDTO {
     @Expose()
     @IsUUID(4)
     public readonly uuid!: string;
+
+    @Expose()
+    @IsNotEmpty()
+    public readonly role!: 'responder' | 'requester'
   }
 
-  const query = plainToInstance(RequestQueryDTO, requestEvent.params, classTransformOptions);
+  const searchParams = Object.fromEntries(requestEvent.url.searchParams);
+  const query = plainToInstance(RequestQueryDTO, {...requestEvent.params, ...searchParams}, classTransformOptions);
   const queryValidationErrors = validateSync(query, classValidationOptions);
   if (queryValidationErrors.length > 0) {
-    return { status: 302, headers: { Location: '/auth' } };
+    return { status: 302, headers: { Location: `/auth` } };
   }
 
   const orm = await MikroORM.init({ ...config, ...{ entities: [User, Demo] } });
@@ -54,7 +59,7 @@ export const GET = async (requestEvent: RequestEvent) => {
         (demo as JSONObject)['backgroundPoster'] =
           'data:' + backgroundPoster.type + ';base64,' + backgroundPoster.bits.toString('base64');
 
-        return { status: 200, body: { demo } };
+        return { status: 200, body: { demo, role: query.role } };
       }
 
       return { status: 404 };

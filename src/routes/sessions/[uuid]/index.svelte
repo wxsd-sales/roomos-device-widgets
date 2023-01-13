@@ -10,10 +10,13 @@
   import Weather from '$components/Weather/Weather.svelte';
   import DeviceCode from '$components/DeviceCode/DeviceCode.svelte';
 
-  import Container from './Container.svelte';
+  import Responder from './responder/index.svelte';
+  import Requester from './requester/index.svelte';
+
   import type { Demo } from 'src/database/entities';
 
   export let demo: Demo;
+  export let role: string;
 
   let isAuthorized = false;
   const httpApiRequest = jsonRequest('/api');
@@ -33,6 +36,10 @@
 
   const isDevice = browser ? (window.navigator.userAgent.includes('RoomOS') ? true : false) : false;
 </script>
+
+<svelte:head>
+  <script crossorigin src="https://unpkg.com/webex@^2/umd/webex.min.js"></script>
+</svelte:head>
 
 <Background imageLink={demo.backgroundPoster} filter="brightness({demo.backgroundBrightness}%)" />
 <section id="hero" class="hero is-fullheight has-text-white is-dark">
@@ -58,8 +65,12 @@
   <div id="body-widgets" class="hero-body p-1">
     <div class="container">
       <!--lhs start-->
-      <div id="responder" class="box is-flex is-flex-direction-column is-translucent-black">
-        <Container socketID={demo.uuid} />
+      <div id="sessions" class="box is-flex is-flex-direction-column is-translucent-black">
+        {#if role === 'responder'}
+          <Responder socketID={demo.uuid} />
+        {:else}
+          <Requester socketID={demo.uuid} />
+        {/if}
         <!-- {#if $tokenResponseStore?.accessToken == null} -->
         <!-- <DeviceCode
                 title="Favorites"
@@ -70,17 +81,6 @@
               /> -->
         <!-- {/if} -->
       </div>
-      <!--lsh end-->
-      <!--rhs start-->
-      <!-- <div class="tile is-5 is-vertical is-parent is-flex-widescreen is-flex-grow-1 is-justify-content-space-between">
-          <div
-            id="room-analytics"
-            class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
-          >
-            <RoomAnalytics {roomAnalyticsStore} units={demo.weatherUnits} />
-          </div>
-        </div> -->
-      <!--rhs end-->
     </div>
   </div>
   <!-- hero-body end -->
@@ -110,7 +110,7 @@
   @use 'bulma/sass/helpers/color';
   @use 'bulma/sass/helpers/spacing';
 
-  #responder {
+  #sessions {
     height: 43rem;
 
     @media screen and (min-width: 480px) {
@@ -149,12 +149,6 @@
     overflow-x: hidden;
   }
 
-  #room-analytics > :global(div.room-analytics-row > div.room-analytics-column > div.room-analytics-card-container) {
-    @extend .p-2;
-    border-radius: var(--border-radius-large);
-    box-shadow: hsl(0deg, 0%, 71%) 0 0 0 2px;
-  }
-
   #app-model :global(.modal-content) {
     @extend .p-2;
     @extend .is-translucent-black;
@@ -167,18 +161,8 @@
   }
 
   @media screen and (max-width: 1215px) {
-    .tile.is-7 {
-      display: block;
-      flex: none;
-      width: 100%;
-    }
   }
 
   @media screen and (max-width: 1215px) {
-    .tile.is-5 {
-      display: block;
-      flex: none;
-      width: 100%;
-    }
   }
 </style>

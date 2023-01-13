@@ -19,7 +19,11 @@ import env from '$lib/environment';
  *   | { status: 500 }
  * >}
  */
-export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
+export const POST: RequestHandler = async (requestEvent: RequestEvent) => {
+  class RequestQueryDTO {
+    @Expose()
+    public readonly sub!: string;
+  }
   class ResponseDTO implements ToJSON {
     @Expose()
     public readonly guest!: Array<string>;
@@ -32,8 +36,16 @@ export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
     }
   }
 
-  return jsonRequest(env.INSTANT_CONNECT_REST_URL, 'Bearer', env.INSTANT_CONNECT_USER_TOKEN)
-    .get('joseencrypt', { aud: env.INSTANT_CONNECT_AUD, sub: 'video-queue' })
+  // validate request query
+  const searchParams = Object.fromEntries(requestEvent.url.searchParams);
+  const query = plainToInstance(RequestQueryDTO, searchParams, classTransformOptions);
+  const queryValidationErrors = validateSync(query, classValidationOptions);
+  if (queryValidationErrors.length > 0) {
+    return { status: 400, body: { query: queryValidationErrors } };
+  }
+
+  return jsonRequest(env.INSTANT_CONNECT_REST_URL, undefined, 'Bearer', env.INSTANT_CONNECT_USER_TOKEN)
+    .post('joseencrypt', undefined, { aud: env.INSTANT_CONNECT_AUD, jwt: {sub: query.sub }})
     .then((r: Response) => r.json())
     .then((r: JSONObject) => ({
       status: 200,

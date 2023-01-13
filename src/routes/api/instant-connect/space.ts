@@ -41,7 +41,7 @@ export const GET: RequestHandler = async (requestEvent: RequestEvent) => {
     return { status: 400, body: { query: queryValidationErrors } };
   }
 
-  return jsonRequest(env.INSTANT_CONNECT_REST_URL, 'Bearer', env.INSTANT_CONNECT_USER_TOKEN)
+  return jsonRequest(env.INSTANT_CONNECT_REST_URL, undefined, 'Bearer', env.INSTANT_CONNECT_USER_TOKEN)
     .get('space', { org: env.INSTANT_CONNECT_ORG_ID, int: 'jose', v: '1', data: query.data })
     .then((r: Response) => r.json())
     .then((r: JSONObject) => ({

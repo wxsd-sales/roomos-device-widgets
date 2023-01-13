@@ -49,6 +49,16 @@ body {
   box-shadow: none !important;
 }
 
+.flash {
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
 //* {
 //  outline: lightgrey dashed 1px;
 //}

@@ -71,7 +71,9 @@ export interface Status {
 }
 
 export enum StateKey {
-  WEBEX_TOKEN = 'WEBEX_TOKEN'
+  WEBEX_TOKEN = 'WEBEX_TOKEN',
+  QUEUE_ORDER = 'QUEUE_ORDER',
+  REQUESTER_ID = 'REQUESTER_ID'
 }
 
 export interface TokenResponse {

@@ -12,3 +12,11 @@ export const LIST = 'list';
 export const INITIAL_QUEUE_REQUEST = 'initial-queue-request';
 export const INIT_LIST = 'initial_list';
 export const JOIN = 'join';
+export const SDK_SESSION = 'sdk-session';
+export const IC_SESSION = 'ic-session';
+
+export const SDK_MEMBERS_UPDATE = 'members:update';
+export const SDK_MEETING_REMOVED = 'meeting:removed';
+
+export const VISIBILITY_CHANGE = 'visibilitychange';
+export const VISIBILITY_HIDDEN = 'hidden';

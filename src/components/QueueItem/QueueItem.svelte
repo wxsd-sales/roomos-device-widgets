@@ -103,7 +103,7 @@
 </div>
 
 <style>
-  @media screen and (min-width: 480px) {
+  @media screen and (min-width: 768px) {
     .meetingType {
       justify-content: flex-start !important;
     }
@@ -111,9 +111,28 @@
       text-align: right !important;
     }
     .item {
-      width: 65rem;
+      width: 45rem;
     }
   }
+
+  @media screen and (min-width: 1024px) {
+    .item {
+      width: 55rem;
+    }
+  }
+
+  @media screen and (min-width: 1216px) {
+    .item {
+      width: 68rem;
+    }
+  }
+
+  @media screen and (min-width: 1408px) {
+    .item {
+      width: 75rem;
+    }
+  }
+
   .close {
     display: flex;
     justify-content: flex-end;

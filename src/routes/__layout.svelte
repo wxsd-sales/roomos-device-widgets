@@ -22,7 +22,7 @@
     $page.url.pathname === base ||
     $page.url.pathname === '/' ||
     $page.url.pathname === '/index' ||
-    $page.url.pathname.includes('queue') ||
+    $page.url.pathname.includes('sessions') ||
     !isError
   );
 

@@ -1,19 +1,27 @@
 import { SOAP_BOX_URL } from '$lib/constants';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
-import { MESSAGE, MEMBERS_UPDATE, APPEND, REMOVE, HSET, CONNECT, INITIAL_QUEUE_REQUEST, INIT_LIST } from './constants';
+import { MEMBERS_UPDATE, APPEND, REMOVE, HSET, CONNECT, INIT_LIST } from '../constants';
+
+interface SOCKET_PAYLOAD_DATA {
+  event: string;
+  status ?: string;
+  sessionStatus ?: string;
+  meetingType ?: string;
+  payload: any;
+  gradNurseID?: string;
+  link?: string;
+  guestToken?: string;
+}
 
 interface SOCKET_PAYLOAD {
+  set?: string;
   id: string;
   key: string;
-  data: {
-    event: string;
-    status?: string;
-    sessionStatus?: string;
-    meetingType?: string;
-    payload: any;
-  };
+  index: number,
+  data: SOCKET_PAYLOAD_DATA;
   command: string;
+  room: string;
 }
 
 export class SocketIO {
