@@ -18,5 +18,5 @@ export const GET = async (requestEvent: RequestEvent) => {
     return { status: 200, body: { demos } };
   }
 
-  return { status: 422 };
+  return { status: 302, redirect: '/auth' };
 };
