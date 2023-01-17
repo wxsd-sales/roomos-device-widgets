@@ -18,13 +18,7 @@
   export let email = undefined;
   export let isError = false;
 
-  let isNavVisible = !(
-    $page.url.pathname === base ||
-    $page.url.pathname === '/' ||
-    $page.url.pathname === '/index' ||
-    $page.url.pathname.includes('sessions') ||
-    !isError
-  );
+  let isNavVisible = !($page.url.pathname === base || $page.url.pathname.includes('sessions') || !isError);
 
   let form: HTMLFormElement;
 
