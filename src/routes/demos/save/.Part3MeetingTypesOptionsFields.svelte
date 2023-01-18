@@ -28,7 +28,7 @@
     <p>Provide a list of Meeting type options for a requester to choose from.</p>
   </div>
   <!-- A -->
-  <div class="column is-one-third">
+  <div class="column is-one-half">
     <label class="checkbox">
       <input
         type="checkbox"
@@ -50,7 +50,7 @@
       </p>
     </div>
   </div>
-  <div class="column is-one-third">
+  <div class="column is-one-half">
     <label class="checkbox">
       <input
         type="checkbox"
@@ -69,7 +69,7 @@
       </p>
     </div>
   </div>
-  <div class="column is-one-third">
+  <!-- <div class="column is-one-third">
     <label class="checkbox">
       <input
         type="checkbox"
@@ -91,7 +91,7 @@
         >
       </p>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <Modal isActive={showSIPWarningModal}>

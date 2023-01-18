@@ -82,15 +82,15 @@
       if (showAuthWarningModal) showSIPWarningModal = false;
     }}
   />
-  <hr />
-  <AuthenticationRequirement
+  <!-- <hr />
+   <AuthenticationRequirement
     {responderAuthIsRequired}
     {showAuthWarningModal}
     on:showSIPWarningModal={(event) => {
       showSIPWarningModal = event.detail.authCheckBox;
       if (showSIPWarningModal) showAuthWarningModal = false;
     }}
-  />
+  /> -->
   <hr />
   <WeatherFields {units} {cityId} />
   <hr />
