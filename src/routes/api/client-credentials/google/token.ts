@@ -105,7 +105,7 @@ export const POST = async (requestEvent: RequestEvent) => {
   const formJwt = (subject: string, pkcs8: string, issuer: string, expiry = '1h') => {
     const alg = 'RS256';
     const scope = env.GOOGLE_CLIENT_CREDENTIALS_SCOPE;
-    const audience = env.GOOGLE_OAUTH_URL + '/' + env.GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT;
+    const audience = env.GOOGLE_OAUTH_URL + '/' + env.GOOGLE_OAUTH_TOKEN_ENDPOINT;
 
     return jose
       .importPKCS8(pkcs8, alg)
@@ -130,7 +130,7 @@ export const POST = async (requestEvent: RequestEvent) => {
     .then(([r1, r2]) => formJwt(r1, r2.googlePrivateKey as string, r2.googleClientEmail as string))
     .then((r) =>
       urlEncodedRequest(env.GOOGLE_OAUTH_URL).post(
-        env.GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT,
+        env.GOOGLE_OAUTH_TOKEN_ENDPOINT,
         undefined,
         humps.decamelizeKeys({ grantType: env.GOOGLE_CLIENT_CREDENTIALS_TYPE, assertion: r }) as JSONObject
       )

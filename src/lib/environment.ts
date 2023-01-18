@@ -32,7 +32,7 @@ export class Environment {
   public readonly GOOGLE_OAUTH_URL: string;
 
   @IsNotEmpty()
-  public readonly GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT: string;
+  public readonly GOOGLE_OAUTH_TOKEN_ENDPOINT: string;
 
   @IsNotEmpty()
   public readonly GOOGLE_CLIENT_CREDENTIALS_SCOPE: string;
@@ -130,7 +130,7 @@ export class Environment {
     this.APP_PREVIEW_PASSWORD = process.env.APP_PREVIEW_PASSWORD as string;
     this.GOOGLE_API_URL = process.env.GOOGLE_API_URL as string;
     this.GOOGLE_OAUTH_URL = process.env.GOOGLE_OAUTH_URL as string;
-    this.GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT = process.env.GOOGLE_CLIENT_CREDENTIALS_TOKEN_ENDPOINT as string;
+    this.GOOGLE_OAUTH_TOKEN_ENDPOINT = process.env.GOOGLE_OAUTH_TOKEN_ENDPOINT as string;
     this.GOOGLE_CLIENT_CREDENTIALS_SCOPE = process.env.GOOGLE_CLIENT_CREDENTIALS_SCOPE as string;
     this.GOOGLE_CLIENT_CREDENTIALS_TYPE = process.env.GOOGLE_CLIENT_CREDENTIALS_TYPE as string;
     this.GOOGLE_NEWS_RSS_URL = process.env.GOOGLE_NEWS_RSS_URL as string;
