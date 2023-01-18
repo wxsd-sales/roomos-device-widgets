@@ -4,7 +4,8 @@
   import DeviceId from '.Step2DeviceId.svelte';
   import DemoUuid from '.Step3DemoUuid.svelte';
   import GoogleIntegration from '.Step4GoogleIntegration.svelte';
-  import Complete from '.Step5Complete.svelte';
+  import MicrosoftIntegration from '.Step5MicrosoftIntegration.svelte';
+  import Complete from '.Step6Complete.svelte';
   import { onMount } from 'svelte';
 
   export let orgId = undefined;
@@ -25,6 +26,8 @@
   <DemoUuid />
   <hr />
   <GoogleIntegration />
+  <hr />
+  <MicrosoftIntegration />
   <hr />
   <Complete />
   <hr />

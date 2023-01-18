@@ -56,6 +56,21 @@ export class Environment {
   public readonly IMI_SMS_ENDPOINT: string;
 
   @IsUrl()
+  public readonly MICROSOFT_API_URL: string;
+
+  @IsUrl()
+  public readonly MICROSOFT_OAUTH_URL: string;
+
+  @IsNotEmpty()
+  public readonly MICROSOFT_OAUTH_TOKEN_ENDPOINT: string;
+
+  @IsNotEmpty()
+  public readonly MICROSOFT_CLIENT_CREDENTIALS_SCOPE: string;
+
+  @IsNotEmpty()
+  public readonly MICROSOFT_CLIENT_CREDENTIALS_TYPE: string;
+
+  @IsUrl()
   public readonly OPENWEATHERMAP_API_URL: string;
 
   @IsNotEmpty()
@@ -138,6 +153,11 @@ export class Environment {
     this.GUEST_DEMO_CREATE_ENDPOINT = process.env.GUEST_DEMO_CREATE_ENDPOINT as string;
     this.IMI_WEBHOOK_URL = process.env.IMI_WEBHOOK_URL as string;
     this.IMI_SMS_ENDPOINT = process.env.IMI_SMS_ENDPOINT as string;
+    this.MICROSOFT_API_URL = process.env.MICROSOFT_API_URL as string;
+    this.MICROSOFT_OAUTH_URL = process.env.MICROSOFT_OAUTH_URL as string;
+    this.MICROSOFT_OAUTH_TOKEN_ENDPOINT = process.env.MICROSOFT_OAUTH_TOKEN_ENDPOINT as string;
+    this.MICROSOFT_CLIENT_CREDENTIALS_SCOPE = process.env.MICROSOFT_CLIENT_CREDENTIALS_SCOPE as string;
+    this.MICROSOFT_CLIENT_CREDENTIALS_TYPE = process.env.MICROSOFT_CLIENT_CREDENTIALS_TYPE as string;
     this.OPENWEATHERMAP_API_URL = process.env.OPENWEATHERMAP_API_URL as string;
     this.OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY as string;
     this.WEBEX_API_URL = process.env.WEBEX_API_URL as string;

@@ -31,22 +31,48 @@ export const POST = async (requestEvent: RequestEvent) => {
     public readonly demoUuid!: string;
 
     @Expose()
-    @ValidateIf(({ obj }) => obj?.googlePrivateKey != null || obj?.googleClientCertificate != null)
+    @ValidateIf(({ obj }) => obj?.googlePrivateKey ?? obj?.googleClientCertificate)
     @IsNotEmpty()
     @Transform(({ obj }: { obj: FormData }) => obj.get('googleClientEmail') || undefined, { toClassOnly: true })
     public readonly googleClientEmail?: string;
 
     @Expose()
-    @ValidateIf(({ obj }) => obj?.googleClientEmail != null || obj?.googleClientCertificate != null)
+    @ValidateIf(({ obj }) => obj?.googleClientEmail ?? obj?.googleClientCertificate)
     @IsNotEmpty()
     @Transform(({ obj }: { obj: FormData }) => obj.get('googlePrivateKey') || undefined, { toClassOnly: true })
     public readonly googlePrivateKey?: string;
 
     @Expose()
-    @ValidateIf(({ obj }) => obj?.googleClientEmail != null || obj?.googlePrivateKey != null)
+    @ValidateIf(({ obj }) => obj?.googleClientEmail ?? obj?.googlePrivateKey)
     @IsNotEmpty()
     @Transform(({ obj }: { obj: FormData }) => obj.get('googleClientCertificate') || undefined, { toClassOnly: true })
     public readonly googleClientCertificate?: string;
+
+    @Expose()
+    @ValidateIf(({ obj }) => obj?.microsoftClientId ?? obj?.microsoftPrivateKey ?? obj?.microsoftClientCertificate)
+    @IsNotEmpty()
+    @Transform(({ obj }: { obj: FormData }) => obj.get('microsoftTenantId') || undefined, { toClassOnly: true })
+    public readonly microsoftTenantId?: string;
+
+    @Expose()
+    @ValidateIf(({ obj }) => obj?.microsoftTenantId ?? obj?.microsoftPrivateKey ?? obj?.microsoftClientCertificate)
+    @IsNotEmpty()
+    @Transform(({ obj }: { obj: FormData }) => obj.get('microsoftClientId') || undefined, { toClassOnly: true })
+    public readonly microsoftClientId?: string;
+
+    @Expose()
+    @ValidateIf(({ obj }) => obj?.microsoftTenantId ?? obj?.microsoftClientId ?? obj?.microsoftClientCertificate)
+    @IsNotEmpty()
+    @Transform(({ obj }: { obj: FormData }) => obj.get('microsoftPrivateKey') || undefined, { toClassOnly: true })
+    public readonly microsoftPrivateKey?: string;
+
+    @Expose()
+    @ValidateIf(({ obj }) => obj?.microsoftTenantId ?? obj?.microsoftClientId ?? obj?.microsoftPrivateKey)
+    @IsNotEmpty()
+    @Transform(({ obj }: { obj: FormData }) => obj.get('microsoftClientCertificate') || undefined, {
+      toClassOnly: true
+    })
+    public readonly microsoftClientCertificate?: string;
   }
 
   const formData = plainToInstance(RequestFormDataDTO, await requestEvent.request.formData(), classTransformOptions);
@@ -66,7 +92,11 @@ export const POST = async (requestEvent: RequestEvent) => {
       demo: demo,
       googleClientEmail: formData.googleClientEmail,
       googlePrivateKey: formData.googlePrivateKey,
-      googleClientCertificate: formData.googleClientCertificate
+      googleClientCertificate: formData.googleClientCertificate,
+      microsoftTenantId: formData.microsoftTenantId,
+      microsoftClientId: formData.microsoftClientId,
+      microsoftPrivateKey: formData.microsoftPrivateKey,
+      microsoftClientCertificate: formData.microsoftClientCertificate
     });
     await db.persistAndFlush(activation);
 

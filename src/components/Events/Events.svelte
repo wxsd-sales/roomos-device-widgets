@@ -54,10 +54,10 @@
         </Event>
       {/each}
       {#if event.length === 0}
-        <p class="subtitle">No upcoming Google Calendar events.</p>
+        <p class="subtitle">No upcoming calendar events.</p>
       {/if}
     {:catch error}
-      <p class="subtitle has-text-danger" title={error?.message}>Could not get Google Calendar events.</p>
+      <p class="subtitle has-text-danger" title={error?.message}>Could not get calendar events.</p>
     {/await}
   </div>
   <slot name="footer" />
