@@ -8,6 +8,7 @@ import { prerendering } from '$app/env';
 import humps from 'humps';
 import env from '$lib/environment';
 import * as cookie from 'cookie';
+import { getUserUUID } from '$lib/webex/common';
 
 export const GET = async (requestEvent: RequestEvent) => {
   if (requestEvent.locals.session?.user?.uuid) {
@@ -55,9 +56,9 @@ export const GET = async (requestEvent: RequestEvent) => {
         .then((s: Response) => s.json() as Promise<PersonResponse>)
         .then((s: PersonResponse) =>
           db != null
-            ? db.findOne(User, { webex_uuid: s.id }).then(async (t) => {
+            ? db.findOne(User, { uuid: getUserUUID(s.id) }).then(async (t) => {
                 const session = new Session({
-                  user: t ?? new User(s.id, s.emails[0]),
+                  user: t ?? new User(getUserUUID(s.id), s.emails[0]),
                   ipAddress: prerendering ? 'unknown' : requestEvent.clientAddress,
                   userAgent: requestEvent.request.headers.get('User-Agent') ?? undefined,
                   lastActivityAt: Date.now(),

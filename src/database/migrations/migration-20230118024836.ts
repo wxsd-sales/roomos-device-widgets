@@ -1,15 +1,14 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20230109184037 extends Migration {
+export class Migration20230118024836 extends Migration {
   async up(): Promise<void> {
     this.addSql(
       'create table `data` (`uuid` text not null, `created_at` datetime not null default current_timestamp, `updated_at` datetime not null default current_timestamp, `bits` blob not null, `name` text not null, `type` text not null, `last_modified` datetime not null, primary key (`uuid`));'
     );
 
     this.addSql(
-      'create table `user` (`uuid` text not null, `created_at` datetime not null default current_timestamp, `updated_at` datetime not null default current_timestamp, `webex_uuid` text null, `email` text not null, primary key (`uuid`));'
+      'create table `user` (`uuid` text not null, `created_at` datetime not null default current_timestamp, `updated_at` datetime not null default current_timestamp, `email` text not null, primary key (`uuid`));'
     );
-    this.addSql('create unique index `user_webex_uuid_unique` on `user` (`webex_uuid`);');
 
     this.addSql(
       'create table `session` (`uuid` text not null, `created_at` datetime not null default current_timestamp, `updated_at` datetime not null default current_timestamp, `user_uuid` text null, `ip_address` text not null, `payload` json null, `user_agent` text null, `is_expired` integer null, `last_activity_at` datetime not null, constraint `session_user_uuid_foreign` foreign key(`user_uuid`) references `user`(`uuid`) on delete no action on update cascade, primary key (`uuid`));'

@@ -95,7 +95,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 36,
           "mappedType": "text"
         },
         "created_at": {
@@ -120,15 +119,6 @@
           "default": "current_timestamp",
           "mappedType": "datetime"
         },
-        "webex_uuid": {
-          "name": "webex_uuid",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
         "email": {
           "name": "email",
           "type": "text",
@@ -141,13 +131,6 @@
       },
       "name": "user",
       "indexes": [
-        {
-          "columnNames": ["webex_uuid"],
-          "composite": false,
-          "keyName": "user_webex_uuid_unique",
-          "primary": false,
-          "unique": true
-        },
         {
           "keyName": "primary",
           "columnNames": ["uuid"],
@@ -200,7 +183,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 36,
           "mappedType": "text"
         },
         "ip_address": {
@@ -321,7 +303,6 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 36,
           "mappedType": "text"
         },
         "name": {
