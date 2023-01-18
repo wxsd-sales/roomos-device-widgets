@@ -1,7 +1,5 @@
 <script lang="ts">
   import { jsonRequest } from '$lib/shared/json-request';
-  import { derived, readable, writable } from 'svelte/store';
-  import { browser } from '$app/env';
   import type * as TYPES from '$lib/types';
 
   import Background from '$components/Background/Background.svelte';
@@ -32,7 +30,7 @@
   const getWeatherResponse = (id: number, units: string) =>
     httpApiRequest.get('weather', { id, units }).then((r) => r.json() as Promise<TYPES.WeatherResponse>);
 
-  const isDevice = browser ? (window.navigator.userAgent.includes('RoomOS') ? true : false) : false;
+  // const isDevice = browser ? (window.navigator.userAgent.includes('RoomOS') ? true : false) : false;
 </script>
 
 <svelte:head>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { MEETING_TYPE_OPTIONS } from '$lib/constants';
+  import { MEETING_TYPE_OPTIONS } from '$lib/enums';
 
   import Modal from '$components/Modal/Modal.svelte';
 

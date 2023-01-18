@@ -7,13 +7,6 @@ export const WEBEX_SDK_CONFIG = {
   logger: { level: 'silent' },
   meetings: { reconnection: { enabled: true } }
 };
-
-export enum MEETING_TYPE_OPTIONS {
-  BROWSER_SDK = 'SDK',
-  INSTANT_CONNECT = 'IC',
-  SIP_URI_DIALING = 'SIP'
-}
-
 export const AUDIO_OUTPUT = 'audiooutput';
 export const AUDIO_SOURCE = 'audioinput';
 export const VIDEO_SOURCE = 'videoinput';

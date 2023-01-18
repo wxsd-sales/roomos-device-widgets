@@ -2,13 +2,10 @@ import 'reflect-metadata';
 import type { RequestEvent } from '@sveltejs/kit';
 import { Expose, Transform, plainToInstance } from 'class-transformer';
 import {
-  IsEmail,
   IsIn,
   IsInt,
   IsNotEmpty,
-  IsUrl,
   IsUUID,
-  Matches,
   Max,
   MaxLength,
   Min,
@@ -21,7 +18,7 @@ import { jsonRequest } from '$lib/shared/json-request';
 import { classTransformOptions, classValidationOptions } from '../../.utils';
 import env from '$lib/environment';
 import { LoadStrategy } from '@mikro-orm/core';
-import { MEETING_TYPE_OPTIONS } from '$lib/constants';
+import { MEETING_TYPE_OPTIONS } from '$lib/enums';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 

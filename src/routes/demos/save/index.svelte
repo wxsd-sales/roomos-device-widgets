@@ -1,15 +1,15 @@
 <script lang="ts">
-  import DemoFields from '.Part0DemoFields.svelte';
-  import BackgroundFields from '.Part1BackgroundFields.svelte';
-  import BrandFields from '.Part2BrandFields.svelte';
-  import MeetingTypesOptionsFields from '.Part3MeetingTypesOptionsFields.svelte';
-  import AuthenticationRequirement from '.Part4AuthenticationRequirementFields.svelte';
-  import WeatherFields from '.Part5WeatherFields.svelte';
+  import DemoFields from './.Part0DemoFields.svelte';
+  import BackgroundFields from './.Part1BackgroundFields.svelte';
+  import BrandFields from './.Part2BrandFields.svelte';
+  import MeetingTypesOptionsFields from './.Part3MeetingTypesOptionsFields.svelte';
+  import AuthenticationRequirement from './.Part4AuthenticationRequirementFields.svelte';
+  import WeatherFields from './.Part5WeatherFields.svelte';
 
   import { page } from '$app/stores';
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount } from 'svelte';
   import { urlEncodedRequest } from '../../../lib/shared/urlencoded-request';
-  import { MEETING_TYPE_OPTIONS } from '$lib/constants';
+  import { MEETING_TYPE_OPTIONS } from '$lib/enums';
 
   export let form = undefined;
   export let name = undefined;
@@ -19,9 +19,8 @@
   export let logo = undefined;
   export let title = undefined;
   export let subtitle = undefined;
-  export let url = undefined;
   export let cityId = undefined;
-  export let meetingTypeOptions = undefined;
+  export let meetingTypeOptions: Array<MEETING_TYPE_OPTIONS>;
   export let isSDK = meetingTypeOptions ? meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.BROWSER_SDK) : false;
   export let isIC = meetingTypeOptions ? meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.INSTANT_CONNECT) : false;
   export let isSIP = meetingTypeOptions ? meetingTypeOptions.includes(MEETING_TYPE_OPTIONS.SIP_URI_DIALING) : false;
@@ -32,7 +31,6 @@
   let showSIPWarningModal = false;
 
   const id = $page.url.searchParams.get('id');
-  const dispatch = createEventDispatcher();
 
   let formElement: HTMLFormElement;
 

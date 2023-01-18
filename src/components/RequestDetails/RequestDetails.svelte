@@ -1,54 +1,54 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { readable } from 'svelte/store';
-  import moment from 'moment';
+  import { MEETING_TYPE_OPTIONS } from '$lib/enums';
+  import type { RequestInfo } from './types';
+  import { SESSION_STATUS } from './enums';
 
-  export let onClick = (data: unknown) => {};
-  export let data;
-  let start;
+  export let onClick: (requestInfo: RequestInfo) => void;
+  export let requestInfo: RequestInfo;
+
   let timer = 30 * 60;
 
   const mstime = readable(new Date().getTime(), (set) => {
-    let animationFrame;
+    let animationFrame: number;
+
     const next = () => {
       set(new Date().getTime());
       animationFrame = requestAnimationFrame(next);
     };
-    if (window.requestAnimationFrame) {
-      next();
-      return () => cancelAnimationFrame(animationFrame);
-    }
+    next();
+    return () => cancelAnimationFrame(animationFrame);
   });
-
-  const handleClick = () => {
-    onClick(data);
-  };
-
-  const close = () => {
-    onClick({ ...data, command: 'close' });
-  };
 
   mstime.subscribe(() => {
     if (minutes === 0 && seconds === 0) {
-      if (data.sessionStatus === ' inactive') {
-        onClick({ ...data, command: 'force-close' });
+      if (requestInfo.sessionStatus === SESSION_STATUS.INACTIVE) {
+        onClick({ ...requestInfo, command: 'force-close' });
       }
     }
   });
 
-  $: time = Math.floor(($mstime - data.timeStamp) / 1000);
+  const handleClick = () => {
+    onClick(requestInfo);
+  };
+
+  const close = () => {
+    onClick({ ...requestInfo, command: 'close' });
+  };
+
+  $: time = Math.floor(($mstime - requestInfo.timeStamp) / 1000);
   $: toWait = timer - time > 0 ? timer - time : 0;
   $: minutes = Math.floor(toWait / 60);
   $: seconds = toWait - minutes * 60;
 </script>
 
-<div class="box is-translucent-black pt-2 pb-5 item" class:flash={data.sessionStatus === 'active'}>
+<div class="box is-translucent-black pt-2 pb-5 item" class:flash={requestInfo.sessionStatus === SESSION_STATUS.ACTIVE}>
   <div class="close mb-2">
     <button
       class="button p-0 customButton"
       style="border: none; background-color: transparent; height: 2rem;"
       on:click={close}
-      disabled={data.sessionStatus === 'active'}
+      disabled={requestInfo.sessionStatus === SESSION_STATUS.ACTIVE}
     >
       <span class="icon has-text-danger">
         <i class="mdi mdi-24px mdi-close " />
@@ -61,12 +61,16 @@
         <div class="is-flex is-align-items-center ">
           <span
             class={`icon has-text-${
-              data?.sessionStatus === 'active' ? 'danger' : data?.status === 'active' ? 'success' : 'warning'
+              requestInfo?.sessionStatus === SESSION_STATUS.ACTIVE
+                ? 'danger'
+                : requestInfo?.status === SESSION_STATUS.ACTIVE
+                ? 'success'
+                : 'warning'
             }`}
           >
             <i class="mdi mdi-18px mdi-circle " />
           </span>
-          {#if data.sessionStatus === 'active'}
+          {#if requestInfo.sessionStatus === SESSION_STATUS.ACTIVE}
             <div class="subtitle has-text-weight-medium has-text-white ml-1">In Session</div>
           {:else}
             <div class="subtitle has-text-weight-medium has-text-white ml-1">Support Request</div>
@@ -74,7 +78,7 @@
         </div>
       </div>
       <div class="column has-text-white is-4 is-size-6 has-text-right">
-        {data?.timeStamp.format('LT')}
+        {requestInfo?.timeStamp.format('LT')}
       </div>
     </div>
     <div class="columns mb-5 mt-4">
@@ -84,14 +88,14 @@
       <div
         class="column is-flex is-align-items-flex-end is-justify-content-center meetingType has-text-weight-semibold"
       >
-        {data.meetingType === 'SDK'
+        {requestInfo.meetingType === MEETING_TYPE_OPTIONS.BROWSER_SDK
           ? 'Provided By: Webex Browser SDK'
-          : data.meetingType === 'IC'
+          : requestInfo.meetingType === MEETING_TYPE_OPTIONS.INSTANT_CONNECT
           ? 'Provided By: Webex Instant Connect'
           : 'Provided By: SIP URI Dialing Feature'}
       </div>
       <div class="column">
-        {#if data.sessionStatus === 'inactive'}
+        {#if requestInfo.sessionStatus === 'inactive'}
           <div>Your request will auto expire in: {minutes} mins {seconds}s</div>
         {/if}
         <div>

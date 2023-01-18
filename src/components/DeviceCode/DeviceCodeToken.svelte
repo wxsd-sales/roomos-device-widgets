@@ -5,7 +5,7 @@
   export let deviceCode: Promise<string>;
   export let expiresAt: Promise<number>;
   export let interval: Promise<number>;
-  export let getTokenResponse: (...args) => Promise<TokenResponse> = (...args) => Promise.reject(undefined);
+  export let getTokenResponse: (...args) => Promise<TokenResponse> = () => Promise.reject(undefined);
 
   const dispatch = createEventDispatcher();
   const intervalId = setInterval(() => (now = Date.now()), 1000);

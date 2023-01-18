@@ -8,7 +8,7 @@ interface SOCKET_PAYLOAD_DATA {
   status?: string;
   sessionStatus?: string;
   meetingType?: string;
-  payload: any;
+  payload: never;
   gradNurseID?: string;
   link?: string;
   guestToken?: string;
@@ -61,7 +61,7 @@ export class SocketIO {
     });
   }
 
-  emit(eventName: string, payload: any) {
+  emit(eventName: string, payload: SOCKET_PAYLOAD) {
     this.room.emit(eventName, payload);
   }
 }

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import type { MEETING_TYPE_OPTIONS } from '$lib/constants';
+import type { MEETING_TYPE_OPTIONS } from '$lib/enums';
 import { Entity, ManyToOne, Property, types } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { User } from './user';

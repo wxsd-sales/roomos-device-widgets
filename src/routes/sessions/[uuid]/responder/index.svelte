@@ -1,11 +1,9 @@
 <script lang="ts">
   import moment from 'moment';
   import { onMount } from 'svelte';
-  import { browser } from '$app/env';
-  import { INSTANT_CONNECT_TALK_URL, NODE_SERVER_URL_SIP_DEMO, MEETING_TYPE_OPTIONS } from '$lib/constants';
-  import QueueItem from '$components/QueueItem/QueueItem.svelte';
+  import { INSTANT_CONNECT_TALK_URL } from '$lib/constants';
+  import QueueItem from '$components/RequestDetails/RequestDetails.svelte';
   import { jsonRequest } from '$lib/shared/json-request';
-  import { tokenResponseStore } from '$lib/store';
 
   import type * as TYPES from '$lib/types';
   import {
@@ -26,6 +24,7 @@
   } from '../constants';
   import { SocketIO } from '../socket';
   import Modal from '$components/Modal/Modal.svelte';
+  import { MEETING_TYPE_OPTIONS } from '$lib/enums';
 
   export let socketID;
 
@@ -39,8 +38,7 @@
   let meetingURL = '';
   let showModal = false;
   let iframe;
-  let dummyToken;
-  let isOnDevice = browser ? (window.navigator.userAgent.includes('RoomOS') ? true : false) : false;
+  // let isOnDevice = browser ? (window.navigator.userAgent.includes('RoomOS') ? true : false) : false;
 
   const socketIO = new SocketIO(socketID);
   const httpApiRequest = jsonRequest('/api');
@@ -219,67 +217,6 @@
     });
   };
 
-  const createMeeting = async () => {
-    let start_date = new Date(new Date().getTime() + 90 * 1000); //90 seconds in the future
-    let end_date = new Date(start_date.getTime() + 1 * 60 * 60 * 1000); //1 hour after start_date
-    let body = {
-      title: 'Consultation Session',
-      start: start_date,
-      end: end_date,
-      allowAnyUserToBeCoHost: true,
-      allowAuthenticatedDevices: true,
-      enableAutomaticLock: false,
-      enableConnectAudioBeforeHost: true,
-      enabledAutoRecordMeeting: false,
-      enabledJoinBeforeHost: true,
-      sendEmail: false,
-      unlockedMeetingJoinSecurity: 'allowJoin'
-    };
-
-    const { data } = await axios.post('https://webexapis.com/v1/meetings', body, {
-      headers: {
-        'Authorization': `Bearer ${dummyToken.access_token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    return { sipAddress: data.sipAddress, pin: data.hostKey };
-  };
-
-  const startSIPSession = async () => {
-    try {
-      joinSession = true;
-      joinButtonIsLoading = false;
-      iframeIsLoading = true;
-
-      const {
-        data: { hostToken, sipAddress }
-      } = await axios({
-        method: 'post',
-        url: NODE_SERVER_URL_SIP_DEMO,
-        data: {
-          guid: selectedGradNurse.ID
-        }
-      });
-
-      await monitorMeeting(hostToken, sipAddress);
-      meetingURL = `sip:${sipAddress}`;
-
-      iframeIsLoading = false;
-
-      HCA_MAIN_SOCKET.emit('message', {
-        command: 'set',
-        set: 'SIP_ADDRESS',
-        data: {
-          gradNurseID: selectedGradNurse.ID,
-          link: meetingURL
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const startSession = async () => {
     joinButtonIsLoading = true;
     const { meetingType } = selectedGradNurse;
@@ -290,9 +227,6 @@
         break;
       case MEETING_TYPE_OPTIONS.BROWSER_SDK:
         await startGuestDemoSession();
-        break;
-      case MEETING_TYPE_OPTIONS.SIP_URI_DIALING:
-        await startSIPSession();
         break;
 
       default:
@@ -365,7 +299,7 @@
       {:else}
         <div class="is-flex is-flex-direction-column" style="height: 100%;">
           {#each queue as q}
-            <QueueItem onClick={handleClick} data={q} />
+            <QueueItem onClick={handleClick} requestInfo={q} />
           {/each}
         </div>
       {/if}

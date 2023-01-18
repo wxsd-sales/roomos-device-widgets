@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
+import type { RequestHandler } from '@sveltejs/kit';
 import type { JSONObject, JSONValue, ToJSON } from '@sveltejs/kit/types/private';
 import type { QRCodeRenderersOptions } from 'qrcode';
 import { urlEncodedRequest } from '$lib/shared/urlencoded-request';
@@ -12,12 +12,8 @@ import env from '$lib/environment';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 
-/**
- * @param {RequestEvent} requestEvent
- *
- * @returns {Promise<{ body: ResponseDTO; status: 200 } | { body: any; status: number } | { status: 500 }>}
- */
-export const POST: RequestHandler = async (requestEvent: RequestEvent) => {
+/** @returns {Promise<{ body: ResponseDTO; status: 200 } | { body: any; status: number } | { status: 500 }>} */
+export const POST: RequestHandler = async () => {
   class ResponseDTO implements ToJSON {
     @Expose()
     @Transform(({ obj, value }) => value ?? obj.device_code, { toClassOnly: true })

@@ -16,12 +16,11 @@
     IC_SESSION,
     JOIN,
     INIT_LIST,
-    CONNECT,
     LIST,
     SET
   } from '../constants';
 
-  import { MEETING_TYPE_OPTIONS } from '$lib/constants';
+  import { MEETING_TYPE_OPTIONS } from '$lib/enums';
 
   import { SocketIO } from '../socket';
 
@@ -42,7 +41,6 @@
   let tempID: string;
   let meetingType = 'SDK';
   let selectedNurse = {};
-  let isOnDevice = browser ? (window.navigator.userAgent.includes('RoomOS') ? true : false) : false;
   let isOnMobile = browser && window.screen.availWidth < 480;
 
   if (browser) {
@@ -131,7 +129,7 @@
     }
     if (payload.set === IC_SESSION && payload.id === SET && $requesterIDStore === payload.data.gradNurseID) {
       const {
-        data: { link, guestToken }
+        data: { link }
       } = payload;
       assistanceIsReady = true;
       meetingURL = link;
@@ -146,8 +144,8 @@
 
     if (payload.set === 'SIP_ADDRESS' && $requesterIDStore === payload.data.gradNurseID) {
       const {
-        data: { link, guestToken }
-      } = message;
+        data: { link }
+      } = payload;
       assistanceIsReady = true;
       meetingURL = link;
       isSip = true;

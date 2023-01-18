@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
 import type { JSONObject, JSONValue, ToJSON } from '@sveltejs/kit/types/private';
-import { Expose, instanceToPlain, plainToInstance, Transform, Type } from 'class-transformer';
-import { IsIn, IsInt, validateSync } from 'class-validator';
+import { Expose, instanceToPlain, plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
 import { jsonRequest } from '$lib/shared/json-request';
 import { classTransformOptions, classValidationOptions, onFailure } from '../../.utils';
 import env from '$lib/environment';

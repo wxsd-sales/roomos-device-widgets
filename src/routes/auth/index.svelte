@@ -2,11 +2,6 @@
   export const prerender = false;
 </script>
 
-<script lang="ts">
-  import { page } from '$app/stores';
-  import { browser } from '$app/env';
-</script>
-
 <section class="container p-4 is-align-items-center" id="login">
   <div class="columns is-multiline">
     <div class="column is-12 is-hidden">

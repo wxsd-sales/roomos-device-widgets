@@ -3,10 +3,8 @@
   import DeviceCodeQr from './DeviceCodeQr.svelte';
   import DeviceCodeText from './DeviceCodeText.svelte';
   import DeviceCodeToken from './DeviceCodeToken.svelte';
-  import Title from '../Title/Title.svelte';
   import { onMount } from 'svelte';
 
-  export let title = 'Sign-In with Your Device';
   export let isMinimal = true;
   export let getAuthorizeResponse: (...args) => Promise<AuthorizeResponse> = () => Promise.reject(undefined);
   export let getTokenResponse: (...args) => Promise<TokenResponse> = () => Promise.reject(undefined);
@@ -39,9 +37,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  .device-code-help-text {
-    min-height: 15rem;
-  }
-</style>
