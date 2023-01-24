@@ -392,7 +392,7 @@
   export const statusStore = readable<TYPES.Status>(undefined, (set) => {
     const interval = setInterval(
       async () => set(statusErrorCount < statusErrorCountThreshold ? await getStatus() : undefined),
-      10000
+      1000
     );
     return () => clearInterval(interval);
   });
