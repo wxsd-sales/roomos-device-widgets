@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="level-right">
-        <img class="image is-32x32" src={logo} alt="Google" />
+        <img class="image is-32x32" src={logo} alt="Microsoft" />
       </div>
     </div>
   </div>
