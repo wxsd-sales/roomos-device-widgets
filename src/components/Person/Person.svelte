@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PersonResponse } from './types/person-response';
+  import type { PersonResponse } from '$lib/types';
   import { webexHttpPeopleResource } from '$lib/webex/http-wrapper';
   import { browser } from '$app/env';
   import { onMount } from 'svelte';
@@ -12,6 +12,7 @@
   export let accessToken: string;
   export let size = 64;
   export let rtf = new Intl.RelativeTimeFormat('en', { style: 'narrow' });
+  export let personStore = writable<PersonResponse>(undefined);
 
   export const units = {
     year: 24 * 60 * 60 * 1000 * 365,
@@ -41,7 +42,6 @@
       : webexHttpPeopleResource(accessToken).getMyOwnDetails()
     ).then((r) => r.json() as Promise<PersonResponse>);
 
-  let personStore = writable<PersonResponse>(undefined);
   let personResponse = browser ? getPersonDetails(accessToken, id) : Promise.resolve(undefined);
 
   $: personResponse?.then((r) => id ?? (id = r.id));

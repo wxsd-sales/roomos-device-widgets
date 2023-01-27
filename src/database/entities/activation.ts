@@ -23,6 +23,18 @@ export class Activation extends BaseEntity {
   @Property({ type: types.string, nullable: true })
   googleClientCertificate?: string;
 
+  @Property({ type: types.string, nullable: true })
+  microsoftTenantId?: string;
+
+  @Property({ type: types.string, nullable: true })
+  microsoftClientId?: string;
+
+  @Property({ type: types.string, nullable: true })
+  microsoftPrivateKey?: string;
+
+  @Property({ type: types.string, nullable: true })
+  microsoftClientCertificate?: string;
+
   constructor(obj: {
     botToken: string;
     deviceId: string;
@@ -30,6 +42,10 @@ export class Activation extends BaseEntity {
     googleClientEmail?: string;
     googlePrivateKey?: string;
     googleClientCertificate?: string;
+    microsoftTenantId?: string;
+    microsoftClientId?: string;
+    microsoftPrivateKey?: string;
+    microsoftClientCertificate?: string;
   }) {
     super();
     this.botToken = obj.botToken;
@@ -38,5 +54,9 @@ export class Activation extends BaseEntity {
     this.googleClientEmail = obj.googleClientEmail;
     this.googlePrivateKey = obj.googlePrivateKey;
     this.googleClientCertificate = obj.googleClientCertificate;
+    this.microsoftTenantId = obj.microsoftTenantId;
+    this.microsoftClientId = obj.microsoftClientId;
+    this.microsoftPrivateKey = obj.microsoftPrivateKey;
+    this.microsoftClientCertificate = obj.microsoftClientCertificate;
   }
 }
