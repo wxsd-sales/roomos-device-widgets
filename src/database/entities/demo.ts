@@ -64,6 +64,9 @@ export class Demo extends BaseEntity {
   @Property({ type: types.integer })
   weatherCityId!: number;
 
+  @Property({ type: types.string, nullable: true })
+  iframeUrl?: string;
+
   constructor(obj: {
     user: User;
     name: string;
@@ -83,6 +86,7 @@ export class Demo extends BaseEntity {
     newsUrl?: string;
     weatherUnits: 'imperial' | 'metric' | 'standard';
     weatherCityId: number;
+    iframeUrl?: string;
   }) {
     super();
     this.user = obj.user;
@@ -103,5 +107,6 @@ export class Demo extends BaseEntity {
     this.newsUrl = obj.newsUrl;
     this.weatherUnits = obj.weatherUnits;
     this.weatherCityId = obj.weatherCityId;
+    this.iframeUrl = obj.iframeUrl;
   }
 }

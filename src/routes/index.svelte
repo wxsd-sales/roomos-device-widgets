@@ -23,6 +23,7 @@
   import Modal from '$components/Modal/Modal.svelte';
   import Events from '$components/Events/Events.svelte';
   import EventSend from '$components/Events/EventSend.svelte';
+  import Iframe from '$components/Iframe/Iframe.svelte';
 
   export let botToken = undefined;
   export let deviceId = undefined;
@@ -571,18 +572,25 @@
           >
             <GuestInvite {disconnect} {connect} {callsStore} />
           </div>
-          <div
-            id="bookings"
-            class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
-          >
-            <Bookings {getBookings} {disconnect} {connect} {callsStore} />
-          </div>
-          <div
-            id="room-analytics"
-            class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
-          >
-            <RoomAnalytics {roomAnalyticsStore} units={demo.weatherUnits} />
-          </div>
+
+          {#if demo?.iframeUrl == null}
+            <div
+              id="bookings"
+              class="tile is-child box is-translucent-black has-text-white 0is-flex-grow-0 is-flex-shrink-1"
+            >
+              <Bookings {getBookings} {disconnect} {connect} {callsStore} />
+            </div>
+            <div
+              id="room-analytics"
+              class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
+            >
+              <RoomAnalytics {roomAnalyticsStore} units={demo.weatherUnits} />
+            </div>
+          {:else}
+            <div id="iframe-url" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
+              <Iframe url={demo?.iframeUrl} />
+            </div>
+          {/if}
         </div>
         <!--rhs end-->
       </div>

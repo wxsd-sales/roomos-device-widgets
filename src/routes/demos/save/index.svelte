@@ -6,6 +6,7 @@
   import GuestInviteFields from '.Part4GuestInviteFields.svelte';
   import NewsFields from '.Part5NewsFields.svelte';
   import WeatherFields from '.Part6WeatherFields.svelte';
+  import IframeFields from '.Part7IframeFields.svelte';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
   import { urlEncodedRequest } from '../../../lib/shared/urlencoded-request';
@@ -28,6 +29,7 @@
   export let url = undefined;
   export let cityId = undefined;
   export let units = undefined;
+  export let iframeUrl = undefined;
 
   const id = $page.url.searchParams.get('id');
   let formElement: HTMLFormElement;
@@ -77,6 +79,8 @@
   <NewsFields {url} />
   <hr />
   <WeatherFields {units} {cityId} />
+  <hr />
+  <IframeFields {iframeUrl} />
   <hr />
 
   <div class="columns is-multiline">
