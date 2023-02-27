@@ -1,8 +1,11 @@
 <script lang="ts">
   import type { JSONObject, JSONValue } from '@sveltejs/kit/types/private';
-  import { botToken, botEmail, deviceId } from '.stores';
   import { webexHttp } from '$lib/webex/http-wrapper';
+  import * as store from './.stores';
 
+  export let botToken = store.botToken;
+  export let botEmail = store.botEmail;
+  export let deviceId = store.deviceId;
   export let compatibleDevices: JSONValue = [];
 
   let isLoading = false;
@@ -19,8 +22,8 @@
       .then((r) => r.json())
       .then((r) => r.items as JSONObject[])
       .then((r) => r.filter(isCompatibleDevice))
-      .then((r) => (compatibleDevices = r) && deviceId.set(undefined))
-      .catch((e) => (compatibleDevices = { error: e.status }) && deviceId.set(undefined))
+      .then((r) => (compatibleDevices = r))
+      .catch((e) => (compatibleDevices = { error: e.status }))
       .finally(() => (isLoading = false));
   };
 

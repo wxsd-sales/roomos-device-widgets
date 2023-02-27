@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { JSONObject } from '@sveltejs/kit/types/private';
-  import { botEmail, botToken } from '.stores';
   import { VALID_ACCESS_TOKEN } from '$lib/constants';
   import { webexHttpPeopleResource } from '$lib/webex/http-wrapper';
+  import * as store from './.stores';
 
+  export let botToken = store.botToken;
+  export let botEmail = store.botEmail;
   export let orgId = undefined;
   export let bot: JSONObject = {};
 
