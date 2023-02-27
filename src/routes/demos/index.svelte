@@ -84,10 +84,17 @@
         </div>
       </div>
     </div>
-    {#each demo?.activations as activation}
-      <div class="columns is-vcentered">
+
+    <div class="columns is-vcentered is-multiline my-0">
+      <div class="column is-12">
+        <p class="title is-size-5 has-text-weight-bold">Activations ({demo?.activations?.length})</p>
+        {#if demo?.activations?.length === 0}
+          <p class="subtitle is-size-6 has-text-weight-bold">No activations for this demo.</p>
+        {/if}
+      </div>
+      {#each demo?.activations as activation}
         <div class="column is-6">
-          <p class="title is-size-5 has-text-weight-bold">{activation.uuid}</p>
+          <p class="subtitle is-size-6 has-text-weight-bold">{activation.uuid}</p>
         </div>
         <div class="column is-2">
           <button
@@ -119,7 +126,7 @@
             <span>Delete</span>
           </button>
         </form>
-      </div>
-    {/each}
+      {/each}
+    </div>
   {/each}
 </div>
