@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { WXSD_MAILTO } from '$lib/constants';
+
   export let tenantId;
   export let clientId;
   export let privateKey;
@@ -29,7 +31,9 @@
   <div class="column is-full content mb-0">
     <p>
       This is an advanced use case which requires setup of a Microsoft Azure App Registration with Certificates to
-      access the user’s Office 365 calendar. Consult the WXSD team for help/instructions if you want to try this.
+      access the user’s Office 365 calendar. Consult the
+      <a href={encodeURI(WXSD_MAILTO + ' (Microsoft Integration)')}>WXSD team</a>
+      for help/instructions if you want to try this.
     </p>
     <p>
       Once setup, PWA/Kiosk users will be able to join and schedule (create, read, update, delete) personal Microsoft

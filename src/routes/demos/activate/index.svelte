@@ -13,17 +13,17 @@
   export let demoUuid = undefined;
   export let botToken = undefined;
   export let deviceId = undefined;
-  export let google = undefined;
-  export let microsoft = undefined;
+  export let google = {};
+  export let microsoft = {};
   export let orgId = undefined;
   export let form = undefined;
 
   const id = $page.url.searchParams.get('id');
   let formElement: HTMLFormElement;
 
-  $: botToken != null && store.botToken.set(botToken);
-  $: demoUuid != null && store.demoUuid.set(demoUuid);
-  $: deviceId != null && store.deviceId.set(deviceId);
+  $: store.botToken.set(botToken);
+  $: store.demoUuid.set(demoUuid);
+  $: store.deviceId.set(deviceId);
 
   onMount(() => form && scrollTo(null, formElement.scrollHeight));
 </script>

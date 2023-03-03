@@ -49,3 +49,5 @@ export const VALID_DESTINATION = new RegExp(
   `(${VALID_MEETING_LINK.source})|(${VALID_PMR_LINK.source})|(${VALID_PMR_ADDRESS.source})|(${VALID_SIP.source})|(${VALID_EMAIL.source})`,
   'i'
 );
+
+export const WXSD_MAILTO = 'mailto:wxsd@external.cisco.com?subject=RoomOS Device Widgets';

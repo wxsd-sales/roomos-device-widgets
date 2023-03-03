@@ -83,7 +83,7 @@
       </div>
     </div>
     <div class="help">
-      <p>To identify a demo, take note of its ID or name</p>
+      <p>To identify a demo, take note of it's ID or name</p>
     </div>
   </div>
   <div class="column is-full">

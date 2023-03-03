@@ -7,7 +7,7 @@ export const DELETE = async (requestEvent: RequestEvent) => {
   const db = requestEvent.locals.db;
   const session = requestEvent.locals.session;
 
-  if (db && session && session.user && session.user.uuid) {
+  if (db && session?.user?.uuid) {
     await db
       .findOne(Activation, activationId, { fields: ['demo.user.uuid'], strategy: LoadStrategy.JOINED })
       .then((r) => (r && r.demo.user.uuid === session.user?.uuid ? db.removeAndFlush(r) : null));
