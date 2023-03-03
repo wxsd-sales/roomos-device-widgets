@@ -1,13 +1,17 @@
 import 'reflect-metadata';
-import { Entity, ManyToOne, Property, types } from '@mikro-orm/core';
+import { Collection, Entity, ManyToOne, OneToMany, Property, types } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { User } from './user';
 import { Data } from './data';
+import { Activation } from './activation';
 
 @Entity()
 export class Demo extends BaseEntity {
   @ManyToOne({ entity: () => User, onDelete: 'cascade' })
   user!: User;
+
+  @OneToMany({ entity: () => Activation, mappedBy: 'demo', orphanRemoval: true })
+  activations = new Collection<Activation>(this);
 
   @Property({ type: types.string })
   name!: string;

@@ -6,17 +6,35 @@
   import GoogleIntegration from '.Step4GoogleIntegration.svelte';
   import MicrosoftIntegration from '.Step5MicrosoftIntegration.svelte';
   import Complete from '.Step6Complete.svelte';
+  import * as store from './.stores';
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
 
+  export let demoUuid = undefined;
+  export let botToken = undefined;
+  export let deviceId = undefined;
+  export let google = undefined;
+  export let microsoft = undefined;
   export let orgId = undefined;
   export let form = undefined;
 
+  const id = $page.url.searchParams.get('id');
   let formElement: HTMLFormElement;
+
+  $: botToken != null && store.botToken.set(botToken);
+  $: demoUuid != null && store.demoUuid.set(demoUuid);
+  $: deviceId != null && store.deviceId.set(deviceId);
 
   onMount(() => form && scrollTo(null, formElement.scrollHeight));
 </script>
 
-<form id="demo-activate" class="container px-4 mb-6" action="./activate" method="post" bind:this={formElement}>
+<form
+  id="demo-activate"
+  class="container px-4 mb-6"
+  action={'./activate' + (id == null ? '' : '?_method=PATCH')}
+  method="post"
+  bind:this={formElement}
+>
   <Prerequisites />
   <hr />
   <BotToken {orgId} />
@@ -25,13 +43,18 @@
   <hr />
   <DemoUuid />
   <hr />
-  <GoogleIntegration />
+  <GoogleIntegration {...google} />
   <hr />
-  <MicrosoftIntegration />
+  <MicrosoftIntegration {...microsoft} />
   <hr />
   <Complete />
   <hr />
   <div class="columns is-multiline">
+    {#if id != null}
+      <div class="column is-12 is-hidden">
+        <input class="input" name="id" value={id} readonly />
+      </div>
+    {/if}
     <div class="column is-12">
       <button class="button is-medium is-rounded is-success is-fullwidth" type="submit">
         <span>Next</span>

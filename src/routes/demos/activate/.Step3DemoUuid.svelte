@@ -1,9 +1,13 @@
 <script lang="ts">
   import type { JSONObject, JSONValue } from '@sveltejs/kit/types/private';
-  import { deviceId, demoUuid, botToken, botEmail } from '.stores';
   import { jsonRequest } from '$lib/shared/json-request';
   import { VALID_UUID } from '$lib/constants';
+  import * as store from './.stores';
 
+  export let botToken = store.botToken;
+  export let botEmail = store.botEmail;
+  export let deviceId = store.deviceId;
+  export let demoUuid = store.demoUuid;
   export let demos: JSONValue = [];
 
   let isLoading = false;
@@ -16,8 +20,8 @@
       .get()
       .then((r) => r.json())
       .then((r) => r.demos as JSONObject[])
-      .then((r) => (demos = r) && demoUuid.set(undefined))
-      .catch((e) => (demos = { error: e.status }) && demoUuid.set(undefined))
+      .then((r) => (demos = r))
+      .catch((e) => (demos = { error: e.status }))
       .finally(() => (isLoading = false));
   };
 
@@ -79,7 +83,7 @@
       </div>
     </div>
     <div class="help">
-      <p>To identify a demo, take not of its ID or name</p>
+      <p>To identify a demo, take note of its ID or name</p>
     </div>
   </div>
   <div class="column is-full">

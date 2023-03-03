@@ -9,7 +9,7 @@ export const GET = async (requestEvent: RequestEvent) => {
   if (db && session?.uuid && session?.user?.uuid) {
     const demos = await db
       .findOne(User, session.user.uuid, {
-        fields: ['demos.uuid', 'demos.name', 'demos.createdAt', 'demos.updatedAt'],
+        fields: ['demos.uuid', 'demos.name', 'demos.createdAt', 'demos.updatedAt', 'demos.activations'],
         strategy: LoadStrategy.JOINED
       })
       .then((r) => r?.demos.toJSON())

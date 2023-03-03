@@ -17,7 +17,7 @@
     <div class="level is-mobile">
       <div class="level-left">
         <div>
-          <h2 class="subtitle">Step #4 <span class="has-text-info">(optional)</span></h2>
+          <h2 class="subtitle">Step #5 <span class="has-text-info">(optional)</span></h2>
           <h2 class="title">Microsoft Integration</h2>
         </div>
       </div>
