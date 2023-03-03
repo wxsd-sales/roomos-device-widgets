@@ -4,7 +4,7 @@
 
 <div class="columns is-multiline">
   <div class="column is-full">
-    <h2 class="title">Frame Element <span class="has-text-info">(optional)</span></h2>
+    <h2 class="title">Frame Element</h2>
   </div>
   <div class="column is-full content mb-0">
     <p>
