@@ -14,6 +14,8 @@
   export let rtf = new Intl.RelativeTimeFormat('en', { style: 'narrow' });
   export let personStore = writable<PersonResponse>(undefined);
 
+  let visible = false;
+
   export const units = {
     year: 24 * 60 * 60 * 1000 * 365,
     month: (24 * 60 * 60 * 1000 * 365) / 12,
@@ -68,10 +70,14 @@
     </div>
     <div class="column name-column">
       <h2 class="has-text-weight-bold">
-        <span class="is-size-5 person-nickname">{$personStore?.nickName},</span>
-        <span class="has-text-grey-light is-size-6 person-email">
-          {$personStore?.emails[0].replace(/@.*$/, '')}
-        </span>
+        {#if visible || accessToken != null}
+          <span class="is-size-5 person-nickname" on:click={() => (visible = !visible)}>{$personStore?.nickName},</span>
+          <span class="has-text-grey-light is-size-6 person-email" on:click={() => (visible = !visible)}>
+            {$personStore?.emails[0].replace(/@.*$/, '')}
+          </span>
+        {:else}
+          <span class="is-size-5 person-nickname" on:click={() => (visible = !visible)}>{$personStore?.nickName}</span>
+        {/if}
       </h2>
       <h3 class="is-size-6 has-text-grey-light has-text-weight-normal person-last-activity">
         {$personStore?.lastActivity ? 'last activity ~' + getRelativeTime(new Date($personStore?.lastActivity)) : ''}
