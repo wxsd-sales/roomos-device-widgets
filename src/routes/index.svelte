@@ -24,6 +24,7 @@
   import Events from '$components/Events/Events.svelte';
   import EventSend from '$components/Events/EventSend.svelte';
   import Iframe from '$components/Iframe/Iframe.svelte';
+  import { TOKEN_PLACEHOLDER } from '$lib/constants';
 
   export let botToken = undefined;
   export let deviceId = undefined;
@@ -75,10 +76,12 @@
     httpApiRequest.get('weather', { id, units }).then((r) => r.json() as Promise<TYPES.WeatherResponse>);
 
   export const getStatus = () =>
-    devicesHttpApiRequest
-      .get('status')
-      .then((r) => !(statusErrorCount = 0) && (r.json() as Promise<TYPES.Status>))
-      .catch((e) => (statusErrorCount = statusErrorCount + 1) && Promise.reject(e));
+    botToken === TOKEN_PLACEHOLDER
+      ? Promise.resolve({})
+      : devicesHttpApiRequest
+          .get('status')
+          .then((r) => !(statusErrorCount = 0) && (r.json() as Promise<TYPES.Status>))
+          .catch((e) => (statusErrorCount = statusErrorCount + 1) && Promise.reject(e));
 
   export const disconnect = (id: number) => devicesHttpApiRequest.post('call-disconnect', undefined, { callId: id });
 
@@ -88,10 +91,12 @@
       : devicesHttpApiRequest.post('dial', undefined, { bookingId: id, number: destination });
 
   export const getBookings = () =>
-    devicesHttpApiRequest
-      .get('bookings')
-      .then((r) => r.json())
-      .then((r) => [...r, ...defaultBookings]);
+    botToken === TOKEN_PLACEHOLDER
+      ? Promise.resolve(defaultBookings)
+      : devicesHttpApiRequest
+          .get('bookings')
+          .then((r) => r.json())
+          .then((r) => [...r, ...defaultBookings]);
 
   export const getFavouriteSpaces = (id, accessToken) => {
     const webex: Promise<unknown> = webexSdk(accessToken).initialize();
@@ -474,7 +479,13 @@
             {:else if authWidget === 'googleCalendar' || authWidget === 'microsoftCalendar'}
               <Authorized {tokenResponseStore} {personStore}>
                 {#key date}
-                  <Events listEvents={() => listEvents(start, end)} {deleteEvent} {disconnect} {connect} {callsStore}>
+                  <Events
+                    listEvents={() => listEvents(start, end)}
+                    {deleteEvent}
+                    disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                    connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
+                    {callsStore}
+                  >
                     <div class="column is-12 is-flex-align-items-flex-end mt-auto events-footer" slot="footer">
                       <div class="columns">
                         <div class="column is-7">
@@ -532,8 +543,8 @@
                   id={$tokenResponseStore.id}
                   accessToken={$tokenResponseStore.accessToken}
                   {getFavouriteSpaces}
-                  {disconnect}
-                  {connect}
+                  disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                  connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
                   {callsStore}
                 />
               </Authorized>
@@ -552,8 +563,8 @@
                   id={$tokenResponseStore.id}
                   accessToken={$tokenResponseStore.accessToken}
                   edit={isUserListEditable}
-                  {disconnect}
-                  {connect}
+                  disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                  connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
                   {callsStore}
                 />
               </Authorized>
@@ -570,7 +581,11 @@
             id="guest-invite"
             class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
           >
-            <GuestInvite {disconnect} {connect} {callsStore} />
+            <GuestInvite
+              disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+              connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
+              {callsStore}
+            />
           </div>
 
           {#if demo?.iframeUrl == null}
@@ -578,7 +593,12 @@
               id="bookings"
               class="tile is-child box is-translucent-black has-text-white 0is-flex-grow-0 is-flex-shrink-1"
             >
-              <Bookings {getBookings} {disconnect} {connect} {callsStore} />
+              <Bookings
+                {getBookings}
+                disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
+                {callsStore}
+              />
             </div>
             <div
               id="room-analytics"
