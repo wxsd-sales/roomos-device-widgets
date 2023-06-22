@@ -582,6 +582,7 @@
             class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
           >
             <GuestInvite
+              destination={demo.guestInviteDestination}
               disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
               connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
               {callsStore}
