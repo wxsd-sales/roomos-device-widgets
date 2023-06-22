@@ -4,10 +4,12 @@
   import { jsonRequest } from '$lib/shared/json-request';
   import Title from '../Title/Title.svelte';
 
+  export let destination = undefined;
   export let httpApiRequest = jsonRequest('/api');
   export let title = 'Text Video Chat Link to a Guest';
   export let countryCode: '1' | '353' | '61' | '44' = '1';
 
+  let destinationValue = destination;
   const dispatch = createEventDispatcher();
   const numberInput = { mask: `+{${countryCode}} (000) 000-0000`, lazy: true };
   const numberRegex = new RegExp(`\\+${countryCode} \\(\\d{3}\\) \\d{3}-\\d{4}`);
@@ -38,7 +40,7 @@
 {/if}
 
 <form bind:this={formElement} on:submit|preventDefault={handleSubmit}>
-  <div class="columns is-vcentered">
+  <div class="columns is-vcentered" class:is-hidden={destination != null}>
     <div class="column">
       <div class="control has-icons-left">
         <input
@@ -46,6 +48,8 @@
           placeholder="SIP Destination"
           type="email"
           name="sip-target"
+          bind:value={destinationValue}
+          readonly={destination != null}
           required
         />
         <span class="icon is-left">
@@ -54,8 +58,8 @@
       </div>
     </div>
   </div>
-  <div class="columns is-mobile is-vcentered">
-    <div class="column">
+  <div class="columns is-mobile is-vcentered" class:is-multiline={destination != null}>
+    <div class="column" class:is-12={destination != null}>
       <div class="control has-icons-left">
         <input
           class="input is-rounded is-medium"
@@ -71,7 +75,7 @@
         </span>
       </div>
     </div>
-    <div class="column is-5">
+    <div class="column {destination != null ? 'is-12' : 'is-5'}">
       <button class="button is-primary is-rounded is-medium is-fullwidth" type="submit" class:is-loading={isLoading}>
         <span class="icon">
           <i class="mdi mdi-message-text-fast" />
