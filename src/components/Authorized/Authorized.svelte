@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { TokenResponse } from './types/token-response';
+  import type { PersonResponse } from '$lib/types';
   import { writable } from 'svelte/store';
   import Person from '../Person/Person.svelte';
 
   export let tokenResponseStore = writable<TokenResponse>(undefined);
+  export let personStore = writable<PersonResponse>(undefined);
 
   let isActive = false;
 </script>
@@ -13,7 +15,7 @@
     <div class="navbar-item dropdown is-hoverable avatar-navbar-brand-item">
       <div class="dropdown-trigger title mb-0">
         {#if $tokenResponseStore?.accessToken}
-          <Person accessToken={$tokenResponseStore.accessToken} bind:id={$tokenResponseStore.id} />
+          <Person accessToken={$tokenResponseStore.accessToken} bind:id={$tokenResponseStore.id} {personStore} />
         {/if}
       </div>
       <div class="dropdown-menu" role="menu">
@@ -41,7 +43,7 @@
           <slot name="navbar-button" />
           <button
             class="button is-rounded is-danger is-medium is-flex-grow-1 has-text-weight-bold"
-            on:click={() => tokenResponseStore.set(undefined)}
+            on:click={() => tokenResponseStore.set(undefined) || personStore.set(undefined)}
           >
             <span class="icon">
               <i class="mdi mdi-logout" />

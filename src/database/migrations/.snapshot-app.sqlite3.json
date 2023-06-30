@@ -694,6 +694,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "integer"
+        },
+        "iframe_url": {
+          "name": "iframe_url",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
         }
       },
       "name": "demo",
@@ -840,6 +849,42 @@
         },
         "google_client_certificate": {
           "name": "google_client_certificate",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "microsoft_tenant_id": {
+          "name": "microsoft_tenant_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "microsoft_client_id": {
+          "name": "microsoft_client_id",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "microsoft_private_key": {
+          "name": "microsoft_private_key",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
+        "microsoft_client_certificate": {
+          "name": "microsoft_client_certificate",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,

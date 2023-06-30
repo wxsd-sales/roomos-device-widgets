@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { WXSD_MAILTO } from '$lib/constants';
+
   export let clientEmail;
   export let privateKey;
   export let clientCertificate;
@@ -27,8 +29,9 @@
   <div class="column is-full content mb-0">
     <p>
       This is an advanced use case which requires setup of a Google Cloud Service Account with "Domain-wide delegation
-      of authority" to access the user’s Workspace calendar. Consult the WXSD team for help/instructions if you want to
-      try this.
+      of authority" to access the user’s Workspace calendar. Consult the
+      <a href={encodeURI(WXSD_MAILTO + ' (Google Integration)')}>WXSD team</a>
+      for help/instructions if you want to try this.
     </p>
     <p>
       Once setup, PWA/Kiosk users will be able to join and schedule (create, read, update, delete) personal Google

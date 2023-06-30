@@ -41,20 +41,39 @@
   }
 </script>
 
-<button
-  class="button is-rounded is-medium is-fullwidth {$callsStore[0]?.bookingId !== id ? 'is-success' : 'is-danger'}"
-  disabled={$callsStore.length > 0 && $callsStore[0]?.bookingId !== id}
-  type="button"
-  data-id={id}
-  data-destination={destination}
-  class:is-loading={isLoading}
-  on:click={() => handleClick($callsStore.length > 0 ? $callsStore[0]?.id : id, destination, getPlatformType(platform))}
->
-  {#if protocol === 'WebRTC' && $callsStore[0]?.bookingId !== id && isLoading === false}
-    <img class="image is-32x32" src={getPlatformIcon(platform)} alt={platform} />
-  {:else}
-    <span class="icon">
-      <i class="mdi mdi-36px {$callsStore[0]?.bookingId !== id ? 'mdi-phone' : 'mdi-phone-hangup'}" />
-    </span>
-  {/if}
-</button>
+{#if connect == null || disconnect == null}
+  <a
+    class="button is-rounded is-medium is-fullwidth is-success"
+    type="button"
+    data-id={id}
+    href="sip:{destination}"
+    target="_blank"
+  >
+    {#if protocol === 'WebRTC' && $callsStore[0]?.bookingId !== id && isLoading === false}
+      <img class="image is-32x32" src={getPlatformIcon(platform)} alt={platform} />
+    {:else}
+      <span class="icon">
+        <i class="mdi mdi-36px {$callsStore[0]?.bookingId !== id ? 'mdi-phone' : 'mdi-phone-hangup'}" />
+      </span>
+    {/if}
+  </a>
+{:else}
+  <button
+    class="button is-rounded is-medium is-fullwidth {$callsStore[0]?.bookingId !== id ? 'is-success' : 'is-danger'}"
+    disabled={$callsStore.length > 0 && $callsStore[0]?.bookingId !== id}
+    type="button"
+    data-id={id}
+    data-destination={destination}
+    class:is-loading={isLoading}
+    on:click={() =>
+      handleClick($callsStore.length > 0 ? $callsStore[0]?.id : id, destination, getPlatformType(platform))}
+  >
+    {#if protocol === 'WebRTC' && $callsStore[0]?.bookingId !== id && isLoading === false}
+      <img class="image is-32x32" src={getPlatformIcon(platform)} alt={platform} />
+    {:else}
+      <span class="icon">
+        <i class="mdi mdi-36px {$callsStore[0]?.bookingId !== id ? 'mdi-phone' : 'mdi-phone-hangup'}" />
+      </span>
+    {/if}
+  </button>
+{/if}

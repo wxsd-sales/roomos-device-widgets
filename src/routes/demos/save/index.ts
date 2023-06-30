@@ -59,7 +59,8 @@ export const GET = async (requestEvent: RequestEvent) => {
               'guestInviteDestination',
               'newsUrl',
               'weatherUnits',
-              'weatherCityId'
+              'weatherCityId',
+              'iframeUrl'
             ],
             strategy: LoadStrategy.JOINED
           }
@@ -93,7 +94,8 @@ export const GET = async (requestEvent: RequestEvent) => {
             destination: r.guestInviteDestination,
             url: r.newsUrl,
             cityId: r.weatherCityId,
-            units: r.weatherUnits
+            units: r.weatherUnits,
+            iframeUrl: r.iframeUrl
           }
         }))
         .catch(() => ({
@@ -210,6 +212,13 @@ export const POST = async (requestEvent: RequestEvent) => {
     @IsInt()
     @Transform(({ obj }: { obj: FormData }) => Number(obj.get('cityId')), { toClassOnly: true })
     public readonly cityId!: number;
+
+    @Expose()
+    @IsUrl()
+    @MaxLength(2048)
+    @ValidateIf(({ obj }) => obj?.iframeUrl)
+    @Transform(({ obj }: { obj: FormData }) => obj.get('iframeUrl') || undefined, { toClassOnly: true })
+    public readonly iframeUrl?: string;
   }
 
   const formData = plainToInstance(RequestFormDataDTO, await requestEvent.request.formData(), classTransformOptions);
@@ -257,7 +266,8 @@ export const POST = async (requestEvent: RequestEvent) => {
       guestInviteDestination: formData.destination,
       newsUrl: formData.url,
       weatherCityId: formData.cityId,
-      weatherUnits: formData.units
+      weatherUnits: formData.units,
+      iframeUrl: formData.iframeUrl
     });
     await db.persistAndFlush(demo);
 
@@ -377,6 +387,13 @@ export const PATCH = async (requestEvent: RequestEvent) => {
     @IsInt()
     @Transform(({ obj }: { obj: FormData }) => Number(obj.get('cityId')), { toClassOnly: true })
     public readonly cityId!: number;
+
+    @Expose()
+    @IsUrl()
+    @MaxLength(2048)
+    @ValidateIf(({ obj }) => obj?.iframeUrl)
+    @Transform(({ obj }: { obj: FormData }) => obj.get('iframeUrl') || undefined, { toClassOnly: true })
+    public readonly iframeUrl?: string;
   }
 
   const formData = plainToInstance(RequestFormDataDTO, await requestEvent.request.formData(), classTransformOptions);
@@ -428,7 +445,8 @@ export const PATCH = async (requestEvent: RequestEvent) => {
               'guestInviteDestination',
               'newsUrl',
               'weatherUnits',
-              'weatherCityId'
+              'weatherCityId',
+              'iframeUrl'
             ],
             strategy: LoadStrategy.JOINED
           }
@@ -457,6 +475,7 @@ export const PATCH = async (requestEvent: RequestEvent) => {
           r.newsUrl = formData.url;
           r.weatherCityId = formData.cityId;
           r.weatherUnits = formData.units;
+          r.iframeUrl = formData.iframeUrl;
           await db.persistAndFlush(r);
 
           return { status: 302, headers: { Location: '/demos' } };

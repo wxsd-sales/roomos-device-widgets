@@ -1,8 +1,12 @@
 <script lang="ts">
   import type { JSONObject, JSONValue } from '@sveltejs/kit/types/private';
-  import { botToken, botEmail, deviceId } from '.stores';
   import { webexHttp } from '$lib/webex/http-wrapper';
+  import * as store from './.stores';
+  import { DEVICE_PLACEHOLDER, TOKEN_PLACEHOLDER } from '$lib/constants';
 
+  export let botToken = store.botToken;
+  export let botEmail = store.botEmail;
+  export let deviceId = store.deviceId;
   export let compatibleDevices: JSONValue = [];
 
   let isLoading = false;
@@ -14,14 +18,16 @@
     isLoading = true;
     compatibleDevices = [];
 
-    return webexHttp(botToken, 'devices')
-      .get()
-      .then((r) => r.json())
-      .then((r) => r.items as JSONObject[])
-      .then((r) => r.filter(isCompatibleDevice))
-      .then((r) => (compatibleDevices = r) && deviceId.set(undefined))
-      .catch((e) => (compatibleDevices = { error: e.status }) && deviceId.set(undefined))
-      .finally(() => (isLoading = false));
+    return botToken === TOKEN_PLACEHOLDER
+      ? Promise.resolve((compatibleDevices = [{ id: DEVICE_PLACEHOLDER }]) && (isLoading = false))
+      : webexHttp(botToken, 'devices')
+          .get()
+          .then((r) => r.json())
+          .then((r) => r.items as JSONObject[])
+          .then((r) => r.filter(isCompatibleDevice))
+          .then((r) => (compatibleDevices = r))
+          .catch((e) => (compatibleDevices = { error: e.status }))
+          .finally(() => (isLoading = false));
   };
 
   $: ($botToken && $botEmail && retrieveCompatibleDevices($botToken)) || (compatibleDevices = []);
@@ -64,7 +70,9 @@
           autocomplete="off"
           bind:value={$deviceId}
           class:is-danger={compatibleDevices?.error}
-          disabled={isLoading || compatibleDevices.length === 0 || $botEmail == null}
+          disabled={$botToken === TOKEN_PLACEHOLDER
+            ? false
+            : isLoading || compatibleDevices.length === 0 || $botEmail == null}
           required
         />
         <datalist id="compatible-devices">

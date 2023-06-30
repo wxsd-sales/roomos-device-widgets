@@ -13,6 +13,7 @@ import config from '../../../../../mikro-orm.config';
 import humps from 'humps';
 import env from '$lib/environment';
 import * as jose from 'jose';
+import { base } from '$app/paths';
 
 /** @typedef {import('class-validator').ValidationError} ValidationError */
 
@@ -99,26 +100,29 @@ export const POST = async (requestEvent: RequestEvent) => {
     .then((r) => r.emails[0]);
 
   const account = em.findOneOrFail(Activation, query.activationId, {
-    fields: ['googleClientEmail', 'googlePrivateKey', 'googleClientCertificate']
+    fields: ['microsoftTenantId', 'microsoftClientId', 'microsoftPrivateKey', 'microsoftClientCertificate']
   });
 
-  const formJwt = (subject: string, pkcs8: string, issuer: string, expiry = '1h') => {
+  const formJwt = (audience: string, subject: string, issuer: string, pkcs8: string, x509: string, expiry = '1h') => {
     const alg = 'RS256';
-    const scope = env.GOOGLE_CLIENT_CREDENTIALS_SCOPE;
-    const audience = env.GOOGLE_OAUTH_URL + '/' + env.GOOGLE_OAUTH_TOKEN_ENDPOINT;
+    const data = x509
+      .replaceAll('\n', '')
+      ?.match(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/gm)
+      ?.join('');
+    const sha1 = crypto.subtle.digest('SHA-1', Buffer.from(data as string, 'base64'));
+    const hex = sha1.then((r) => Buffer.from(r).toString('hex'));
+    const x5t = hex.then((r) => Buffer.from(r, 'hex').toString('base64url'));
 
-    return jose
-      .importPKCS8(pkcs8, alg)
-      .then((r) =>
-        new jose.SignJWT({ scope })
-          .setProtectedHeader({ alg })
-          .setIssuer(issuer)
-          .setAudience(audience)
-          .setSubject(subject)
-          .setIssuedAt()
-          .setExpirationTime(expiry)
-          .sign(r)
-      );
+    return Promise.all([x5t, jose.importPKCS8(pkcs8, alg)]).then(([r1, r2]) =>
+      new jose.SignJWT({})
+        .setProtectedHeader({ alg, x5t: r1 })
+        .setIssuer(issuer)
+        .setAudience(audience)
+        .setSubject(subject)
+        .setIssuedAt()
+        .setExpirationTime(expiry)
+        .sign(r2)
+    );
   };
 
   const addExpiresAt = (obj: JSONObject, date: number = Date.now()) => ({
@@ -127,12 +131,25 @@ export const POST = async (requestEvent: RequestEvent) => {
   });
 
   return Promise.all([subject, account])
-    .then(([r1, r2]) => formJwt(r1, r2.googlePrivateKey as string, r2.googleClientEmail as string))
-    .then((r) =>
-      urlEncodedRequest(env.GOOGLE_OAUTH_URL).post(
-        env.GOOGLE_OAUTH_TOKEN_ENDPOINT,
-        undefined,
-        humps.decamelizeKeys({ grantType: env.GOOGLE_CLIENT_CREDENTIALS_TYPE, assertion: r }) as JSONObject
+    .then(([, r2]) =>
+      formJwt(
+        env.MICROSOFT_OAUTH_URL + `/${r2.microsoftTenantId}/` + env.MICROSOFT_OAUTH_TOKEN_ENDPOINT,
+        r2.microsoftClientId as string,
+        r2.microsoftClientId as string,
+        r2.microsoftPrivateKey as string,
+        r2.microsoftClientCertificate as string
+      ).then((r) =>
+        urlEncodedRequest(env.MICROSOFT_OAUTH_URL).post(
+          r2.microsoftTenantId + '/' + env.MICROSOFT_OAUTH_TOKEN_ENDPOINT,
+          undefined,
+          humps.decamelizeKeys({
+            scope: env.MICROSOFT_CLIENT_CREDENTIALS_SCOPE,
+            clientId: r2.microsoftClientId,
+            clientAssertionType: env.MICROSOFT_CLIENT_CREDENTIALS_TYPE,
+            clientAssertion: r,
+            grantType: 'client_credentials'
+          }) as JSONObject
+        )
       )
     )
     .then((r) =>

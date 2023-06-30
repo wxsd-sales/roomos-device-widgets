@@ -112,6 +112,17 @@
 </section>
 
 {#if isNavVisible}
+  {#if email?.endsWith('cisco.com')}
+    <section class="hero is-small is-warning">
+      <div class="hero-body px-4">
+        <div class="container">
+          <h2 class="subtitle">
+            You have logged in using your {email} Cisco account. This is usually not recommended.
+          </h2>
+        </div>
+      </div>
+    </section>
+  {/if}
   <nav class="navbar is-fixed-top has-shadow" aria-label="main navigation">
     <div class="navbar-brand">
       {#if email}

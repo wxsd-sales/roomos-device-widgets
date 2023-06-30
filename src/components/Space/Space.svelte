@@ -7,6 +7,8 @@
   export let title = undefined;
   export let size = 64;
 
+  let visible = false;
+
   export const getInitials = (sipAddress?: string, title?: string) =>
     title != null
       ? title?.charAt(0)?.toUpperCase() + title?.charAt(1)?.toUpperCase()
@@ -20,13 +22,13 @@
     </div>
     <div class="column name-column">
       <h2 class="has-text-weight-bold">
-        {#if sipAddress}
-          <span class="is-size-5 person-nickname">{title},</span>
-          <span class="has-text-grey-light is-size-6 person-email">
+        {#if sipAddress && visible}
+          <span class="is-size-5 person-nickname" on:click={() => (visible = !visible)}>{title},</span>
+          <span class="has-text-grey-light is-size-6 person-email" on:click={() => (visible = !visible)}>
             {sipAddress.replace(/@.*$/, '')}
           </span>
         {:else}
-          <span class="is-size-5 person-nickname">{title}</span>
+          <span class="is-size-5 person-nickname" on:click={() => (visible = !visible)}>{title}</span>
         {/if}
       </h2>
     </div>

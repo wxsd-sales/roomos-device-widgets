@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { JSONObject } from '@sveltejs/kit/types/private';
-  import { botEmail, botToken } from '.stores';
-  import { VALID_ACCESS_TOKEN } from '$lib/constants';
+  import { TOKEN_PLACEHOLDER, VALID_ACCESS_TOKEN } from '$lib/constants';
   import { webexHttpPeopleResource } from '$lib/webex/http-wrapper';
+  import * as store from './.stores';
 
+  export let botToken = store.botToken;
+  export let botEmail = store.botEmail;
   export let orgId = undefined;
   export let bot: JSONObject = {};
 
@@ -19,13 +21,15 @@
     bot = {};
     botEmail.set(undefined);
 
-    return webexHttpPeopleResource(botToken)
-      .getMyOwnDetails()
-      .then((r) => r.json())
-      .then((r) => (r.orgId === orgId ? r : Promise.reject({ status: "Bot doesn't belong to your Org." })))
-      .then((r) => (bot = r) && botEmail.set(r?.emails[0] || undefined))
-      .catch((e) => (bot = { error: e.status }) && botEmail.set(undefined))
-      .finally(() => (isLoading = false));
+    return botToken === TOKEN_PLACEHOLDER
+      ? Promise.resolve(botEmail.set('webexbot@example.com') || (isLoading = false))
+      : webexHttpPeopleResource(botToken)
+          .getMyOwnDetails()
+          .then((r) => r.json())
+          .then((r) => (r.orgId === orgId ? r : Promise.reject({ status: "Bot doesn't belong to your Org." })))
+          .then((r) => (bot = r) && botEmail.set(r?.emails[0] || undefined))
+          .catch((e) => (bot = { error: e.status }) && botEmail.set(undefined))
+          .finally(() => (isLoading = false));
   };
 
   $: ($botToken && retrieveBotDetails($botToken)) || ((bot = {}) && botEmail.set(undefined));

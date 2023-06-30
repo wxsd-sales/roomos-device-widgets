@@ -51,7 +51,8 @@ export const GET = async (requestEvent: RequestEvent) => {
         'demo.guestInviteDestination',
         'demo.newsUrl',
         'demo.weatherUnits',
-        'demo.weatherCityId'
+        'demo.weatherCityId',
+        'demo.iframeUrl'
       ],
       strategy: LoadStrategy.JOINED
     })

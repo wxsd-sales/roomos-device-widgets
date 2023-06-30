@@ -43,7 +43,7 @@
     </div>
     <div class="column is-full content mb-0">
       <div class="notification is-danger is-light px-5">
-        Copy this URL and keep it in a safe place, you will not see this again.
+        Copy this URL and keep it in a safe place, you may not see this again.
       </div>
       <div class="notification is-danger is-light px-5">
         <p>

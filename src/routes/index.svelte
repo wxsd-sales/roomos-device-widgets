@@ -23,6 +23,8 @@
   import Modal from '$components/Modal/Modal.svelte';
   import Events from '$components/Events/Events.svelte';
   import EventSend from '$components/Events/EventSend.svelte';
+  import Iframe from '$components/Iframe/Iframe.svelte';
+  import { TOKEN_PLACEHOLDER } from '$lib/constants';
 
   export let botToken = undefined;
   export let deviceId = undefined;
@@ -30,7 +32,7 @@
   export let statusErrorCountThreshold = 10;
   export let activationId = $page.url.searchParams.get('activationId');
   export let authWidget = $page.url.searchParams.get('authWidget') ?? 'contacts';
-  export let title = authWidget === 'googleCalendar' ? 'Google Calendar' : ' Favourites';
+  export let title = authWidget.toLowerCase().endsWith('calendar') ? 'Calendar' : ' Favourites';
 
   let statusErrorCount = 0;
   let activeModalLink = undefined;
@@ -74,10 +76,12 @@
     httpApiRequest.get('weather', { id, units }).then((r) => r.json() as Promise<TYPES.WeatherResponse>);
 
   export const getStatus = () =>
-    devicesHttpApiRequest
-      .get('status')
-      .then((r) => !(statusErrorCount = 0) && (r.json() as Promise<TYPES.Status>))
-      .catch((e) => (statusErrorCount = statusErrorCount + 1) && Promise.reject(e));
+    botToken === TOKEN_PLACEHOLDER
+      ? Promise.resolve({})
+      : devicesHttpApiRequest
+          .get('status')
+          .then((r) => !(statusErrorCount = 0) && (r.json() as Promise<TYPES.Status>))
+          .catch((e) => (statusErrorCount = statusErrorCount + 1) && Promise.reject(e));
 
   export const disconnect = (id: number) => devicesHttpApiRequest.post('call-disconnect', undefined, { callId: id });
 
@@ -87,10 +91,12 @@
       : devicesHttpApiRequest.post('dial', undefined, { bookingId: id, number: destination });
 
   export const getBookings = () =>
-    devicesHttpApiRequest
-      .get('bookings')
-      .then((r) => r.json())
-      .then((r) => [...r, ...defaultBookings]);
+    botToken === TOKEN_PLACEHOLDER
+      ? Promise.resolve(defaultBookings)
+      : devicesHttpApiRequest
+          .get('bookings')
+          .then((r) => r.json())
+          .then((r) => [...r, ...defaultBookings]);
 
   export const getFavouriteSpaces = (id, accessToken) => {
     const webex: Promise<unknown> = webexSdk(accessToken).initialize();
@@ -171,14 +177,33 @@
   let eventSendModel = false;
   let date = new Date().toISOString().split('T')[0];
 
+  let personStore = writable<TYPES.PersonResponse>(undefined);
+
   const getGoogleCalendarApiRequest = (accessToken: string, activationId: string) =>
     jsonRequest('/api', 'client-credentials/google', 'Bearer', accessToken)
       .post('token', { activationId })
       .then((r) => r.json())
       .then((r) => jsonRequest('https://www.googleapis.com/calendar/v3/calendars', 'primary', 'Bearer', r.accessToken));
 
+  const getMicrosoftCalendarApiRequest = (accessToken: string, activationId: string) =>
+    jsonRequest('/api', 'client-credentials/microsoft', 'Bearer', accessToken)
+      .post('token', { activationId })
+      .then((r) => r.json())
+      .then((r) =>
+        jsonRequest(
+          `https://graph.microsoft.com/v1.0/users/${$personStore.emails[0]}`,
+          'events',
+          'Bearer',
+          r.accessToken
+        )
+      );
+
+  $: microsoftCalendarApi =
+    browser && authWidget === 'microsoftCalendar' && $personStore?.emails[0] && $tokenResponseStore?.accessToken != null
+      ? getMicrosoftCalendarApiRequest($tokenResponseStore.accessToken, activationId)
+      : undefined;
   $: googleCalendarApi =
-    browser && $tokenResponseStore?.accessToken != null
+    browser && authWidget === 'googleCalendar' && $personStore?.emails[0] && $tokenResponseStore?.accessToken != null
       ? getGoogleCalendarApiRequest($tokenResponseStore.accessToken, activationId)
       : undefined;
   $: start = new Date(new Date(date).setHours(0, 0, 0, 0));
@@ -233,6 +258,63 @@
         )
     );
 
+  export const listMicrosoftExchangeEvents = (start: Date, end: Date) =>
+    microsoftCalendarApi?.then((r) =>
+      r
+        .get(undefined, {
+          $filter: `start/dateTime ge '${start.toISOString()}' and end/dateTime le '${end.toISOString()}'`
+        })
+        .then((r) => r.json())
+        .then((r) => r?.value as JSONObject[])
+        .then((r) =>
+          r.map((r) => {
+            const event = {
+              id: r.id,
+              organizer: {
+                name: r?.organizer?.emailAddress?.name,
+                email: r?.organizer?.emailAddress?.address,
+                prefix: 'Organized by '
+              },
+              title: r.subject,
+              time: { start: new Date(r.start.dateTime), end: new Date(r.end.dateTime) }
+            };
+            if (r?.onlineMeeting?.joinUrl != null) {
+              return {
+                ...event,
+                ...{ number: r.onlineMeeting.joinUrl, protocol: 'WebRTC', platform: 'MicrosoftTeams' }
+              };
+            } else if ((r?.body?.content as string)?.match(/https:\/\/teams\.microsoft\.com\/.*%7d/gm)) {
+              return {
+                ...event,
+                ...{
+                  number: (r?.body?.content as string)?.match(/https:\/\/teams\.microsoft\.com\/.*%7d/gm)[0],
+                  protocol: 'WebRTC',
+                  platform: 'MicrosoftTeams'
+                }
+              };
+            } else if ((r?.body?.content as string)?.match(/\d+@zoomcrc\.com/gm)) {
+              return {
+                ...event,
+                ...{
+                  number: (r?.body?.content as string)?.match(/\d+@zoomcrc\.com/gm)[0],
+                  protocol: 'SIP'
+                }
+              };
+            } else if ((r?.body?.content as string)?.match(/\d+@webex\.com/gm)) {
+              return {
+                ...event,
+                ...{
+                  number: (r?.body?.content as string)?.match(/\d+@webex\.com/gm)[0],
+                  protocol: 'SIP'
+                }
+              };
+            } else {
+              return event;
+            }
+          })
+        )
+    );
+
   export const insertGoogleWorkspaceEvent = (
     start: Date,
     end: Date,
@@ -255,8 +337,63 @@
       )
     );
 
+  export const insertMicrosoftExchangeEvent = (
+    start: Date,
+    end: Date,
+    attendees: Set<string>,
+    summary: string,
+    description: string
+  ) =>
+    microsoftCalendarApi?.then((r) =>
+      r.post(undefined, undefined, {
+        start: { dateTime: start.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+        end: { dateTime: end.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+        attendees: Array.from(attendees).map((e) => ({ emailAddress: { address: e } })),
+        body: {
+          content: description
+        },
+        subject: summary,
+        isOnlineMeeting: true
+      })
+    );
+
   export const deleteGoogleWorkspaceEvent = (id: string) =>
     googleCalendarApi?.then((r) => r.delete(`events/${id}`, { conferenceDataVersion: 1, sendUpdates: 'all' }));
+
+  export const deleteMicrosoftExchangeEvent = (id: string) => microsoftCalendarApi?.then((r) => r.delete(id));
+
+  export const listEvents = (start: Date, end: Date) => {
+    switch (authWidget.toLowerCase()) {
+      case 'microsoftcalendar':
+        return listMicrosoftExchangeEvents(start, end);
+      case 'googlecalendar':
+        return listGoogleWorkspaceEvents(start, end);
+      default:
+        return [];
+    }
+  };
+
+  export const insertEvent = (start: Date, end: Date, attendees: Set<string>, summary: string, description: string) => {
+    switch (authWidget.toLowerCase()) {
+      case 'microsoftcalendar':
+        return insertMicrosoftExchangeEvent(start, end, attendees, summary, description);
+      case 'googlecalendar':
+        return insertGoogleWorkspaceEvent(start, end, attendees, summary, description);
+      default:
+        return undefined;
+    }
+  };
+
+  export const deleteEvent = (id: string) => {
+    switch (authWidget.toLowerCase()) {
+      case 'microsoftcalendar':
+        return deleteMicrosoftExchangeEvent(id);
+      case 'googlecalendar':
+        return deleteGoogleWorkspaceEvent(id);
+      default:
+        return undefined;
+    }
+  };
 
   export const statusStore = readable<TYPES.Status>(undefined, (set) => {
     const interval = setInterval(
@@ -339,14 +476,14 @@
                 {getTokenResponse}
                 on:newTokenResponse={(e) => tokenResponseStore.set(e.detail)}
               />
-            {:else if authWidget === 'googleCalendar'}
-              <Authorized {tokenResponseStore}>
+            {:else if authWidget === 'googleCalendar' || authWidget === 'microsoftCalendar'}
+              <Authorized {tokenResponseStore} {personStore}>
                 {#key date}
                   <Events
-                    listEvents={() => listGoogleWorkspaceEvents(start, end)}
-                    deleteEvent={deleteGoogleWorkspaceEvent}
-                    {disconnect}
-                    {connect}
+                    listEvents={() => listEvents(start, end)}
+                    {deleteEvent}
+                    disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                    connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
                     {callsStore}
                   >
                     <div class="column is-12 is-flex-align-items-flex-end mt-auto events-footer" slot="footer">
@@ -406,8 +543,8 @@
                   id={$tokenResponseStore.id}
                   accessToken={$tokenResponseStore.accessToken}
                   {getFavouriteSpaces}
-                  {disconnect}
-                  {connect}
+                  disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                  connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
                   {callsStore}
                 />
               </Authorized>
@@ -426,8 +563,8 @@
                   id={$tokenResponseStore.id}
                   accessToken={$tokenResponseStore.accessToken}
                   edit={isUserListEditable}
-                  {disconnect}
-                  {connect}
+                  disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                  connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
                   {callsStore}
                 />
               </Authorized>
@@ -444,20 +581,37 @@
             id="guest-invite"
             class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
           >
-            <GuestInvite {disconnect} {connect} {callsStore} />
+            <GuestInvite
+              destination={demo.guestInviteDestination}
+              disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+              connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
+              {callsStore}
+            />
           </div>
-          <div
-            id="bookings"
-            class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
-          >
-            <Bookings {getBookings} {disconnect} {connect} {callsStore} />
-          </div>
-          <div
-            id="room-analytics"
-            class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
-          >
-            <RoomAnalytics {roomAnalyticsStore} units={demo.weatherUnits} />
-          </div>
+
+          {#if demo?.iframeUrl == null}
+            <div
+              id="bookings"
+              class="tile is-child box is-translucent-black has-text-white 0is-flex-grow-0 is-flex-shrink-1"
+            >
+              <Bookings
+                {getBookings}
+                disconnect={botToken === TOKEN_PLACEHOLDER ? null : disconnect}
+                connect={botToken === TOKEN_PLACEHOLDER ? null : connect}
+                {callsStore}
+              />
+            </div>
+            <div
+              id="room-analytics"
+              class="tile is-child box is-translucent-black has-text-white is-flex-grow-0 is-flex-shrink-1"
+            >
+              <RoomAnalytics {roomAnalyticsStore} units={demo.weatherUnits} />
+            </div>
+          {:else}
+            <div id="iframe-url" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
+              <Iframe url={demo?.iframeUrl} />
+            </div>
+          {/if}
         </div>
         <!--rhs end-->
       </div>
@@ -508,7 +662,7 @@
     <Modal isActive={eventSendModel} on:click={() => (eventSendModel = false)}>
       <div class="container is-fluid box is-translucent-black has-text-white event-send">
         <EventSend
-          insertEvent={insertGoogleWorkspaceEvent}
+          {insertEvent}
           onSuccess={() => (date = new Date().toISOString().split('T')[0]) && (eventSendModel = false)}
         />
       </div>

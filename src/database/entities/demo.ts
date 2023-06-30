@@ -1,13 +1,17 @@
 import 'reflect-metadata';
-import { Entity, ManyToOne, Property, types } from '@mikro-orm/core';
+import { Collection, Entity, ManyToOne, OneToMany, Property, types } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { User } from './user';
 import { Data } from './data';
+import { Activation } from './activation';
 
 @Entity()
 export class Demo extends BaseEntity {
   @ManyToOne({ entity: () => User, onDelete: 'cascade' })
   user!: User;
+
+  @OneToMany({ entity: () => Activation, mappedBy: 'demo', orphanRemoval: true })
+  activations = new Collection<Activation>(this);
 
   @Property({ type: types.string })
   name!: string;
@@ -60,6 +64,9 @@ export class Demo extends BaseEntity {
   @Property({ type: types.integer })
   weatherCityId!: number;
 
+  @Property({ type: types.string, nullable: true })
+  iframeUrl?: string;
+
   constructor(obj: {
     user: User;
     name: string;
@@ -79,6 +86,7 @@ export class Demo extends BaseEntity {
     newsUrl?: string;
     weatherUnits: 'imperial' | 'metric' | 'standard';
     weatherCityId: number;
+    iframeUrl?: string;
   }) {
     super();
     this.user = obj.user;
@@ -99,5 +107,6 @@ export class Demo extends BaseEntity {
     this.newsUrl = obj.newsUrl;
     this.weatherUnits = obj.weatherUnits;
     this.weatherCityId = obj.weatherCityId;
+    this.iframeUrl = obj.iframeUrl;
   }
 }

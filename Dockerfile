@@ -10,4 +10,4 @@ COPY . ./
 RUN npm run build
 RUN node --experimental-modules --experimental-specifier-resolution=node --loader ts-node/esm ./node_modules/.bin/mikro-orm migration:up
 
-CMD ["sh", "-c", "npx vite preview --host 0.0.0.0 --port 3000"]
+CMD ["sh", "-c", "node -r dotenv-expand/config ./build"]
