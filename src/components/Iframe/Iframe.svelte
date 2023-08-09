@@ -1,10 +1,11 @@
 <script lang="ts">
   export let url = undefined;
   export let ratio = 'is-5by4';
+  export let allow: string;
 </script>
 
 <figure class="image {ratio}">
-  <iframe src={url} class="has-ratio" />
+  <iframe title="iframe" src={url} class="has-ratio" {allow} />
 </figure>
 
 <style>
