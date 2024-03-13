@@ -40,7 +40,7 @@ export const GET = async (requestEvent: RequestEvent) => {
     redirectUri
   });
   const tokenResponse = urlEncodedRequest(env.WEBEX_API_URL)
-    .post('access_token', params as Record<string, string>)
+    .post('access_token', undefined, params as Record<string, string>)
     .then((r) =>
       r
         .json()
