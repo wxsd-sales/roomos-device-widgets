@@ -33,15 +33,17 @@
       .then((r) => r.text())
       .then((r) => new DOMParser().parseFromString(r, 'application/xml'))
       .then((r) =>
-        [...r.querySelectorAll('channel>item').values()].map((r) => ({
-          title: r.getElementsByTagName('title')?.[0].innerHTML,
-          pubDate: r.getElementsByTagName('pubDate')?.[0].innerHTML,
-          link: r.getElementsByTagName('link')?.[0].innerHTML,
-          source: {
-            name: r.getElementsByTagName('source')?.[0].innerHTML,
-            link: r.getElementsByTagName('source')?.[0].getAttribute('url')
-          }
-        }))
+        [...r.querySelectorAll('channel>item').values()]
+          .map((r) => ({
+            title: r.getElementsByTagName('title')?.[0].innerHTML,
+            pubDate: r.getElementsByTagName('pubDate')?.[0].innerHTML ?? new Date(0).toString(),
+            link: r.getElementsByTagName('link')?.[0].innerHTML,
+            source: {
+              name: r.getElementsByTagName('source')?.[0].innerHTML,
+              link: r.getElementsByTagName('source')?.[0].getAttribute('url')
+            }
+          }))
+          .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
       );
 
   let newsResponse = browser ? getNewsResponse() : Promise.resolve(undefined);
