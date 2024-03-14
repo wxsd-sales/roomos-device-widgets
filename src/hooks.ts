@@ -1,8 +1,8 @@
 import type { GetSession, Handle, HandleError } from '@sveltejs/kit';
 import { webexHttpMessagesResource } from '$lib/webex/http-wrapper';
+import { LoadStrategy } from '@mikro-orm/core';
 import { prerendering } from '$app/env';
-import { LoadStrategy, MikroORM } from '@mikro-orm/core';
-import config from '../mikro-orm.config';
+import { db } from '$lib/db';
 import env from '$lib/environment';
 import * as entity from './database/entities';
 import * as cookie from 'cookie';
@@ -32,10 +32,6 @@ export const handle: Handle = async ({ event, resolve }) => {
   let response: Response;
 
   if (isProtectedRoute) {
-    const db = await MikroORM.init({
-      ...config,
-      ...{ entities: [entity.Session, entity.User, entity.Data, entity.Demo, entity.Activation] }
-    }).then((r) => r.em.fork());
     const cookies = cookie.parse(event.request.headers.get('Cookie') ?? '');
     const session = cookies.sessionId
       ? await db.findOne(
