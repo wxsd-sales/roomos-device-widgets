@@ -75,16 +75,18 @@ export const handle: Handle = async ({ event, resolve }) => {
     isStatic ? '' : response.status, // static assets not handled by svelte-kit
     isStatic ? '' : Date.now() - d1.getTime() + ' ms' // static assets not handled by svelte-kit
   ].join(' ');
+  
+  //commented by rkanthet
 
-  if (import.meta.env.PROD && !isStatic && !isSkipReporting && response.status >= 400) {
-    webexHttpMessagesResource(env.WEBEX_NOTIFICATION_CHANNEL_TOKEN)
-      .createMessage({
-        roomId: env.WEBEX_NOTIFICATION_CHANNEL_ID,
-        markdown: ['```text', message, '```'].join('\n')
-      })
-      .catch()
-      .finally();
-  }
+  // if (import.meta.env.PROD && !isStatic && !isSkipReporting && response.status >= 400) {
+  //   webexHttpMessagesResource(env.WEBEX_NOTIFICATION_CHANNEL_TOKEN)
+  //     .createMessage({
+  //       roomId: env.WEBEX_NOTIFICATION_CHANNEL_ID,
+  //       markdown: ['```text', message, '```'].join('\n')
+  //     })
+  //     .catch()
+  //     .finally();
+  // }
 
   console.info('\x1b[34m' + message + '\x1b[0m');
 
