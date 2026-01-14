@@ -4,15 +4,15 @@
   import { jsonRequest } from '$lib/shared/json-request';
   import Title from '../Title/Title.svelte';
 
-  export let destination = undefined;
+  export let destination: string | undefined = undefined;
   export let httpApiRequest = jsonRequest('/api');
   export let title = 'Text Video Chat Link to a Guest';
-  export let countryCode: '1' | '353' | '61' | '44' = '1';
 
   let destinationValue = destination;
   const dispatch = createEventDispatcher();
-  const numberInput = { mask: `+{${countryCode}} (000) 000-0000`, lazy: true };
-  const numberRegex = new RegExp(`\\+${countryCode} \\(\\d{3}\\) \\d{3}-\\d{4}`);
+  const numberInput = { mask: `(000) 000-0000`, lazy: true };
+  const numberRegex = new RegExp(`\\(\\d{3}\\) \\d{3}-\\d{4}`);
+  const countryCodes = ['🇺🇸 +1', '🇬🇧 +44', '🇦🇺 +61', '🇮🇪 +353'];
 
   let formElement: HTMLFormElement;
   let isLoading = false;
@@ -22,9 +22,12 @@
     if (import.meta.env.DEV) console.info(e);
 
     const formData = new FormData(e.target as HTMLFormElement);
+    const countryCode = (formData.get('countryCode') as string).split(' ').pop();
+    if (countryCode == undefined) return;
+
     const query = {
       sipTarget: formData.get('sip-target') as string,
-      number: formData.get('number') as string,
+      number: (countryCode + ' ' + formData.get('number')) as string,
       expiresIn: 8 * 3600
     };
 
@@ -60,22 +63,31 @@
   </div>
   <div class="columns is-mobile is-vcentered" class:is-multiline={destination != null}>
     <div class="column" class:is-12={destination != null}>
-      <div class="control has-icons-left">
-        <input
-          class="input is-rounded is-medium"
-          type="tel"
-          name="number"
-          required
-          pattern={numberRegex.source}
-          placeholder={numberInput.mask}
-          use:imask={numberInput}
-        />
-        <span class="icon is-left">
-          <i class="mdi mdi-cellphone-message" />
-        </span>
+      <div class="field has-addons is-flex ">
+        <p class="control">
+          <span class="select is-rounded is-medium">
+            <select name="countryCode">
+              {#each countryCodes as code}
+                <option>{code}</option>
+              {/each}
+            </select>
+          </span>
+        </p>
+
+        <div class="control is-expanded">
+          <input
+            class="input is-rounded is-medium"
+            type="tel"
+            name="number"
+            required
+            pattern={numberRegex.source}
+            placeholder={numberInput.mask}
+            use:imask={numberInput}
+          />
+        </div>
       </div>
     </div>
-    <div class="column {destination != null ? 'is-12' : 'is-5'}">
+    <div class="column {destination != null ? 'is-12' : 'is-4'}">
       <button class="button is-primary is-rounded is-medium is-fullwidth" type="submit" class:is-loading={isLoading}>
         <span class="icon">
           <i class="mdi mdi-message-text-fast" />
