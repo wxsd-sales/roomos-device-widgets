@@ -609,7 +609,7 @@
             </div>
           {:else}
             <div id="iframe-url" class="tile is-child box is-translucent-black has-text-white is-flex-grow-1">
-              <Iframe url={demo?.iframeUrl} />
+              <Iframe url={demo?.iframeUrl} allow={'camera;microphone; fullscreen;display-capture'} />
             </div>
           {/if}
         </div>
